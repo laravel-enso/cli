@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Core\app\Classes\StructureManager;
+namespace LaravelEnso\StructureManager\app\Classes;
 
 class StructureDestroyer extends Structure
 {
