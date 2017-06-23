@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Core\app\Classes\StructureManager;
+namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\MenuManager\app\Models\Menu;
 use LaravelEnso\PermissionManager\app\Models\Permission;
