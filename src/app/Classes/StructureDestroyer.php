@@ -2,8 +2,6 @@
 
 namespace LaravelEnso\Core\app\Classes\StructureManager;
 
-use LaravelEnso\MenuManager\app\Models\Menu;
-
 class StructureDestroyer extends Structure
 {
     public function __construct()

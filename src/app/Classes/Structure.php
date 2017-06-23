@@ -8,12 +8,12 @@ use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
 
 abstract class Structure
 {
-	protected $permissionGroup = null;
+    protected $permissionGroup = null;
     protected $permissions = null;
     protected $parentMenu = null;
     protected $menu = null;
 
-	public function setPermissionGroup($permissionGroup)
+    public function setPermissionGroup($permissionGroup)
     {
         if (!$permissionGroup || !is_array($permissionGroup) || empty($permissionGroup)) {
             return false;
