@@ -2,6 +2,10 @@
 
 namespace LaravelEnso\StructureManager\app\Classes;
 
+use LaravelEnso\MenuManager\app\Models\Menu;
+use LaravelEnso\PermissionManager\app\Models\Permission;
+use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
+
 class StructureDestroyer extends Structure
 {
     public function __construct()
@@ -18,6 +22,35 @@ class StructureDestroyer extends Structure
         });
     }
 
+    public function setPermissionGroup($permissionGroup)
+    {
+        if (!$permissionGroup || !is_array($permissionGroup) || empty($permissionGroup)) {
+            return false;
+        }
+
+        $this->permissionGroup = PermissionGroup::whereName($permissionGroup['name'])->first();
+    }
+
+    public function setPermissions($permissions)
+    {
+        if (!$this->permissionGroup || !is_array($permissions) || empty($permissions)) {
+            return false;
+        }
+
+        $permissionNames = array_column($permissions, 'name');
+
+        $this->permissions = Permission::whereIn('name', $permissionNames)->get();
+    }
+
+    public function setMenu($menu)
+    {
+        if (!$menu) {
+            return false;
+        }
+
+        $this->menu = Menu::whereName($menu)->first();
+    }
+
     private function deletePermissions()
     {
         if ($this->permissions && $this->permissions->count()) {
@@ -27,10 +60,8 @@ class StructureDestroyer extends Structure
 
     private function deletePermissionGroup()
     {
-        if ($this->permissionGroup) {
-            if (!$this->permissionGroup->permissions->count()) {
-                $this->permissionGroup->delete();
-            }
+        if ($this->permissionGroup && !$this->permissionGroup->permissions->count()) {
+            $this->permissionGroup->delete();
         }
     }
 

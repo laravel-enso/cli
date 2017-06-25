@@ -25,6 +25,10 @@ abstract class StructureMigration extends Migration
 
     public function down()
     {
+        if (config('app.env') == 'testing') {
+            return;
+        }
+
         $manager = new StructureDestroyer();
 
         $manager->setPermissionGroup($this->permissionGroup);
