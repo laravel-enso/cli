@@ -35,7 +35,8 @@ class StructureCreator extends Structure
             return false;
         }
 
-        $this->permissionGroup = new PermissionGroup($permissionGroup);
+        $this->permissionGroup = PermissionGroup::whereName($permissionGroup['name'])->first()
+            ?: new PermissionGroup($permissionGroup);
     }
 
     public function setPermissions($permissions)
