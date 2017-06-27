@@ -4,12 +4,18 @@
 [![Total Downloads](https://poser.pugx.org/laravel-enso/structuremanager/downloads)](https://packagist.org/packages/laravel-enso/structuremanager)
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/structuremanager/version)](https://packagist.org/packages/laravel-enso/structuremanager)
 
-Structure Manager depedency for Laravel Enso
+Structure Manager dependency for [Laravel Enso](https://github.com/laravel-enso/Enso)
 
-## Note
+### Details
 
-Included in Laravel Enso Core / Coreplus packages
+- can be used to more easily insert (default) data, during the install of a package, and can create menus, assign default permissions, etc.
+- can also rollback its own changes
+- depends on [Permission Manager](https://github.com/laravel-enso/PermissionManager) as it uses it for permissions handling
+
+### Notes
+
+The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with this package included.
 
 ### Contributions
 
-...are welcome
+are welcome
