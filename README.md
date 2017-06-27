@@ -7,7 +7,10 @@
 Structure Manager dependency for [Laravel Enso](https://github.com/laravel-enso/Enso)
 
 ### Details
-It can be used to more easily insert (default) data, during the install of a package, and can create menus, assign default permissions, etc.
+
+- can be used to more easily insert (default) data, during the install of a package, and can create menus, assign default permissions, etc.
+- can also rollback its own changes
+- depends on [Permission Manager](https://github.com/laravel-enso/PermissionManager) as it uses it for permissions handling
 
 ### Notes
 
