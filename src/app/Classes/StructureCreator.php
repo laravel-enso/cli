@@ -9,14 +9,9 @@ use LaravelEnso\RoleManager\app\Models\Role;
 
 class StructureCreator extends Structure
 {
-    private $parentMenu;
-    private $defaultRole;
-    private $roles;
-
     public function __construct()
     {
         $this->permissions = collect();
-        $this->parentMenu = null;
         $this->defaultRole = Role::whereName(config('laravel-enso.defaultRole'))->first(['id']);
         $this->roles = Role::get(['id']);
     }
@@ -31,7 +26,7 @@ class StructureCreator extends Structure
 
     public function setPermissionGroup($permissionGroup)
     {
-        if (!$permissionGroup || !is_array($permissionGroup) || empty($permissionGroup)) {
+        if (is_null($permissionGroup) || !is_array($permissionGroup) || empty($permissionGroup)) {
             return false;
         }
 
@@ -52,7 +47,7 @@ class StructureCreator extends Structure
 
     public function setParentMenu($menu)
     {
-        if (!$menu) {
+        if (is_null($menu) || !is_array($menu) || empty($menu)) {
             return false;
         }
 
@@ -61,7 +56,7 @@ class StructureCreator extends Structure
 
     public function setMenu($menu)
     {
-        if (!$menu) {
+        if (is_null($menu)) {
             return false;
         }
 
@@ -83,11 +78,11 @@ class StructureCreator extends Structure
         }
 
         $this->permissions->each(function ($permission) {
-            $this->attachToRoles($permission);
+            $this->saveAndAttachToRoles($permission);
         });
     }
 
-    private function attachToRoles($permission)
+    private function saveAndAttachToRoles($permission)
     {
         $permission->permission_group_id = $this->permissionGroup->id;
         $permission->save();

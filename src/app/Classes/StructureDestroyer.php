@@ -24,7 +24,7 @@ class StructureDestroyer extends Structure
 
     public function setPermissionGroup($permissionGroup)
     {
-        if (!$permissionGroup || !is_array($permissionGroup) || empty($permissionGroup)) {
+        if (is_null($permissionGroup) || !is_array($permissionGroup) || empty($permissionGroup)) {
             return false;
         }
 
@@ -38,13 +38,12 @@ class StructureDestroyer extends Structure
         }
 
         $permissionNames = array_column($permissions, 'name');
-
         $this->permissions = Permission::whereIn('name', $permissionNames)->get();
     }
 
     public function setMenu($menu)
     {
-        if (!$menu) {
+        if (is_null($menu) || !is_array($menu) || empty($menu)) {
             return false;
         }
 
@@ -60,7 +59,7 @@ class StructureDestroyer extends Structure
 
     private function deletePermissionGroup()
     {
-        if ($this->permissionGroup && !$this->permissionGroup->permissions->count()) {
+        if ($this->permissionGroup && !$this->permissionGroup->permissions()->count()) {
             $this->permissionGroup->delete();
         }
     }
