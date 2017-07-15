@@ -47,7 +47,7 @@ class StructureCreator extends Structure
 
     public function setParentMenu($menu)
     {
-        if (is_null($menu) || !is_array($menu) || empty($menu)) {
+        if (is_null($menu) || !$menu) {
             return false;
         }
 
