@@ -12,7 +12,7 @@ class StructureCreator extends Structure
     public function __construct()
     {
         $this->permissions = collect();
-        $this->defaultRole = Role::whereName(config('laravel-enso.defaultRole'))->first(['id']);
+        $this->defaultRole = Role::whereName(config('enso.config.defaultRole'))->first(['id']);
         $this->roles = Role::get(['id']);
     }
 
