@@ -11,13 +11,19 @@ Structure Manager dependency for [Laravel Enso](https://github.com/laravel-enso/
 
 ### Details
 
-- can be used to more easily insert (default) data, during the install of a package, and can create menus, assign default permissions, etc.
+- can be used to more easily insert (default) data, during the install of a package, or later when new routes and permissions are required and can create menus, assign default permissions, etc.
+- extends Illuminate's `Migration` class and acts like a migration
 - can also rollback its own changes
-- depends on [Permission Manager](https://github.com/laravel-enso/PermissionManager) as it uses it for permissions handling
+- when adding menus and permissions, automatic access for the administrator role is added
 
 ### Notes
 
 The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with this package included.
+
+Depends on:
+- depends on [PermissionManager](https://github.com/laravel-enso/PermissionManager) as it uses it for permissions handling
+- depends on [MenuManager](https://github.com/laravel-enso/MenuManager) for the creation of menus, when required
+- depends on [RoleManager](https://github.com/laravel-enso/RoleManager) for the integration with roles, when adding default permissions
 
 <!--h-->
 ### Contributions
