@@ -53,7 +53,10 @@ class StructureDestroyer extends Structure
     private function deletePermissions()
     {
         if ($this->permissions && $this->permissions->count()) {
-            $this->permissions->each->delete();
+            $this->permissions->each(function ($permission) {
+                $permission->roles()->sync([]);
+                $permission->delete();
+            });
         }
     }
 
