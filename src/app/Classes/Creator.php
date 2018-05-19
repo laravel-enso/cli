@@ -3,9 +3,9 @@
 namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\MenuManager\app\Models\Menu;
-use LaravelEnso\RoleManager\app\Models\Role;
 use LaravelEnso\PermissionManager\app\Models\Permission;
 use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
+use LaravelEnso\RoleManager\app\Models\Role;
 use LaravelEnso\StructureManager\app\Interfaces\EnsoStructure;
 
 class Creator extends Structure implements EnsoStructure
@@ -26,7 +26,7 @@ class Creator extends Structure implements EnsoStructure
         (Menu::create($menu + [
             'parent_id' => isset($this->parentMenu)
                 ? $this->parentMenu->id
-                : null
+                : null,
         ]))
         ->roles()
         ->attach($this->defaultRole);
