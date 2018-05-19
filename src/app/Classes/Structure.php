@@ -4,6 +4,7 @@ namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\MenuManager\app\Models\Menu;
 use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
+use LaravelEnso\StructureManager\app\Exceptions\EnsoStructureException;
 
 abstract class Structure
 {
@@ -88,10 +89,18 @@ abstract class Structure
 
     private function validatesStructure($structure, $attributes)
     {
-        return count($structure) === count($attributes)
+        $valid = count($structure) === count($attributes)
             && collect($attributes)
                 ->keys()
                 ->diff(collect($structure)->values())
                 ->isEmpty();
+
+        if (!$valid) {
+            throw new EnsoStructureException(__(
+                'The current structure element is wrongly defined. Check the exception trace below'
+            ));
+        }
+
+        return $valid;
     }
 }

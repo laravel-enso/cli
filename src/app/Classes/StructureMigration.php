@@ -13,11 +13,13 @@ abstract class StructureMigration extends Migration
 
     public function up()
     {
-        (new Creator())
-            ->parentMenu($this->parentMenu)
-            ->menu($this->menu)
-            ->permissionGroup($this->permissionGroup)
-            ->permissions($this->permissions);
+        \DB::transaction(function () {
+            (new Creator())
+                ->parentMenu($this->parentMenu)
+                ->menu($this->menu)
+                ->permissionGroup($this->permissionGroup)
+                ->permissions($this->permissions);
+        });
     }
 
     public function down()
@@ -26,9 +28,11 @@ abstract class StructureMigration extends Migration
             return;
         }
 
-        (new Destroyer())
-            ->menu($this->menu)
-            ->permissions($this->permissions)
-            ->permissionGroup($this->permissionGroup);
+        \DB::transaction(function () {
+            (new Destroyer())
+                ->menu($this->menu)
+                ->permissions($this->permissions)
+                ->permissionGroup($this->permissionGroup);
+        });
     }
 }
