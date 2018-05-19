@@ -9,7 +9,7 @@ abstract class Structure
 {
     private const PermissionGroupAttributes = ['name', 'description'];
     private const PermissionAttributes = ['name', 'description', 'type', 'default'];
-    private const MenuAttributes = ['name', 'icon', 'link', 'has_children'];
+    private const MenuAttributes = ['name', 'icon', 'link', 'order', 'has_children'];
 
     protected $permissionGroup = null;
     protected $permissions = null;
