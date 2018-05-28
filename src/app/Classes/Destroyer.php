@@ -5,7 +5,7 @@ namespace LaravelEnso\StructureManager\app\Classes;
 use LaravelEnso\MenuManager\app\Models\Menu;
 use LaravelEnso\PermissionManager\app\Models\Permission;
 use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
-use LaravelEnso\StructureManager\app\Interfaces\EnsoStructure;
+use LaravelEnso\StructureManager\app\Contracts\EnsoStructure;
 
 class Destroyer extends Structure implements EnsoStructure
 {

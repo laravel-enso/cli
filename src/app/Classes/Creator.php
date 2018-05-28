@@ -6,7 +6,7 @@ use LaravelEnso\MenuManager\app\Models\Menu;
 use LaravelEnso\PermissionManager\app\Models\Permission;
 use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
 use LaravelEnso\RoleManager\app\Models\Role;
-use LaravelEnso\StructureManager\app\Interfaces\EnsoStructure;
+use LaravelEnso\StructureManager\app\Contracts\EnsoStructure;
 
 class Creator extends Structure implements EnsoStructure
 {

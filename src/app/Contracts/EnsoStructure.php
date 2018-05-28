@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Interfaces;
+namespace LaravelEnso\StructureManager\app\Contracts;
 
 interface EnsoStructure
 {
