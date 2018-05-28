@@ -9,8 +9,8 @@ use LaravelEnso\StructureManager\app\Exceptions\EnsoStructureException;
 abstract class Structure
 {
     private const PermissionGroupAttributes = ['name', 'description'];
-    private const PermissionAttributes = ['name', 'description', 'type', 'default'];
-    private const MenuAttributes = ['name', 'icon', 'link', 'order', 'has_children'];
+    private const PermissionAttributes = ['name', 'description', 'type', 'is_default'];
+    private const MenuAttributes = ['name', 'icon', 'link', 'order_index', 'has_children'];
 
     protected $permissionGroup = null;
     protected $permissions = null;

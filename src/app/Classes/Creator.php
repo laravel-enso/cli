@@ -55,6 +55,10 @@ class Creator extends Structure implements EnsoStructure
 
         (Permission::create($permission))
             ->roles()
-            ->attach($permission['default'] ? $this->roles : $this->defaultRole);
+            ->attach(
+                $permission['is_default']
+                    ? $this->roles
+                    : $this->defaultRole
+            );
     }
 }
