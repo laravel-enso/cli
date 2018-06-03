@@ -24,8 +24,10 @@ class Destroyer extends Structure implements EnsoStructure
     {
         Permission::whereIn('name', array_column($permissions, 'name'))
             ->get()
-            ->each
-            ->delete();
+            ->each(function ($permission) {
+                $permission->roles()->detach();
+                $permission->delete();
+            });
     }
 
     public function handlePermissionGroup($permissionGroup)

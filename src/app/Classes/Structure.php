@@ -78,8 +78,7 @@ abstract class Structure
 
     private function validatesPermissions($permissions)
     {
-        return !is_null($this->permissionGroup)
-            && is_array($permissions)
+        return is_array($permissions)
             && !empty($permissions)
             && collect($permissions)
                 ->filter(function ($permission) {
