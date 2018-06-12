@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel-enso/core": "2.9.*",
+        "laravel-enso/core": "2.10.*",
         "laravel-enso/menumanager": "2.1.*",
         "laravel-enso/permissionmanager": "2.1.*",
         "laravel-enso/rolemanager": "2.2.*"
