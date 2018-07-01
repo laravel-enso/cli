@@ -1,0 +1,1 @@
+        ['name' => '${prefix}.initTable', 'description' => 'Init table for ${model}', 'type' => 0, 'is_default' => false],

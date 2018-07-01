@@ -28,5 +28,13 @@
         "psr-4": {
             "LaravelEnso\\StructureManager\\": "src/"
         }
-    }
+    },
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "LaravelEnso\\StructureManager\\AppServiceProvider"
+                ],
+                "aliases": {}
+            }
+        }
 }

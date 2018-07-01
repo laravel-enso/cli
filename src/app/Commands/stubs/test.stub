@@ -1,0 +1,36 @@
+{
+    "model": {
+        "name": "Project"
+    },
+    "permissionGroup": {
+        "name": "administration.projects"
+    },
+    "permissions": {
+        "index": false,
+        "create": false,
+        "store": false,
+        "show": false,
+        "edit": false,
+        "update": false,
+        "destroy": false,
+        "initTable": false,
+        "getTableData": false,
+        "exportExcel": false,
+        "selectOptions": false
+    },
+    "menu": {
+        "name": "Projects",
+        "icon": "envelope",
+        "parentMenu": "Administration",
+        "link": "administration.projects.index",
+        "order_index": 0,
+        "has_children": false
+    },
+    "files": {
+        "routes": true,
+        "views": true,
+        "form": true,
+        "table": true,
+        "select": true
+    }
+}

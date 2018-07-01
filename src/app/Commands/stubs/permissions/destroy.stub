@@ -1,0 +1,1 @@
+        ['name' => '${prefix}.destroy', 'description' => 'Delete ${model}', 'type' => 1, 'is_default' => false],

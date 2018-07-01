@@ -1,0 +1,1 @@
+        ['name' => '${prefix}.store', 'description' => 'Store a new ${model}', 'type' => 1, 'is_default' => false],
