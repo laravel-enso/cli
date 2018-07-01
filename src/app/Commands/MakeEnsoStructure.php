@@ -16,7 +16,7 @@ class MakeEnsoStructure extends Command
         'Permissions',
         'Menu',
         'Files',
-        'Generate'
+        'Generate',
     ];
 
     protected $signature = 'enso:make:structure';
@@ -162,7 +162,7 @@ class MakeEnsoStructure extends Command
 
     private function setChoices()
     {
-        $this->choices = new Obj;
+        $this->choices = new Obj();
 
         $this->choices()->each(function ($choice) {
             $this->choices->set(

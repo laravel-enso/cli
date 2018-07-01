@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'requires' => ['Menu', 'Permissions'],
+    'requires'   => ['Menu', 'Permissions'],
     'attributes' => [
         'routes' => false,
-        'views' => false,
-        'form' => false,
-        'table' => false,
+        'views'  => false,
+        'form'   => false,
+        'table'  => false,
         'select' => false,
-    ]
+    ],
 ];

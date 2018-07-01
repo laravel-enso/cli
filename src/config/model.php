@@ -3,5 +3,5 @@
 return [
     'attributes' => [
         'name' => null,
-    ]
+    ],
 ];

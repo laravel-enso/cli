@@ -33,17 +33,16 @@ class Writer
         $path = database_path('migrations/'.$this->migrationName);
 
         \File::put($path, $migration);
-
     }
 
     private function replaceArray()
     {
         return [
             'CreateStructureForClass' => $this->class(),
-            '$menu' => $this->menu(),
-            '$parentMenu' => $this->parentMenu(),
-            '$permissionGroup' => $this->permissionGroup(),
-            '$permissions' => $this->permissions(),
+            '$menu'                   => $this->menu(),
+            '$parentMenu'             => $this->parentMenu(),
+            '$permissionGroup'        => $this->permissionGroup(),
+            '$permissions'            => $this->permissions(),
         ];
     }
 
@@ -99,35 +98,34 @@ class Writer
                 $group->values(),
                 $this->stub('permissionGroup')
             );
-
         }
-            
+
         return isset($stub)
             ? '$permissionGroup = '.$stub
             : null;
     }
-    
+
     private function permissions()
     {
         if ($this->structure->has('permissions')) {
             $permissions = $this->structure->get('permissions');
 
             $stub = collect($permissions->keys())
-                ->filter(function($permission) use ($permissions) {
+                ->filter(function ($permission) use ($permissions) {
                     return $permissions->$permission;
-                })->reduce(function($stub, $permission) {
+                })->reduce(function ($stub, $permission) {
                     return $stub.PHP_EOL
                     .str_replace(
                         ['${model}', '${prefix}'],
                         [
                             strtolower($this->model()),
-                            $this->structure->get('permissionGroup')->get('name')
+                            $this->structure->get('permissionGroup')->get('name'),
                         ],
                         $this->stub('permissions/'.$permission)
                     );
-            }, '');
+                }, '');
         }
-            
+
         return isset($stub)
             ? '$permissions = ['.$stub.PHP_EOL.'    ]'
             : null;
@@ -158,14 +156,14 @@ class Writer
 
     private function keyMappings($keys)
     {
-        return collect($keys)->map(function($key) {
+        return collect($keys)->map(function ($key) {
             return '${'.$key.'}';
         })->toArray();
     }
-    
+
     private function writableValues($values)
     {
-        return collect($values)->map(function($value) {
+        return collect($values)->map(function ($value) {
             if (is_bool($value)) {
                 return $value
                     ? 'true'
@@ -175,8 +173,6 @@ class Writer
             return $value;
         })->toArray();
     }
-
-
 
     private function stub($stub)
     {
