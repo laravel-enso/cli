@@ -134,7 +134,7 @@ class MakeEnsoStructure extends Command
 
     private function enforceStyle($value, $choice)
     {
-        if($choice === 'Model') {
+        if ($choice === 'Model') {
             $value = ucfirst($value);
         }
 
@@ -224,7 +224,7 @@ class MakeEnsoStructure extends Command
 
     private function write()
     {
-         collect($this->choices->keys())
+        collect($this->choices->keys())
              ->each(function ($key) {
                  if (!$this->configured->first(function ($attribute) use ($key) {
                      return camel_case($attribute) === $key;
@@ -245,9 +245,8 @@ class MakeEnsoStructure extends Command
         $this->choices = new Obj((array) json_decode(\File::get(__DIR__.'/stubs/test.stub')));
 
         collect($this->choices)->keys()
-            ->each(function($choice) {
+            ->each(function ($choice) {
                 $this->choices->set($choice, new Obj((array) $this->choices->get($choice)));
             });
     }
-
 }

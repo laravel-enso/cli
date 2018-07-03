@@ -3,18 +3,16 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/3/18
- * Time: 10:20 AM
+ * Time: 10:20 AM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesWriter
 {
-
     const ROUTES_SEGMENT = 'assets/js/routes';
     const CRUD_OPERATIONS = ['create', 'edit', 'index', 'show'];
 
@@ -77,7 +75,7 @@ class RoutesWriter
 
     private function writeSegmentRoute($segment, $depth)
     {
-        $segmentFilePath = $this->segmentPath . DIRECTORY_SEPARATOR . $segment . '.js';
+        $segmentFilePath = $this->segmentPath.DIRECTORY_SEPARATOR.$segment.'.js';
 
         if (!File::exists($segmentFilePath)) {
             $template = $this->readTemplate('segment');
@@ -92,7 +90,7 @@ class RoutesWriter
             File::put($segmentFilePath, $content);
         }
 
-        $this->segmentPath .= DIRECTORY_SEPARATOR . $segment;
+        $this->segmentPath .= DIRECTORY_SEPARATOR.$segment;
     }
 
     private function writeFinalSegmentRoute($segment, $depth)
@@ -108,12 +106,12 @@ class RoutesWriter
             $template
         );
 
-        File::put($this->segmentPath . DIRECTORY_SEPARATOR . $segment . '.js', $content);
+        File::put($this->segmentPath.DIRECTORY_SEPARATOR.$segment.'.js', $content);
     }
 
     private function writeCrudRoute($operation)
     {
-        $template = $this->readTemplate('crud' . DIRECTORY_SEPARATOR . $operation);
+        $template = $this->readTemplate('crud'.DIRECTORY_SEPARATOR.$operation);
         $replaceArray = $this->buildCrudArray();
 
         //replace tokens
@@ -123,13 +121,13 @@ class RoutesWriter
             $template
         );
 
-        File::put($this->crudPath . DIRECTORY_SEPARATOR . $operation . '.js', $content);
+        File::put($this->crudPath.DIRECTORY_SEPARATOR.$operation.'.js', $content);
     }
 
     private function setPaths()
     {
         $routesPath = str_replace('.', DIRECTORY_SEPARATOR, $this->structure->permissionGroup->name);
-        $this->crudPath = resource_path(self::ROUTES_SEGMENT . DIRECTORY_SEPARATOR . $routesPath);
+        $this->crudPath = resource_path(self::ROUTES_SEGMENT.DIRECTORY_SEPARATOR.$routesPath);
         $this->segmentPath = resource_path(self::ROUTES_SEGMENT);
     }
 
@@ -141,7 +139,7 @@ class RoutesWriter
 
     private function readTemplate($stub)
     {
-        return File::get(__DIR__ . '/../stubs/routes/' . $stub . '.stub');
+        return File::get(__DIR__.'/../stubs/routes/'.$stub.'.stub');
     }
 
     private function buildCrudArray()
