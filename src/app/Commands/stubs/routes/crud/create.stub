@@ -1,7 +1,7 @@
-const ${Model}Create = () => import('../../../pages/${segment}/${models}/Create.vue');
+const ${Model}Create = () => import('../../../pages/${pathSegment}/Create.vue');
 
 export default {
-    name: '${segment}.${models}.create',
+    name: '${nameSegment}.create',
     path: 'create',
     component: ${Model}Create,
     meta: {

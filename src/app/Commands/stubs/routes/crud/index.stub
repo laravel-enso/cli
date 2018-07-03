@@ -1,7 +1,7 @@
-const ${Model}Index = () => import('../../../pages/${segment}/${models}/Index.vue');
+const ${Model}Index = () => import('../../../pages/${pathSegment}/Index.vue');
 
 export default {
-    name: '${segment}.${models}.index',
+    name: '${nameSegment}.index',
     path: '',
     component: ${Models}Index,
     meta: {

@@ -1,7 +1,7 @@
-const ${Model}Edit = () => import('../../../pages/${segment}/${models}/Edit.vue');
+const ${Model}Edit = () => import('../../../pages/${pathSegment}/Edit.vue');
 
 export default {
-    name: '${segment}.${models}.edit',
+    name: '${nameSegment}.edit',
     path: ':id/edit',
     component: ${Model}Edit,
     meta: {

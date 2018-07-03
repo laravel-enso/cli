@@ -1,7 +1,7 @@
-const ${Model}Show = () => import('../../../pages/${segment}/${models}/Show.vue');
+const ${Model}Show = () => import('../../../pages/${pathSegment}/Show.vue');
 
 export default {
-    name: '${segment}.${models}.show',
+    name: '${nameSegment}.show',
     path: ':id',
     component: ${Model}Show,
     meta: {

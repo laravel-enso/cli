@@ -100,8 +100,8 @@ class MakeEnsoStructure extends Command
         $config = $this->choices->get(camel_case($choice));
 
         collect($config->keys())
-            ->each(function ($key) use ($config) {
-                $input = $this->input($config, $key);
+            ->each(function ($key) use ($config, $choice) {
+                $input = $this->input($config, $key, $choice);
                 $config->set($key, $input);
             });
 
@@ -110,13 +110,15 @@ class MakeEnsoStructure extends Command
         }
     }
 
-    private function input($config, $key)
+    private function input($config, $key, $choice)
     {
         $type = gettype($config->get($key));
 
         $value = is_bool($config->get($key))
             ? $this->confirm($key)
             : $this->anticipate($key, [$config->get($key)]);
+
+        $value = $this->enforceStyle($value, $choice);
 
         if ($this->isValid($type, $value)) {
             return $type === 'integer'
@@ -128,6 +130,15 @@ class MakeEnsoStructure extends Command
         sleep(1);
 
         return $this->input($config, $key);
+    }
+
+    private function enforceStyle($value, $choice)
+    {
+        if($choice === 'Model') {
+            $value = ucfirst($value);
+        }
+
+        return $value;
     }
 
     private function isValid($type, $value)
@@ -199,31 +210,44 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
-        if ($this->configured->isEmpty()) {
-            $this->error('There is nothing configured yet!');
-            $this->line('');
-            sleep(1);
-            $this->index();
+        // if ($this->configured->isEmpty()) {
+        //     $this->error('There is nothing configured yet!');
+        //     $this->line('');
+        //     sleep(1);
+        //     $this->index();
 
-            return;
-        }
+        //     return;
+        // }
 
         $this->write();
     }
 
     private function write()
     {
-        collect($this->choices->keys())
-            ->each(function ($key) {
-                if (!$this->configured->first(function ($attribute) use ($key) {
-                    return camel_case($attribute) === $key;
-                })) {
-                    $this->choices->forget($key);
-                }
-            });
+         collect($this->choices->keys())
+             ->each(function ($key) {
+                 if (!$this->configured->first(function ($attribute) use ($key) {
+                     return camel_case($attribute) === $key;
+                 })) {
+                     $this->choices->forget($key);
+                 }
+             });
+
+        //$this->readTestConfiguration();
 
         (new Writer($this->choices))->run();
 
         $this->info('The new structure is created, start playing');
     }
+
+    private function readTestConfiguration()
+    {
+        $this->choices = new Obj((array) json_decode(\File::get(__DIR__.'/stubs/test.stub')));
+
+        collect($this->choices)->keys()
+            ->each(function($choice) {
+                $this->choices->set($choice, new Obj((array) $this->choices->get($choice)));
+            });
+    }
+
 }
