@@ -8,7 +8,7 @@ export default {
     component: RouterView,
     meta: {
         breadcrumb: '${segment}',
-        route: '${route}'',
+        route: '${route}',
     },
     children: routes,
 };

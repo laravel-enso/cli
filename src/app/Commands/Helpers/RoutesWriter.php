@@ -20,12 +20,14 @@ class RoutesWriter
 
     private $structure;
     private $crudPath;
+    private $crudDepth;
     private $segmentPath;
 
     public function __construct(Obj $structure)
     {
         $this->structure = $structure;
         $this->setPaths();
+        $this->setCrudDepth();
     }
 
     public function run()
@@ -46,6 +48,7 @@ class RoutesWriter
 
     private function writeCrudRoutes()
     {
+
         //filter operations of interest & selected by the user
         $ops = collect($this->structure->permissions->toArray());
         $validOps = $ops->filter(function ($value, $key) {
@@ -60,7 +63,7 @@ class RoutesWriter
 
     private function writeSegmentRoutes()
     {
-        $segments = explode('.',$this->structure->permissionGroup->name);
+        $segments = explode('.', $this->structure->permissionGroup->name);
         $finalSegment = array_pop($segments);
 
         $depth = 0;
@@ -74,11 +77,9 @@ class RoutesWriter
 
     private function writeSegmentRoute($segment, $depth)
     {
-
         $segmentFilePath = $this->segmentPath . DIRECTORY_SEPARATOR . $segment . '.js';
 
-        if(!File::exists($segmentFilePath)) {
-
+        if (!File::exists($segmentFilePath)) {
             $template = $this->readTemplate('segment');
             $replaceArray = $this->buildSegmentArray($segment, $depth);
 
@@ -132,6 +133,12 @@ class RoutesWriter
         $this->segmentPath = resource_path(self::ROUTES_SEGMENT);
     }
 
+    private function setCrudDepth()
+    {
+        $segments = explode('.', $this->structure->permissionGroup->name);
+        $this->crudDepth = count($segments);
+    }
+
     private function readTemplate($stub)
     {
         return File::get(__DIR__ . '/../stubs/routes/' . $stub . '.stub');
@@ -144,6 +151,7 @@ class RoutesWriter
             '${Models}'      => $this->getModelsString(),
             '${pathSegment}' => str_replace('.', DIRECTORY_SEPARATOR, $this->structure->permissionGroup->name),
             '${nameSegment}' => $this->structure->permissionGroup->name,
+            '${depth}'       => str_repeat('../', $this->crudDepth),
         ];
     }
 
@@ -152,12 +160,12 @@ class RoutesWriter
         return str_plural($this->structure->model->name);
     }
 
-    private function buildSegmentArray($segment, $depth, $route='')
+    private function buildSegmentArray($segment, $depth, $route = '')
     {
         return [
             '${segment}' => $segment,
-            '${depth}' => str_repeat('../', $depth),
-            '${route}' => $route,
+            '${depth}'   => str_repeat('../', $depth),
+            '${route}'   => $route,
         ];
     }
 }

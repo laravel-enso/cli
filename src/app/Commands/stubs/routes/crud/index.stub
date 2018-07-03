@@ -1,4 +1,4 @@
-const ${Model}Index = () => import('../../../pages/${pathSegment}/Index.vue');
+const ${Model}Index = () => import('${depth}../pages/${pathSegment}/Index.vue');
 
 export default {
     name: '${nameSegment}.index',

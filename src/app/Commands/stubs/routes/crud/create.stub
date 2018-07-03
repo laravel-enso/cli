@@ -1,4 +1,4 @@
-const ${Model}Create = () => import('../../../pages/${pathSegment}/Create.vue');
+const ${Model}Create = () => import('${depth}../pages/${pathSegment}/Create.vue');
 
 export default {
     name: '${nameSegment}.create',

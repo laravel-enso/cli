@@ -1,6 +1,6 @@
 {
     "model": {
-        "name": "Tree"
+        "name": "Project"
     },
     "permissionGroup": {
         "name": "administration.projects.tree"
