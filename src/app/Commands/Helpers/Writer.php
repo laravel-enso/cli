@@ -2,8 +2,10 @@
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers;
 
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
+//should be renamed to migration writer or similar
 class Writer
 {
     private $structure;
@@ -32,7 +34,7 @@ class Writer
 
         $path = database_path('migrations/'.$this->migrationName);
 
-        \File::put($path, $migration);
+        File::put($path, $migration);
     }
 
     private function replaceArray()
@@ -176,6 +178,6 @@ class Writer
 
     private function stub($stub)
     {
-        return \File::get(__DIR__.'/../stubs/'.$stub.'.stub');
+        return File::get(__DIR__.'/../stubs/'.$stub.'.stub');
     }
 }

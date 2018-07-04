@@ -4,9 +4,10 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\StructureManager\app\Classes\Helpers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Symbol;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writer;
-use LaravelEnso\StructureManager\app\Commands\Contextuals\Menu;
 
 class MakeEnsoStructure extends Command
 {
@@ -118,8 +119,6 @@ class MakeEnsoStructure extends Command
             ? $this->confirm($key)
             : $this->anticipate($key, [$config->get($key)]);
 
-        $value = $this->enforceStyle($value, $choice);
-
         if ($this->isValid($type, $value)) {
             return $type === 'integer'
                 ? intval($value)
@@ -132,14 +131,7 @@ class MakeEnsoStructure extends Command
         return $this->input($config, $key);
     }
 
-    private function enforceStyle($value, $choice)
-    {
-        if($choice === 'Model') {
-            $value = ucfirst($value);
-        }
 
-        return $value;
-    }
 
     private function isValid($type, $value)
     {
@@ -210,14 +202,16 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
-        // if ($this->configured->isEmpty()) {
-        //     $this->error('There is nothing configured yet!');
-        //     $this->line('');
-        //     sleep(1);
-        //     $this->index();
+         if ($this->configured->isEmpty()) {
+             $this->error('There is nothing configured yet!');
+             $this->line('');
+             sleep(1);
+             $this->index();
 
-        //     return;
-        // }
+             return;
+         }
+
+        $this->validate();
 
         $this->write();
     }
@@ -236,6 +230,7 @@ class MakeEnsoStructure extends Command
         //$this->readTestConfiguration();
 
         (new Writer($this->choices))->run();
+        (new RoutesWriter($this->choices))->run();
 
         $this->info('The new structure is created, start playing');
     }
@@ -248,6 +243,11 @@ class MakeEnsoStructure extends Command
             ->each(function($choice) {
                 $this->choices->set($choice, new Obj((array) $this->choices->get($choice)));
             });
+    }
+
+    private function validate()
+    {
+        (new ModelValidator($this->choices))->run();
     }
 
 }

@@ -1,14 +1,11 @@
-import routeImporter from '${depth}../modules/importers/routeImporter';
-
-const routes = routeImporter(require.context('./${segment}', false, /.*\.js$/));
-const RouterView = () => import('${depth}../core/Router.vue');
+const ${Model}Index = () => import('${depth}../pages/${pathSegment}/Index.vue');
 
 export default {
-    path: '/${segment}',
-    component: RouterView,
+    name: '${nameSegment}.index',
+    path: '',
+    component: ${Model}Index,
     meta: {
-        breadcrumb: '${segment}',
-        route: '${route}',
+        breadcrumb: 'index',
+        title: '${Model} Index',
     },
-    children: routes,
 };
