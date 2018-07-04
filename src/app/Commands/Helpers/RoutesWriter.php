@@ -48,7 +48,7 @@ class RoutesWriter
             ->filter(function ($chosen, $operation) {
                 return $chosen && in_array($operation, self::OPERATIONS);
             })->keys()
-            ->each(function($operation) {
+            ->each(function ($operation) {
                 $this->writeCrudRoute($operation);
             });
     }
@@ -61,7 +61,7 @@ class RoutesWriter
                 ->get('name')
         );
 
-        collect($segments)->each(function($segment, $depth) {
+        collect($segments)->each(function ($segment, $depth) {
             $this->writeSegmentRoute($segment, $depth);
         });
     }
@@ -107,7 +107,7 @@ class RoutesWriter
                 ->get('name')
         );
 
-        $this->crudPath = resource_path(self::ROUTES_SEGMENT . '/' . $routesPath);
+        $this->crudPath = resource_path(self::ROUTES_SEGMENT.'/'.$routesPath);
 
         $this->segmentPath = resource_path(self::ROUTES_SEGMENT);
     }

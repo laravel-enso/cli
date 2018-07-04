@@ -200,14 +200,14 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
-         if ($this->configured->isEmpty()) {
-             $this->error('There is nothing configured yet!');
-             $this->line('');
-             sleep(1);
-             $this->index();
+        if ($this->configured->isEmpty()) {
+            $this->error('There is nothing configured yet!');
+            $this->line('');
+            sleep(1);
+            $this->index();
 
-             return;
-         }
+            return;
+        }
 
         $this->validate();
 
