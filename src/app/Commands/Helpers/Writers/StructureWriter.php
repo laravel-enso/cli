@@ -180,9 +180,9 @@ class StructureWriter
     {
         return File::get(
             __DIR__
-            . DIRECTORY_SEPARATOR.'..'
-            . DIRECTORY_SEPARATOR.'..'
-            . DIRECTORY_SEPARATOR.'stubs'
-            . DIRECTORY_SEPARATOR.$stub.'.stub');
+            .DIRECTORY_SEPARATOR.'..'
+            .DIRECTORY_SEPARATOR.'..'
+            .DIRECTORY_SEPARATOR.'stubs'
+            .DIRECTORY_SEPARATOR.$stub.'.stub');
     }
 }

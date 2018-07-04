@@ -4,15 +4,14 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Symbol;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
 
 class MakeEnsoStructure extends Command
 {
-
     const Choices = [
         'Model',
         'Permission Group',

@@ -3,18 +3,16 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/4/18
- * Time: 4:16 PM
+ * Time: 4:16 PM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class PagesWriter
 {
-
     const ROUTES_SEGMENT = 'assets/js/pages';
     const OPERATIONS = ['create', 'edit', 'index', 'show'];
 
@@ -85,7 +83,6 @@ class PagesWriter
             array_values($replaceArray),
             $this->template($operation)
         );
-
 
         $fileName = $this->path.DIRECTORY_SEPARATOR.ucfirst($operation).'.vue';
         File::put($fileName, $content);
