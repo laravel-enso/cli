@@ -2,7 +2,7 @@
 
     <vue-table class="box"
         :path="path"
-        id="users"/>
+        id="${models}"/>
 
 </template>
 
@@ -15,9 +15,12 @@ export default {
 
     data() {
         return {
-            path: route('administration.users.initTable'),
+            path: route('${initTable}'),
         };
     },
 };
 
 </script>
+
+<style lang="scss">
+</style>

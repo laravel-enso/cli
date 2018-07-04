@@ -3,18 +3,16 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/3/18
- * Time: 10:20 AM
+ * Time: 10:20 AM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesWriter
 {
-
     const ROUTES_SEGMENT = 'assets/js/routes';
     const OPERATIONS = ['create', 'edit', 'index', 'show'];
 
@@ -70,7 +68,7 @@ class RoutesWriter
 
     private function writeSegmentRoute($segment, $depth)
     {
-        $segmentFilePath = $this->segmentPath . DIRECTORY_SEPARATOR . $segment . '.js';
+        $segmentFilePath = $this->segmentPath.DIRECTORY_SEPARATOR.$segment.'.js';
 
         if (!File::exists($segmentFilePath)) {
             $replaceArray = $this->segmentArray($segment, $depth);
@@ -97,7 +95,7 @@ class RoutesWriter
             $this->template($operation)
         );
 
-        File::put($this->crudPath . DIRECTORY_SEPARATOR . $operation . '.js', $content);
+        File::put($this->crudPath.DIRECTORY_SEPARATOR.$operation.'.js', $content);
     }
 
     private function setPaths()
@@ -110,6 +108,7 @@ class RoutesWriter
         );
 
         $this->crudPath = resource_path(self::ROUTES_SEGMENT . '/' . $routesPath);
+
         $this->segmentPath = resource_path(self::ROUTES_SEGMENT);
     }
 

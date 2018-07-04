@@ -11,11 +11,10 @@ use Tests\TestCase;
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/3/18
- * Time: 10:35 AM
+ * Time: 10:35 AM.
  */
 class RoutesGenerationTest extends TestCase
 {
-
     private $FOLDER_PATH;
     private $structure;
 
@@ -32,12 +31,11 @@ class RoutesGenerationTest extends TestCase
         $this->setFolderPath();
         $this->setupStructure();
         $this->generateRoutes();
-
     }
 
     private function setupStructure(): void
     {
-        $this->structure = new Obj((array) json_decode(File::get(__DIR__ . '/../../src/app/Commands/stubs/test.stub')));
+        $this->structure = new Obj((array) json_decode(File::get(__DIR__.'/../../src/app/Commands/stubs/test.stub')));
 
         collect($this->structure)->keys()
             ->each(function ($choice) {
