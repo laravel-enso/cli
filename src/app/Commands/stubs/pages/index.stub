@@ -8,14 +8,14 @@
 
 <script>
 
-import VueTable from '../../../components/enso/vuedatatable/VueTable.vue';
+import VueTable from '${depth}../components/enso/vuedatatable/VueTable.vue';
 
 export default {
     components: { VueTable },
 
     data() {
         return {
-            path: route('${initTable}'),
+            path: route('${routeName}.initTable'),
         };
     },
 };

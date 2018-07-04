@@ -4,13 +4,15 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Helpers\RoutesWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Symbol;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writer;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
 
 class MakeEnsoStructure extends Command
 {
+
     const Choices = [
         'Model',
         'Permission Group',
@@ -88,9 +90,9 @@ class MakeEnsoStructure extends Command
             ->each(function ($key) use ($config) {
                 $this->line(
                     $key.' => '.(
-                        is_bool($config->get($key))
-                            ? Symbol::bool($config->get($key))
-                            : $config->get($key)
+                    is_bool($config->get($key))
+                        ? Symbol::bool($config->get($key))
+                        : $config->get($key)
                     )
                 );
             });
@@ -200,14 +202,14 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
-         if ($this->configured->isEmpty()) {
-             $this->error('There is nothing configured yet!');
-             $this->line('');
-             sleep(1);
-             $this->index();
+        if ($this->configured->isEmpty()) {
+            $this->error('There is nothing configured yet!');
+            $this->line('');
+            sleep(1);
+            $this->index();
 
-             return;
-         }
+            return;
+        }
 
         $this->validate();
 
@@ -217,18 +219,25 @@ class MakeEnsoStructure extends Command
     private function write()
     {
         collect($this->choices->keys())
-             ->each(function ($key) {
-                 if (!$this->configured->first(function ($attribute) use ($key) {
-                     return camel_case($attribute) === $key;
-                 })) {
-                     $this->choices->forget($key);
-                 }
-             });
+            ->each(function ($key) {
+                if (!$this->configured->first(function ($attribute) use ($key) {
+                    return camel_case($attribute) === $key;
+                })) {
+                    $this->choices->forget($key);
+                }
+            });
 
         //$this->readTestConfiguration();
 
-        (new Writer($this->choices))->run();
-        (new RoutesWriter($this->choices))->run();
+        (new StructureWriter($this->choices))->run();
+
+        if ($this->selectedRoutes()) {
+            (new RoutesWriter($this->choices))->run();
+        }
+
+        if ($this->selectedViews()) {
+            (new PagesWriter($this->choices))->run();
+        }
 
         $this->info('The new structure is created, start playing');
     }
@@ -246,5 +255,19 @@ class MakeEnsoStructure extends Command
     private function validate()
     {
         (new ModelValidator($this->choices))->run();
+    }
+
+    private function selectedRoutes()
+    {
+        return $this->choices
+            ->get('files')
+            ->get('routes');
+    }
+
+    private function selectedViews()
+    {
+        return $this->choices
+            ->get('files')
+            ->get('views');
     }
 }

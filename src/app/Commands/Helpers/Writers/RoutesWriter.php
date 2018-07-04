@@ -6,7 +6,7 @@
  * Time: 10:20 AM.
  */
 
-namespace LaravelEnso\StructureManager\app\Classes\Helpers;
+namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
@@ -126,8 +126,11 @@ class RoutesWriter
     private function template($operation)
     {
         return File::get(
-            __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR
-            .'stubs'.DIRECTORY_SEPARATOR.'routes'
+            __DIR__
+            .DIRECTORY_SEPARATOR.'..'
+            .DIRECTORY_SEPARATOR.'..'
+            .DIRECTORY_SEPARATOR.'stubs'
+            .DIRECTORY_SEPARATOR.'routes'
             .DIRECTORY_SEPARATOR.$operation.'.stub'
         );
     }

@@ -1,12 +1,12 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Classes\Helpers;
+namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 //should be renamed to migration writer or similar
-class Writer
+class StructureWriter
 {
     private $structure;
     private $migrationName;
@@ -178,6 +178,11 @@ class Writer
 
     private function stub($stub)
     {
-        return File::get(__DIR__.'/../stubs/'.$stub.'.stub');
+        return File::get(
+            __DIR__
+            . DIRECTORY_SEPARATOR.'..'
+            . DIRECTORY_SEPARATOR.'..'
+            . DIRECTORY_SEPARATOR.'stubs'
+            . DIRECTORY_SEPARATOR.$stub.'.stub');
     }
 }

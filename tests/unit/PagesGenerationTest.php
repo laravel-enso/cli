@@ -4,7 +4,7 @@ namespace LaravelEnso\StructureManager\tests\unit;
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
 use Tests\TestCase;
 
 /**
@@ -13,7 +13,7 @@ use Tests\TestCase;
  * Date: 7/3/18
  * Time: 10:35 AM.
  */
-class RoutesGenerationTest extends TestCase
+class PagesGenerationTest extends TestCase
 {
     private $FOLDER_PATH;
     private $structure;
@@ -30,7 +30,7 @@ class RoutesGenerationTest extends TestCase
 
         $this->setFolderPath();
         $this->setupStructure();
-        $this->generateRoutes();
+        $this->generatePages();
     }
 
     private function setupStructure(): void
@@ -43,14 +43,14 @@ class RoutesGenerationTest extends TestCase
             });
     }
 
-    private function generateRoutes(): void
+    private function generatePages(): void
     {
-        $routesWriter = new RoutesWriter($this->structure);
+        $routesWriter = new PagesWriter($this->structure);
         $routesWriter->run();
     }
 
     private function setFolderPath()
     {
-        $this->FOLDER_PATH = resource_path('assets/js/routes/administration/projects');
+        $this->FOLDER_PATH = resource_path('assets/js/pages/administration/projects');
     }
 }
