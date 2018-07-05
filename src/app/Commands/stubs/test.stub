@@ -27,6 +27,8 @@
         "has_children": false
     },
     "files": {
+        "model": true,
+        "migration": true,
         "routes": true,
         "views": true,
         "form": true,

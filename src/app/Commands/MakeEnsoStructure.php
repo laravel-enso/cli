@@ -6,12 +6,14 @@ use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Symbol;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\ModelAndMigrationWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
 
 class MakeEnsoStructure extends Command
 {
+
     const Choices = [
         'Model',
         'Permission Group',
@@ -238,6 +240,10 @@ class MakeEnsoStructure extends Command
             (new PagesWriter($this->choices))->run();
         }
 
+        if ($this->selectedModelOrMigration()) {
+            (new ModelAndMigrationWriter($this->choices))->run();
+        }
+
         $this->info('The new structure is created, start playing');
     }
 
@@ -268,5 +274,11 @@ class MakeEnsoStructure extends Command
         return $this->choices
             ->get('files')
             ->get('views');
+    }
+
+    private function selectedModelOrMigration()
+    {
+        return $this->choices->get('files')->get('model')
+            && $this->choices->get('files')->get('migration');
     }
 }
