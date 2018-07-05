@@ -13,7 +13,6 @@ use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
 
 class MakeEnsoStructure extends Command
 {
-
     const Choices = [
         'Model',
         'Permission Group',

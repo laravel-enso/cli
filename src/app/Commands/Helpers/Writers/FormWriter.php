@@ -3,18 +3,16 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/5/18
- * Time: 4:13 PM
+ * Time: 4:13 PM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class FormWriter
 {
-
     private $structure;
     private $builderPath;
     private $templatePath;
@@ -126,11 +124,11 @@ class FormWriter
         $model = $this->structure->get('model')->get('name');
 
         return [
-            '${pathSegment}' => $this->getPathSegment(),
+            '${pathSegment}'      => $this->getPathSegment(),
             '${namespaceSegment}' => $this->getNamespaceSegment(),
-            '${depth}' => str_repeat('../', $this->depth),
-            '${model}' => strtolower($model),
-            '${Model}' => $model,
+            '${depth}'            => str_repeat('../', $this->depth),
+            '${model}'            => strtolower($model),
+            '${Model}'            => $model,
         ];
     }
 
@@ -162,5 +160,5 @@ class FormWriter
         array_pop($segments);
 
         return str_replace('.', DIRECTORY_SEPARATOR, $permissionGroup);
-}
+    }
 }

@@ -3,11 +3,10 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/5/18
- * Time: 2:57 PM
+ * Time: 2:57 PM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
-
 
 use Illuminate\Support\Facades\Artisan;
 use LaravelEnso\Helpers\app\Classes\Obj;

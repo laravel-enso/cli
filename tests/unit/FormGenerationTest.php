@@ -15,7 +15,6 @@ use Tests\TestCase;
  */
 class FormGenerationTest extends TestCase
 {
-
     private $structure;
     private $builderPath;
     private $templatePath;
@@ -80,5 +79,4 @@ class FormGenerationTest extends TestCase
 
         return $segments;
     }
-
 }
