@@ -22,7 +22,7 @@
         "laravel-enso/core": "2.10.*",
         "laravel-enso/menumanager": "2.1.*",
         "laravel-enso/permissionmanager": "2.1.*",
-        "laravel-enso/rolemanager": "2.2.*"
+        "laravel-enso/rolemanager": "2.3.*"
     },
     "autoload": {
         "psr-4": {
