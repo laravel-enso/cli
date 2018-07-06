@@ -8,6 +8,7 @@ use LaravelEnso\StructureManager\app\Classes\Helpers\Symbol;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\ModelAndMigrationWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesGenerator;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\SelectWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
@@ -236,6 +237,7 @@ class MakeEnsoStructure extends Command
 
         if ($this->selectedRoutes()) {
             (new RoutesWriter($this->choices))->run();
+            (new RoutesGenerator($this->choices))->run();
         }
 
         if ($this->selectedViews()) {
