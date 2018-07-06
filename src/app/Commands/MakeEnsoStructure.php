@@ -9,7 +9,9 @@ use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\ModelAndMigrationWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\SelectWriter;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\TableWriter;
 
 class MakeEnsoStructure extends Command
 {
@@ -202,6 +204,9 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
+
+        //$this->readTestConfiguration();
+
         if ($this->configured->isEmpty()) {
             $this->error('There is nothing configured yet!');
             $this->line('');
@@ -227,8 +232,6 @@ class MakeEnsoStructure extends Command
                 }
             });
 
-        //$this->readTestConfiguration();
-
         (new StructureWriter($this->choices))->run();
 
         if ($this->selectedRoutes()) {
@@ -241,6 +244,14 @@ class MakeEnsoStructure extends Command
 
         if ($this->selectedModelOrMigration()) {
             (new ModelAndMigrationWriter($this->choices))->run();
+        }
+
+        if ($this->selectedTable()) {
+            (new TableWriter($this->choices))->run();
+        }
+
+        if ($this->selectedSelect()) {
+            (new SelectWriter($this->choices))->run();
         }
 
         $this->info('The new structure is created, start playing');
@@ -279,5 +290,15 @@ class MakeEnsoStructure extends Command
     {
         return $this->choices->get('files')->get('model')
             && $this->choices->get('files')->get('migration');
+    }
+
+    private function selectedTable()
+    {
+        return $this->choices->get('files')->get('table');
+    }
+
+    private function selectedSelect()
+    {
+        return $this->choices->get('files')->get('select');
     }
 }

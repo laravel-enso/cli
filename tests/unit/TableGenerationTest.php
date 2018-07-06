@@ -1,24 +1,27 @@
 <?php
-
-namespace LaravelEnso\StructureManager\tests\unit;
-
-use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\FormWriter;
-use Tests\TestCase;
-
 /**
  * Created with luv for spa2.
  * User: mihai
- * Date: 7/3/18
- * Time: 10:35 AM.
+ * Date: 7/6/18
+ * Time: 9:57 AM
  */
-class FormGenerationTest extends TestCase
+
+namespace LaravelEnso\StructureManager\tests\unit;
+
+
+use Illuminate\Support\Facades\File;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\TableWriter;
+use Tests\TestCase;
+
+class TableGenerationTest extends TestCase
 {
+
     private $structure;
     private $builderPath;
     private $templatePath;
     private $controllerPath;
+
 
     /** @test */
     public function testBuilderCreation()
@@ -44,7 +47,7 @@ class FormGenerationTest extends TestCase
 
         $this->setupStructure();
         $this->setFolderPaths();
-        $this->generateForm();
+        $this->generateTableElements();
     }
 
     private function setupStructure(): void
@@ -57,23 +60,16 @@ class FormGenerationTest extends TestCase
             });
     }
 
-    private function generateForm(): void
-    {
-        $formWriter = new FormWriter($this->structure);
-        $formWriter->run();
-    }
-
     private function setFolderPaths()
     {
         $model = $this->structure->get('model')->get('name');
         $permissionGroup = $this->structure->get('permissionGroup')->get('name');
 
         $segments = $this->getVariablePathSegment($permissionGroup);
-        $controllerSegments = $this->getControllerNamespaceSegments($permissionGroup);
 
-        $this->builderPath = app_path('Forms/Builders/'.implode('/', $segments).'/'.$model.'Form.php');
-        $this->templatePath = app_path('Forms/Templates/'.implode('/', $segments).'/'.strtolower($model).'.json');
-        $this->controllerPath = app_path('Http/Controllers/'.implode('/', $controllerSegments).'/'.$model.'Controller.php');
+        $this->builderPath = app_path('Tables/Builders/'.implode('/', $segments).'/'.$model.'Table.php');
+        $this->templatePath = app_path('Tables/Templates/'.implode('/', $segments).'/'.str_plural(strtolower($model)).'.json');
+        $this->controllerPath = app_path('Http/Controllers/'.implode('/', $segments).'/'.str_plural($model).'/'.$model.'TableController.php');
     }
 
     private function getVariablePathSegment($permissionGroup): array
@@ -89,14 +85,9 @@ class FormGenerationTest extends TestCase
         return $segments;
     }
 
-    private function getControllerNamespaceSegments($permissionGroup)
+    private function generateTableElements()
     {
-        $segments = collect(explode('.', $permissionGroup))
-            ->map(function ($segment) {
-                return ucfirst($segment);
-            })
-            ->toArray();
-
-        return $segments;
+        $formWriter = new TableWriter($this->structure);
+        $formWriter->run();
     }
 }

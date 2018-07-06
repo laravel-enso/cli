@@ -8,14 +8,17 @@
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class FormWriter
 {
+
     private $structure;
     private $builderPath;
     private $templatePath;
+    private $controllerPath;
     private $depth;
 
     public function __construct(Obj $structure)
@@ -38,18 +41,13 @@ class FormWriter
 
     private function setFilePaths()
     {
-        $permissionGroup = $this->structure->get('permissionGroup')->get('name');
-
-        $segments = collect(explode('.', $permissionGroup))
-            ->map(function ($segment) {
-                return ucfirst($segment);
-            })
-            ->toArray();
+        $segments = $this->ucfirstPermissionGroupSegments();
 
         array_pop($segments);
 
         $this->builderPath = app_path('Forms/Builders/'.implode('/', $segments));
         $this->templatePath = app_path('Forms/Templates/'.implode('/', $segments));
+        $this->controllerPath = app_path('Http/Controllers/'.implode('/', $this->ucfirstPermissionGroupSegments()));
     }
 
     public function run()
@@ -57,6 +55,8 @@ class FormWriter
         $this->createFolderStructure();
         $this->writeTemplate();
         $this->writeBuilder();
+        $this->writeRequest();
+        $this->writeController();
     }
 
     private function createFolderStructure()
@@ -67,6 +67,10 @@ class FormWriter
 
         if (!File::isDirectory($this->templatePath)) {
             File::makeDirectory($this->templatePath, 0755, true);
+        }
+
+        if (!File::isDirectory($this->controllerPath)) {
+            File::makeDirectory($this->controllerPath, 0755, true);
         }
     }
 
@@ -96,6 +100,20 @@ class FormWriter
         );
 
         File::put($this->builderPath.DIRECTORY_SEPARATOR.$model.'Form.php', $content);
+    }
+
+    private function writeController()
+    {
+        $model = $this->structure->get('model')->get('name');
+        $replaceArray = $this->controllerArray();
+
+        $content = str_replace(
+            array_keys($replaceArray),
+            array_values($replaceArray),
+            $this->template('controller')
+        );
+
+        File::put($this->controllerPath.DIRECTORY_SEPARATOR.$model.'Controller.php', $content);
     }
 
     private function template($file)
@@ -132,17 +150,32 @@ class FormWriter
         ];
     }
 
-    private function getNamespaceSegment()
+    private function controllerArray()
     {
+        $model = $this->structure->get('model')->get('name');
         $permissionGroup = $this->structure->get('permissionGroup')->get('name');
 
-        $segments = collect(explode('.', $permissionGroup))
-            ->map(function ($segment) {
-                return ucfirst($segment);
-            })
-            ->toArray();
+        return [
+            '${Model}' => $model,
+            '${model}' => strtolower($model),
+            '${routeSegment}' => $permissionGroup,
+            '${namespaceSegment}' => !$this->getNamespaceSegment() ?: $this->getNamespaceSegment().'\\',
+            '${controllerNamespaceSegment}' => $this->getControllerNamespaceSegment(),
+        ];
+    }
+
+    private function getNamespaceSegment()
+    {
+        $segments = $this->ucfirstPermissionGroupSegments();
 
         array_pop($segments);
+
+        return implode('\\', $segments);
+    }
+
+    private function getControllerNamespaceSegment()
+    {
+        $segments = $this->ucfirstPermissionGroupSegments();
 
         return implode('\\', $segments);
     }
@@ -151,14 +184,32 @@ class FormWriter
     {
         $permissionGroup = $this->structure->get('permissionGroup')->get('name');
 
+        return str_replace('.', DIRECTORY_SEPARATOR, $permissionGroup);
+    }
+
+    private function writeRequest()
+    {
+        $segments = $this->ucfirstPermissionGroupSegments();
+        $model = array_pop($segments);
+        $segments[] = 'Validate'.$model.'Request';
+
+        $params = [
+            'name' => implode('\\', $segments),
+        ];
+
+        Artisan::call('make:request', $params);
+    }
+
+    private function ucfirstPermissionGroupSegments(): array
+    {
+        $permissionGroup = $this->structure->get('permissionGroup')->get('name');
+
         $segments = collect(explode('.', $permissionGroup))
             ->map(function ($segment) {
                 return ucfirst($segment);
             })
             ->toArray();
 
-        array_pop($segments);
-
-        return str_replace('.', DIRECTORY_SEPARATOR, $permissionGroup);
+        return $segments;
     }
 }

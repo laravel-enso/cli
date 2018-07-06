@@ -1,0 +1,5 @@
+${padding}Route::namespace('${Segment}')
+${padding}    ->prefix('${segment}')->as('${segment}.')
+${padding}    ->group(function () {
+${inner}
+${padding}    });

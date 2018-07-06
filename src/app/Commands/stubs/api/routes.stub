@@ -1,0 +1,14 @@
+${padding}Route::namespace('${Models}')
+${padding}    ->prefix('${models}')->as('${models}.')
+${padding}    ->group(function () {
+${padding}        Route::get('initTable', '${Model}TableController@init')
+${padding}            ->name('initTable');
+${padding}        Route::get('getTableData', '${Model}TableController@data')
+${padding}            ->name('getTableData');
+${padding}        Route::get('exportExcel', '${Model}TableController@excel')
+${padding}            ->name('exportExcel');
+${padding}        Route::get('selectOptions', '${Model}SelectController@options')
+${padding}            ->name('selectOptions');
+${padding}    });
+${padding}
+${padding}Route::resource('${models}', '${Models}\${Model}Controller');

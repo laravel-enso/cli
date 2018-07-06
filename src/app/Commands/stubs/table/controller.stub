@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Http\Controllers\${controllerNamespaceSegment};
+
+use App\Tables\Builders\${namespaceSegment}\${Model}Table;
+use App\Http\Controllers\Controller;
+use LaravelEnso\VueDatatable\app\Traits\Excel;
+use LaravelEnso\VueDatatable\app\Traits\Datatable;
+
+class ${Model}TableController extends Controller
+{
+    use Datatable, Excel;
+
+    protected $tableClass = ${Model}Table::class;
+}

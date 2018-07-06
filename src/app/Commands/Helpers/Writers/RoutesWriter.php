@@ -13,6 +13,7 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesWriter
 {
+
     const ROUTES_SEGMENT = 'assets/js/routes';
     const OPERATIONS = ['create', 'edit', 'index', 'show'];
 
@@ -61,9 +62,13 @@ class RoutesWriter
                 ->get('name')
         );
 
+        $parentSegment = array_pop($segments);
+
         collect($segments)->each(function ($segment, $depth) {
             $this->writeSegmentRoute($segment, $depth);
         });
+
+        $this->writeParentSegmentRoute($parentSegment, count($segments));
     }
 
     private function writeSegmentRoute($segment, $depth)
@@ -77,6 +82,25 @@ class RoutesWriter
                 array_keys($replaceArray),
                 array_values($replaceArray),
                 $this->template('segment')
+            );
+
+            File::put($segmentFilePath, $content);
+        }
+
+        $this->segmentPath .= DIRECTORY_SEPARATOR.$segment;
+    }
+
+    private function writeParentSegmentRoute($segment, $depth)
+    {
+        $segmentFilePath = $this->segmentPath.DIRECTORY_SEPARATOR.$segment.'.js';
+
+        if (!File::exists($segmentFilePath)) {
+            $replaceArray = $this->segmentArray($segment, $depth);
+
+            $content = str_replace(
+                array_keys($replaceArray),
+                array_values($replaceArray),
+                $this->template('parentSegment')
             );
 
             File::put($segmentFilePath, $content);
@@ -149,9 +173,12 @@ class RoutesWriter
 
     private function segmentArray($segment, $depth)
     {
+        $permissionGroup = $this->structure->get('permissionGroup')->get('name');
+
         return [
             '${segment}' => $segment,
             '${depth}'   => str_repeat('../', $depth),
+            '${nameSegment}'   => $permissionGroup,
         ];
     }
 }
