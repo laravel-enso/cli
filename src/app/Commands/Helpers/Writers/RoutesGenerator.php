@@ -3,18 +3,16 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/6/18
- * Time: 3:28 PM
+ * Time: 3:28 PM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesGenerator
 {
-
     private $structure;
     private $routesPath;
 
@@ -129,9 +127,9 @@ class RoutesGenerator
         $model = $this->structure->get('model')->get('name');
 
         return [
-            '${Model}'  => $model,
+            '${Model}'   => $model,
             '${Models}'  => str_plural($model),
-            '${models}' => str_plural(strtolower($model)),
+            '${models}'  => str_plural(strtolower($model)),
         ];
     }
 

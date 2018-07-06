@@ -3,11 +3,10 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/6/18
- * Time: 9:57 AM
+ * Time: 9:57 AM.
  */
 
 namespace LaravelEnso\StructureManager\tests\unit;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
@@ -16,12 +15,10 @@ use Tests\TestCase;
 
 class TableGenerationTest extends TestCase
 {
-
     private $structure;
     private $builderPath;
     private $templatePath;
     private $controllerPath;
-
 
     /** @test */
     public function testBuilderCreation()

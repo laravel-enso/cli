@@ -14,7 +14,6 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class FormWriter
 {
-
     private $structure;
     private $builderPath;
     private $templatePath;
@@ -156,10 +155,10 @@ class FormWriter
         $permissionGroup = $this->structure->get('permissionGroup')->get('name');
 
         return [
-            '${Model}' => $model,
-            '${model}' => strtolower($model),
-            '${routeSegment}' => $permissionGroup,
-            '${namespaceSegment}' => !$this->getNamespaceSegment() ?: $this->getNamespaceSegment().'\\',
+            '${Model}'                      => $model,
+            '${model}'                      => strtolower($model),
+            '${routeSegment}'               => $permissionGroup,
+            '${namespaceSegment}'           => !$this->getNamespaceSegment() ?: $this->getNamespaceSegment().'\\',
             '${controllerNamespaceSegment}' => $this->getControllerNamespaceSegment(),
         ];
     }

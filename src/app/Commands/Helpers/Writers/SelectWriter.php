@@ -3,11 +3,10 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/6/18
- * Time: 12:02 PM
+ * Time: 12:02 PM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
@@ -63,7 +62,7 @@ class SelectWriter
 
         return [
             '${controllerNamespaceSegment}' => $this->getControllerNamespaceSegment(),
-            '${Model}' => $model,
+            '${Model}'                      => $model,
         ];
     }
 

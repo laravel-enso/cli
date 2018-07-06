@@ -3,18 +3,16 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 7/6/18
- * Time: 10:24 AM
+ * Time: 10:24 AM.
  */
 
 namespace LaravelEnso\StructureManager\app\Classes\Helpers\Writers;
-
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class TableWriter
 {
-
     private $structure;
     private $builderPath;
     private $templatePath;
@@ -132,7 +130,7 @@ class TableWriter
         $model = $this->structure->get('model')->get('name');
 
         return [
-            '${namespaceSegment}' => !$this->getNamespaceSegment() ? : '\\'.$this->getNamespaceSegment(),
+            '${namespaceSegment}' => !$this->getNamespaceSegment() ?: '\\'.$this->getNamespaceSegment(),
             '${Model}'            => $model,
             '${models}'           => str_plural(strtolower($model)),
             '${depth}'            => str_repeat('../', $this->depth),

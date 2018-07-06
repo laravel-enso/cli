@@ -13,7 +13,6 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesWriter
 {
-
     const ROUTES_SEGMENT = 'assets/js/routes';
     const OPERATIONS = ['create', 'edit', 'index', 'show'];
 
@@ -176,8 +175,8 @@ class RoutesWriter
         $permissionGroup = $this->structure->get('permissionGroup')->get('name');
 
         return [
-            '${segment}' => $segment,
-            '${depth}'   => str_repeat('../', $depth),
+            '${segment}'       => $segment,
+            '${depth}'         => str_repeat('../', $depth),
             '${nameSegment}'   => $permissionGroup,
         ];
     }
