@@ -1,0 +1,28 @@
+<?php
+
+namespace ${namespace};
+
+use App\${Model};
+use LaravelEnso\FormBuilder\app\Classes\Form;
+
+class ${Model}Form
+{
+    private const TemplatePath = __DIR__.'/${depth}Templates/${relativePath}/${model}.json';
+
+    private $form;
+
+    public function __construct()
+    {
+        $this->form = new Form(self::TemplatePath);
+    }
+
+    public function create()
+    {
+        return $this->form->create();
+    }
+
+    public function edit(${Model} $${model})
+    {
+        return $this->form->edit($${model});
+    }
+}

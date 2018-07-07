@@ -1,0 +1,11 @@
+const ${Model}Index = () => import('${depth}../pages/${relativePath}/Index.vue');
+
+export default {
+    name: '${prefix}.index',
+    path: '',
+    component: ${Model}Index,
+    meta: {
+        breadcrumb: 'index',
+        title: '${Model} Index',
+    },
+};

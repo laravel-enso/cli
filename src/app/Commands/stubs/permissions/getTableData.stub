@@ -1,1 +1,0 @@
-        ['name' => '${prefix}.getTableData', 'description' => 'Get table data for ${model}', 'type' => 0, 'is_default' => false],
