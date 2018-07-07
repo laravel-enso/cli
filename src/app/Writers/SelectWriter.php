@@ -46,7 +46,7 @@ class SelectWriter
     {
         $array = [
             '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
-            '${Model}' => $this->structure->get('model')->get('name'),
+            '${Model}'     => $this->structure->get('model')->get('name'),
         ];
 
         return [

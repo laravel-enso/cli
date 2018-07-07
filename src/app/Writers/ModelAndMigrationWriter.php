@@ -16,8 +16,8 @@ class ModelAndMigrationWriter
     public function run()
     {
         \Artisan::call('make:model', [
-            'name' => $this->choices->get('model')->get('name'),
-            '--force' => true,
+            'name'        => $this->choices->get('model')->get('name'),
+            '--force'     => true,
             '--migration' => $this->choices->get('files')->has('migration'),
         ]);
     }

@@ -63,7 +63,7 @@ class ViewsWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${depth}' => str_repeat('../', $this->depth),
+            '${depth}'           => str_repeat('../', $this->depth),
         ];
 
         return [

@@ -81,7 +81,7 @@ class FormWriter
 
         $array = [
             '${relativePath}' => $this->segments->slice(0, -1)->implode('/'),
-            '${namespace}' => 'App\\Forms\\Builders\\'
+            '${namespace}'    => 'App\\Forms\\Builders\\'
                 .$this->segments->slice(0, -1)->implode('\\'),
             '${depth}' => str_repeat('../', $this->segments->count()),
             '${model}' => strtolower($model),
@@ -105,7 +105,7 @@ class FormWriter
     private function writeRequest()
     {
         \Artisan::call('make:request', [
-            'name' => $this->request()
+            'name' => $this->request(),
         ]);
 
         return $this;
@@ -136,10 +136,10 @@ class FormWriter
         $model = $this->choices->get('model')->get('name');
 
         $array = [
-            '${Model}' => $model,
-            '${model}' => strtolower($model),
-            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
+            '${Model}'            => $model,
+            '${model}'            => strtolower($model),
+            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
             '${builderNamespace}' => 'App\\Forms\\Builders\\'.$this->segments->slice(0, -1)->implode('\\'),
             '${requestNamespace}' => 'App\\Http\\Requests\\'.$this->segments->slice(0, -1)->implode('\\'),
         ];

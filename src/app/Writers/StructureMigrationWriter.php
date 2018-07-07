@@ -27,16 +27,16 @@ class StructureMigrationWriter
     private function replaceFromTo()
     {
         $array = array_filter([
-            '${Entity}' => str_plural($this->entity()),
-            '${menu}' => $this->menu(),
-            '${parentMenu}' => $this->parentMenu(),
+            '${Entity}'          => str_plural($this->entity()),
+            '${menu}'            => $this->menu(),
+            '${parentMenu}'      => $this->parentMenu(),
             '${permissionGroup}' => $this->permissionGroup(),
-            '${permissions}' => $this->permissions(),
+            '${permissions}'     => $this->permissions(),
         ]);
 
         return [
             array_keys($array),
-            array_values($array)
+            array_values($array),
         ];
     }
 
@@ -117,7 +117,7 @@ class StructureMigrationWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}' => strtolower($this->model()),
+            '${model}'           => strtolower($this->model()),
         ];
 
         return [

@@ -4,12 +4,12 @@ namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\StructureManager\app\Writers\FormWriter;
-use LaravelEnso\StructureManager\app\Writers\TableWriter;
-use LaravelEnso\StructureManager\app\Writers\ViewsWriter;
+use LaravelEnso\StructureManager\app\Writers\ModelAndMigrationWriter;
 use LaravelEnso\StructureManager\app\Writers\RoutesWriter;
 use LaravelEnso\StructureManager\app\Writers\SelectWriter;
-use LaravelEnso\StructureManager\app\Writers\ModelAndMigrationWriter;
 use LaravelEnso\StructureManager\app\Writers\StructureMigrationWriter;
+use LaravelEnso\StructureManager\app\Writers\TableWriter;
+use LaravelEnso\StructureManager\app\Writers\ViewsWriter;
 
 class StructureWriter
 {
