@@ -1,0 +1,18 @@
+<?php
+
+namespace ${namespace};
+
+use App\${Model};
+use LaravelEnso\VueDatatable\app\Classes\Table;
+
+class ${Model}Table extends Table
+{
+    protected $templatePath = __DIR__.'/${depth}../Templates/${relativePath}/${models}.json';
+
+    public function query()
+    {
+        return ${Model}::select(\DB::raw('
+            ${models}.id as "dtRowId"
+        '));
+    }
+}

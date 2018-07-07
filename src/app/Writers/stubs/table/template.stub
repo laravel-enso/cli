@@ -1,0 +1,17 @@
+{
+    "routePrefix": "${permissionGroup}",
+    "readSuffix": "getTableData",
+    "name": "Registered ${Models}",
+    "icon": "${icon}",
+    "crtNo": true,
+    "buttons": ["excel", "create", "show", "edit", "destroy"],
+    "columns": [{
+        "label": "Id",
+        "name": "id",
+        "data": "${models}.id",
+        "meta": [
+            "searchable",
+            "sortable"
+        ]
+    }]
+}

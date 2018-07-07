@@ -4,19 +4,13 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Symbol;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Validators\ModelValidator;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\ModelAndMigrationWriter;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\PagesWriter;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesGenerator;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\RoutesWriter;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\SelectWriter;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\StructureWriter;
-use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\TableWriter;
+use LaravelEnso\StructureManager\app\Writers\Helpers\Symbol;
+use LaravelEnso\StructureManager\app\Classes\StructureWriter;
+use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
 
 class MakeEnsoStructure extends Command
 {
-    const Choices = [
+    const Menu = [
         'Model',
         'Permission Group',
         'Permissions',
@@ -26,26 +20,17 @@ class MakeEnsoStructure extends Command
     ];
 
     protected $signature = 'enso:make:structure';
-
     protected $description = 'Create a new Laravel Enso Structure';
 
     private $choices;
-
     private $configured;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->configured = collect();
-
-        $this->setChoices();
-    }
 
     public function handle()
     {
-        $this->info('Create a new Laravel Enso Structure');
+        $this->configured = collect();
+        $this->setChoices();
 
+        $this->info('Create a new Laravel Enso Structure');
         $this->line('');
 
         $this->index();
@@ -55,7 +40,7 @@ class MakeEnsoStructure extends Command
     {
         $this->status();
 
-        $choice = $this->choice('Choose element to configure', self::Choices);
+        $choice = $this->choice('Choose element to configure', self::Menu);
 
         if ($this->choices()->contains($choice)) {
             $this->fill($choice);
@@ -78,14 +63,14 @@ class MakeEnsoStructure extends Command
 
         $this->info(title_case($choice).' configuration:');
 
-        $this->showConfiguration($choice);
+        $this->displayConfiguration($choice);
 
         if ($this->confirm('Configure '.title_case($choice))) {
-            $this->setConfiguration($choice);
+            $this->updateConfiguration($choice);
         }
     }
 
-    private function showConfiguration($choice)
+    private function displayConfiguration($choice)
     {
         $config = $this->choices->get(camel_case($choice));
 
@@ -101,7 +86,7 @@ class MakeEnsoStructure extends Command
             });
     }
 
-    private function setConfiguration($choice)
+    private function updateConfiguration($choice)
     {
         $config = $this->choices->get(camel_case($choice));
 
@@ -145,11 +130,94 @@ class MakeEnsoStructure extends Command
 
     private function status()
     {
-        $this->line('Current configuration status:');
+        $this->info('Current configuration status:');
 
-        $status = $this->choices()->each(function ($choice) {
-            $this->line($choice.' '.(Symbol::bool($this->configured->contains($choice))));
+        $this->choices()->each(function ($choice) {
+            $this->line(
+                $choice.' '.(Symbol::bool($this->configured->contains($choice)))
+            );
         });
+    }
+
+    private function attemptWrite()
+    {
+        // $this->setTestConfig();
+
+        if ($this->configured->isEmpty()) {
+            $this->error('There is nothing configured yet!');
+            $this->line('');
+            sleep(1);
+            $this->index();
+
+            return;
+        }
+
+        $this->sanitize()
+            ->filter()
+            ->write()
+            ->output();
+    }
+
+    private function sanitize()
+    {
+        $this->choices->get('model')->set(
+            'name',
+            ucfirst($this->choices->get('model')->get('name'))
+        );
+
+        return $this;
+    }
+
+    private function filter()
+    {
+        collect($this->choices->keys())
+            ->each(function ($key) {
+                if ($this->configured->first(function ($attribute) use ($key) {
+                    return camel_case($attribute) === $key;
+                }) === null) {
+                    $this->choices->forget($key);
+                }
+            });
+
+        if ($this->choices->has('files')) {
+            collect($this->choices->get('files'))
+                ->each(function ($chosen, $type) {
+                    if (!$chosen) {
+                        $this->choices->get('files')->forget($key);
+                    }
+                });
+        }
+
+        return $this;
+    }
+
+    private function write()
+    {
+        (new StructureWriter($this->choices))
+            ->run();
+
+        return $this;
+    }
+
+    private function output()
+    {
+        if ($this->choices->has('permissions')) {
+            $routes = (new RoutesGenerator($this->choices))
+                ->run();
+
+            $this->info('Copy and paste the following code into your api.php routes file:');
+            $this->line('');
+            $this->warning($routes);
+            $this->line('');
+        }
+
+        $this->info('The new structure is created, you can start playing');
+        $this->line('');
+    }
+
+    private function warning($output)
+    {
+        return $this->line('<fg=yellow>'.$output.'</>');
     }
 
     private function missesRequired($choice)
@@ -158,24 +226,12 @@ class MakeEnsoStructure extends Command
             ->diff($this->configured);
 
         if ($diff->isNotEmpty()) {
-            $this->info('You must configure first: '.'<fg=yellow>'.$diff->implode(', ').'</>');
+            $this->warning('You must configure first: '.$diff->implode(', '));
             $this->line('');
             sleep(1);
         }
 
         return $diff->isNotEmpty();
-    }
-
-    private function setChoices()
-    {
-        $this->choices = new Obj();
-
-        $this->choices()->each(function ($choice) {
-            $this->choices->set(
-                camel_case($choice),
-                $this->attributes($choice)
-            );
-        });
     }
 
     private function attributes($choice)
@@ -195,112 +251,40 @@ class MakeEnsoStructure extends Command
 
     private function action()
     {
-        return collect(self::Choices)->pop();
+        return collect(self::Menu)->pop();
     }
 
     private function choices()
     {
-        return collect(self::Choices)->slice(0, -1);
+        return collect(self::Menu)->slice(0, -1);
     }
 
-    private function attemptWrite()
+    private function setChoices()
     {
+        $this->choices = new Obj();
 
-        //$this->readTestConfiguration();
-
-        if ($this->configured->isEmpty()) {
-            $this->error('There is nothing configured yet!');
-            $this->line('');
-            sleep(1);
-            $this->index();
-
-            return;
-        }
-
-        $this->validate();
-
-        $this->write();
+        $this->choices()->each(function ($choice) {
+            $this->choices->set(
+                camel_case($choice),
+                $this->attributes($choice)
+            );
+        });
     }
 
-    private function write()
+    private function setTestConfig()
     {
-        collect($this->choices->keys())
-            ->each(function ($key) {
-                if (!$this->configured->first(function ($attribute) use ($key) {
-                    return camel_case($attribute) === $key;
-                })) {
-                    $this->choices->forget($key);
-                }
-            });
+        $this->choices = new Obj(
+            (array) json_decode(\File::get(__DIR__.'/../Writers/stubs/test.stub'))
+        );
 
-        (new StructureWriter($this->choices))->run();
-
-        if ($this->selectedRoutes()) {
-            (new RoutesWriter($this->choices))->run();
-            (new RoutesGenerator($this->choices))->run();
-        }
-
-        if ($this->selectedViews()) {
-            (new PagesWriter($this->choices))->run();
-        }
-
-        if ($this->selectedModelOrMigration()) {
-            (new ModelAndMigrationWriter($this->choices))->run();
-        }
-
-        if ($this->selectedTable()) {
-            (new TableWriter($this->choices))->run();
-        }
-
-        if ($this->selectedSelect()) {
-            (new SelectWriter($this->choices))->run();
-        }
-
-        $this->info('The new structure is created, start playing');
-    }
-
-    private function readTestConfiguration()
-    {
-        $this->choices = new Obj((array) json_decode(\File::get(__DIR__.'/stubs/test.stub')));
+        $this->configured = collect($this->choices)->keys();
 
         collect($this->choices)->keys()
             ->each(function ($choice) {
-                $this->choices->set($choice, new Obj((array) $this->choices->get($choice)));
+                $this->choices->set(
+                    $choice,
+                    new Obj((array) $this->choices->get($choice))
+                );
             });
-    }
-
-    private function validate()
-    {
-        (new ModelValidator($this->choices))->run();
-    }
-
-    private function selectedRoutes()
-    {
-        return $this->choices
-            ->get('files')
-            ->get('routes');
-    }
-
-    private function selectedViews()
-    {
-        return $this->choices
-            ->get('files')
-            ->get('views');
-    }
-
-    private function selectedModelOrMigration()
-    {
-        return $this->choices->get('files')->get('model')
-            && $this->choices->get('files')->get('migration');
-    }
-
-    private function selectedTable()
-    {
-        return $this->choices->get('files')->get('table');
-    }
-
-    private function selectedSelect()
-    {
-        return $this->choices->get('files')->get('select');
     }
 }

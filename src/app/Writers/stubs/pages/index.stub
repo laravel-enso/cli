@@ -1,0 +1,26 @@
+<template>
+
+    <vue-table class="box"
+        :path="path"
+        id="${models}"/>
+
+</template>
+
+<script>
+
+import VueTable from '${depth}../components/enso/vuedatatable/VueTable.vue';
+
+export default {
+    components: { VueTable },
+
+    data() {
+        return {
+            path: route('${permissionGroup}.initTable'),
+        };
+    },
+};
+
+</script>
+
+<style lang="scss">
+</style>

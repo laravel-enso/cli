@@ -2,20 +2,13 @@
 
 namespace LaravelEnso\StructureManager\tests\unit;
 
-use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\StructureManager\app\Classes\Helpers\Writers\FormWriter;
 use Tests\TestCase;
 
-/**
- * Created with luv for spa2.
- * User: mihai
- * Date: 7/3/18
- * Time: 10:35 AM.
- */
 class FormGenerationTest extends TestCase
 {
-    private $structure;
+    private $choices;
     private $builderPath;
     private $templatePath;
     private $controllerPath;
@@ -23,19 +16,19 @@ class FormGenerationTest extends TestCase
     /** @test */
     public function testBuilderCreation()
     {
-        $this->assertTrue(File::exists($this->builderPath));
+        $this->assertTrue(\File::exists($this->builderPath));
     }
 
     /** @test */
     public function testTemplateCreation()
     {
-        $this->assertTrue(File::exists($this->templatePath));
+        $this->assertTrue(\File::exists($this->templatePath));
     }
 
     /** @test */
     public function testControllerCreation()
     {
-        $this->assertTrue(File::exists($this->controllerPath));
+        $this->assertTrue(\File::exists($this->controllerPath));
     }
 
     public function setUp()
@@ -49,24 +42,24 @@ class FormGenerationTest extends TestCase
 
     private function setupStructure(): void
     {
-        $this->structure = new Obj((array) json_decode(File::get(__DIR__.'/../../src/app/Commands/stubs/test.stub')));
+        $this->choices = new Obj((array) json_decode(\File::get(__DIR__.'/../../src/app/Commands/stubs/test.stub')));
 
-        collect($this->structure)->keys()
+        collect($this->choices)->keys()
             ->each(function ($choice) {
-                $this->structure->set($choice, new Obj((array) $this->structure->get($choice)));
+                $this->choices->set($choice, new Obj((array) $this->choices->get($choice)));
             });
     }
 
     private function generateForm(): void
     {
-        $formWriter = new FormWriter($this->structure);
+        $formWriter = new FormWriter($this->choices);
         $formWriter->run();
     }
 
     private function setFolderPaths()
     {
-        $model = $this->structure->get('model')->get('name');
-        $permissionGroup = $this->structure->get('permissionGroup')->get('name');
+        $model = $this->choices->get('model')->get('name');
+        $permissionGroup = $this->choices->get('permissionGroup')->get('name');
 
         $segments = $this->getVariablePathSegment($permissionGroup);
         $controllerSegments = $this->getControllerNamespaceSegments($permissionGroup);

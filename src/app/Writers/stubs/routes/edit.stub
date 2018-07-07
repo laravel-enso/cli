@@ -1,0 +1,11 @@
+const ${Model}Edit = () => import('${depth}../pages/${relativePath}/Edit.vue');
+
+export default {
+    name: '${prefix}.edit',
+    path: ':id/edit',
+    component: ${Model}Edit,
+    meta: {
+        breadcrumb: 'edit',
+        title: 'Edit ${Model}',
+    },
+};

@@ -1,1 +1,0 @@
-        ['name' => '${prefix}.exportExcel', 'description' => 'Export excel for ${model}', 'type' => 0, 'is_default' => false],
