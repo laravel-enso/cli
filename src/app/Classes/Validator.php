@@ -20,7 +20,7 @@ class Validator
 
     public function run()
     {
-        $this->configured->each(function($choice) {
+        $this->configured->each(function ($choice) {
             $this->{'validate'.ucfirst(camel_case($choice))}();
         });
 
@@ -50,7 +50,7 @@ class Validator
     {
         //
     }
-    
+
     private function validatePermissions()
     {
         //
@@ -73,7 +73,7 @@ class Validator
             $errors->push('A regular menu must have the link attribute filled');
         }
 
-        if ($menu->filled('parentMenu') 
+        if ($menu->filled('parentMenu')
             && Menu::whereName($menu->get('parentMenu'))->first() === null) {
             $errors->push(
                 'The parent menu '

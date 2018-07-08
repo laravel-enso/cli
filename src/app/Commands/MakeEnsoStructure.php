@@ -4,9 +4,9 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\StructureManager\app\Classes\StructureWriter;
 use LaravelEnso\StructureManager\app\Classes\Validator;
 use LaravelEnso\StructureManager\app\Writers\Helpers\Symbol;
-use LaravelEnso\StructureManager\app\Classes\StructureWriter;
 use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
 
 class MakeEnsoStructure extends Command
@@ -157,7 +157,7 @@ class MakeEnsoStructure extends Command
             $this->info('Will generate:');
             $this->line('structure migration');
             collect($this->choices->get('files'))
-                ->each(function($chosen, $file) {
+                ->each(function ($chosen, $file) {
                     if ($chosen) {
                         $this->line($file);
                     }
@@ -203,7 +203,7 @@ class MakeEnsoStructure extends Command
                         $this->warning('    '.$error);
                     });
                 });
-            
+
             sleep(1);
             $this->line('');
 
