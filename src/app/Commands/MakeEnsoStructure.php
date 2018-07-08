@@ -4,8 +4,9 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\StructureWriter;
+use LaravelEnso\StructureManager\app\Classes\Validator;
 use LaravelEnso\StructureManager\app\Writers\Helpers\Symbol;
+use LaravelEnso\StructureManager\app\Classes\StructureWriter;
 use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
 
 class MakeEnsoStructure extends Command
@@ -24,6 +25,7 @@ class MakeEnsoStructure extends Command
 
     private $choices;
     private $configured;
+    private $validator;
 
     public function handle()
     {
@@ -128,44 +130,87 @@ class MakeEnsoStructure extends Command
             || (gettype($value) === $type);
     }
 
+    private function hasError($choice)
+    {
+        return $this->validator
+            && $this->validator->errors()
+                ->keys()
+                ->contains($choice);
+    }
+
     private function status()
     {
         $this->info('Current configuration status:');
 
-        $this->choices()->each(function ($choice) {
-            $this->line(
-                $choice.' '.(Symbol::bool($this->configured->contains($choice)))
-            );
-        });
+        $this->choices()
+            ->each(function ($choice) {
+                $this->line(
+                    $choice.' '.(
+                        $this->hasError($choice)
+                            ? Symbol::exclamation()
+                            : Symbol::bool($this->configured->contains($choice))
+                    )
+                );
+            });
+        if ($this->configured->isNotEmpty()) {
+            $this->line('');
+            $this->info('Will generate:');
+            $this->line('structure migration');
+            collect($this->choices->get('files'))
+                ->each(function($chosen, $file) {
+                    if ($chosen) {
+                        $this->line($file);
+                    }
+                });
+        }
     }
 
     private function attemptWrite()
     {
         // $this->setTestConfig();
-
-        if ($this->configured->isEmpty()) {
-            $this->error('There is nothing configured yet!');
-            $this->line('');
-            sleep(1);
+        if ($this->failsValidation()) {
             $this->index();
 
             return;
         }
 
-        $this->sanitize()
-            ->filter()
+        $this->filter()
             ->write()
             ->output();
     }
 
-    private function sanitize()
+    private function failsValidation()
     {
-        $this->choices->get('model')->set(
-            'name',
-            ucfirst($this->choices->get('model')->get('name'))
-        );
+        if ($this->configured->isEmpty()) {
+            $this->error('There is nothing configured yet!');
+            $this->line('');
+            sleep(1);
 
-        return $this;
+            return true;
+        }
+
+        $this->validator = (new Validator($this->choices, $this->configured))
+            ->run();
+
+        if ($this->validator->fails()) {
+            $this->warning('Your configuration has errors:');
+            $this->line('');
+
+            $this->validator->errors()
+                ->each(function ($errors, $type) {
+                    $this->info($type.' '.Symbol::exclamation());
+                    $errors->each(function ($error) {
+                        $this->warning('    '.$error);
+                    });
+                });
+            
+            sleep(1);
+            $this->line('');
+
+            return true;
+        }
+
+        return false;
     }
 
     private function filter()

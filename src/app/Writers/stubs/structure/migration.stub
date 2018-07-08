@@ -4,12 +4,12 @@ use LaravelEnso\StructureManager\app\Classes\StructureMigration;
 
 class CreateStructureFor${Entity} extends StructureMigration
 {
-    protected ${permissionGroup};
+    protected $permissionGroup = ${permissionGroup};
 
-    protected ${permissions};
+    protected $permissions = ${permissions};
 
-    protected ${menu};
+    protected $menu = ${menu};
 
-    protected ${parentMenu};
+    protected $parentMenu = ${parentMenu};
 }
 

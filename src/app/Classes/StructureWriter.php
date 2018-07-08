@@ -22,16 +22,21 @@ class StructureWriter
 
     public function run()
     {
-        $this->structure()
-            ->modelAndMigration()
-            ->routes()
-            ->views()
-            ->form()
-            ->table()
-            ->select();
+        $this->writeStructure();
+
+        if (!$this->choices->has('files')) {
+            return;
+        }
+
+        $this->writeModelAndMigration()
+            ->writeRoutes()
+            ->writeViews()
+            ->writeForm()
+            ->writeTable()
+            ->writeSelect();
     }
 
-    private function structure()
+    private function writeStructure()
     {
         (new StructureMigrationWriter($this->choices))
             ->run();
@@ -39,10 +44,10 @@ class StructureWriter
         return $this;
     }
 
-    private function modelAndMigration()
+    private function writeModelAndMigration()
     {
         if ($this->choices->get('files')->has('model')
-            || $this->choices->get('files')->has('migration')) {
+            || $this->choices->get('files')->has('table migration')) {
             (new ModelAndMigrationWriter($this->choices))
                 ->run();
         }
@@ -50,7 +55,7 @@ class StructureWriter
         return $this;
     }
 
-    private function routes()
+    private function writeRoutes()
     {
         if ($this->choices->get('files')->has('routes')) {
             (new RoutesWriter($this->choices))
@@ -60,7 +65,7 @@ class StructureWriter
         return $this;
     }
 
-    private function views()
+    private function writeViews()
     {
         if ($this->choices->get('files')->has('views')) {
             (new ViewsWriter($this->choices))
@@ -70,7 +75,7 @@ class StructureWriter
         return $this;
     }
 
-    private function form()
+    private function writeForm()
     {
         if ($this->choices->get('files')->has('form')) {
             (new SelectWriter($this->choices))
@@ -80,7 +85,7 @@ class StructureWriter
         return $this;
     }
 
-    private function table()
+    private function writeTable()
     {
         if ($this->choices->get('files')->has('table')) {
             (new TableWriter($this->choices))
@@ -90,7 +95,7 @@ class StructureWriter
         return $this;
     }
 
-    private function select()
+    private function writeSelect()
     {
         if ($this->choices->get('files')->has('select')) {
             (new FormWriter($this->choices))

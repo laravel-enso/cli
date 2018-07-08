@@ -26,13 +26,13 @@ class StructureMigrationWriter
 
     private function replaceFromTo()
     {
-        $array = array_filter([
-            '${Entity}'          => str_plural($this->entity()),
-            '${menu}'            => $this->menu(),
-            '${parentMenu}'      => $this->parentMenu(),
+        $array = [
+            '${Entity}' => str_plural($this->entity()),
+            '${menu}' => $this->menu(),
+            '${parentMenu}' => $this->parentMenu(),
             '${permissionGroup}' => $this->permissionGroup(),
-            '${permissions}'     => $this->permissions(),
-        ]);
+            '${permissions}' => $this->permissions(),
+        ];
 
         return [
             array_keys($array),
@@ -52,9 +52,7 @@ class StructureMigrationWriter
             );
         }
 
-        return isset($stub)
-            ? '$menu = '.$stub
-            : null;
+        return $stub ?? 'null';
     }
 
     private function parentMenu()
@@ -62,14 +60,12 @@ class StructureMigrationWriter
         if ($this->choices->has('menu')) {
             $stub = str_replace(
                 '${parentMenu}',
-                $this->choices->get('menu')->parentMenu,
+                $this->choices->get('menu')->get('parentMenu'),
                 $this->stub('parentMenu')
             );
         }
 
-        return isset($stub)
-            ? '$parentMenu = '.$stub
-            : null;
+        return isset($stub) && $stub ? $stub : 'null';
     }
 
     private function permissionGroup()
@@ -89,9 +85,7 @@ class StructureMigrationWriter
             );
         }
 
-        return isset($stub)
-            ? '$permissionGroup = '.$stub
-            : null;
+        return $stub ?? 'null';
     }
 
     private function permissions()
@@ -109,15 +103,15 @@ class StructureMigrationWriter
         }
 
         return isset($stub)
-            ? '$permissions = ['.$stub.PHP_EOL.'    ]'
-            : null;
+            ? '['.$stub.PHP_EOL.'    ]'
+            : 'null';
     }
 
     private function permissionReplaceFromTo()
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}'           => strtolower($this->model()),
+            '${model}' => strtolower($this->model()),
         ];
 
         return [
