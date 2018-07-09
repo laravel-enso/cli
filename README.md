@@ -7,7 +7,7 @@
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/structuremanager/version)](https://packagist.org/packages/laravel-enso/structuremanager)
 <!--/h-->
 
-Structure Manager dependency for [Laravel Enso](https://github.com/laravel-enso/Enso)
+Resource generation CLI & Structure Manager dependency for [Laravel Enso](https://github.com/laravel-enso/Enso)
 
 ### Features
 - comes with its own easy to use CLI for the creation of Enso resources
