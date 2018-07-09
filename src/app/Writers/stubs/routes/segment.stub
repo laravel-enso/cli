@@ -1,0 +1,13 @@
+import routeImporter from '${depth}../modules/importers/routeImporter';
+
+const routes = routeImporter(require.context('./${segment}', false, /.*\.js$/));
+const RouterView = () => import('${depth}../core/Router.vue');
+
+export default {
+    path: '${relativePath}',
+    component: RouterView,
+    meta: {
+        breadcrumb: '${segment}',
+    },
+    children: routes,
+};

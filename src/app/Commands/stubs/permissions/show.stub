@@ -1,1 +1,0 @@
-        ['name' => '${prefix}.show', 'description' => 'Show ${model}', 'type' => 1, 'is_default' => false],

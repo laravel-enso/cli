@@ -1,0 +1,11 @@
+const ${Model}Create = () => import('${depth}../pages/${relativePath}/Create.vue');
+
+export default {
+    name: '${prefix}.create',
+    path: 'create',
+    component: ${Model}Create,
+    meta: {
+        breadcrumb: 'create',
+        title: 'Create ${Model}',
+    },
+};

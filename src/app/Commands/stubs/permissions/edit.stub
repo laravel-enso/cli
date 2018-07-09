@@ -1,1 +1,0 @@
-        ['name' => '${prefix}.edit', 'description' => 'Edit ${model}', 'type' => 1, 'is_default' => false],
