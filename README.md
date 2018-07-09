@@ -9,6 +9,9 @@
 
 Resource generation CLI & Structure Manager dependency for [Laravel Enso](https://github.com/laravel-enso/Enso)
 
+[![Watch the demo](https://laravel-enso.github.io/structuremanager/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/structuremanager/videos/bulma_demo01.mp4)
+<sup>click on the photo to view a short demo in compatible browsers</sup>
+
 ### Features
 - comes with its own easy to use CLI for the creation of Enso resources
 - can be used to more easily insert (default) data, during the install of a package, or later when new routes and permissions are required and can create menus, assign default permissions, etc.
