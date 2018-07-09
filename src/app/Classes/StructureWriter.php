@@ -34,7 +34,7 @@ class StructureWriter
             // ->writeViews()
             // ->writeForm()
             ->writeTable();
-            // ->writeSelect();
+        // ->writeSelect();
     }
 
     private function writeStructure()
