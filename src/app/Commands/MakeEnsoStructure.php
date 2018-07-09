@@ -4,10 +4,10 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Validator;
-use LaravelEnso\StructureManager\app\Helpers\TestConfig;
 use LaravelEnso\StructureManager\app\Classes\StructureWriter;
+use LaravelEnso\StructureManager\app\Classes\Validator;
 use LaravelEnso\StructureManager\app\Commands\Helpers\Symbol;
+use LaravelEnso\StructureManager\app\Helpers\TestConfig;
 use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
 
 class MakeEnsoStructure extends Command

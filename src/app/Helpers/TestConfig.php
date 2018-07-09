@@ -16,7 +16,7 @@ class TestConfig
             ->each(function ($choice) use ($choices) {
                 $choices->set($choice, new Obj((array) $choices->get($choice)));
             });
-        
+
         return $choices;
     }
 }
