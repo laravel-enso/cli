@@ -168,8 +168,8 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
-        $this->choices = TestConfig::load();
-        $this->configured = collect($this->choices)->keys();
+        // $this->choices = TestConfig::load();
+        // $this->configured = collect($this->choices)->keys();
 
         if ($this->failsValidation()) {
             $this->index();
