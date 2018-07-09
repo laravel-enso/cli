@@ -10,6 +10,6 @@ class CreateStructureFor${Entity} extends StructureMigration
 
     protected $menu = ${menu};
 
-    protected $parentMenu = ${parentMenu};
+    protected $parentMenu = '${parentMenu}';
 }
 

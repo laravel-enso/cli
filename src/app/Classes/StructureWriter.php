@@ -78,7 +78,7 @@ class StructureWriter
     private function writeForm()
     {
         if ($this->choices->get('files')->has('form')) {
-            (new SelectWriter($this->choices))
+            (new FormWriter($this->choices))
                 ->run();
         }
 
@@ -98,8 +98,10 @@ class StructureWriter
     private function writeSelect()
     {
         if ($this->choices->get('files')->has('select')) {
-            (new FormWriter($this->choices))
+            (new SelectWriter($this->choices))
                 ->run();
         }
+
+        return $this;
     }
 }

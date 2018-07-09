@@ -27,8 +27,8 @@ class ViewsWriter
 
     public function run()
     {
-        $this->createFolders();
-        $this->writePages();
+        $this->createFolders()
+            ->writeViews();
     }
 
     private function createFolders()
@@ -36,20 +36,22 @@ class ViewsWriter
         if (!\File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
+
+        return $this;
     }
 
-    private function writePages()
+    private function writeViews()
     {
         collect($this->choices->get('permissions'))
             ->filter(function ($chosen, $operation) {
                 return $chosen && collect(self::Operations)->contains($operation);
             })->keys()
             ->each(function ($operation) {
-                $this->writePage($operation);
+                $this->writeView($operation);
             });
     }
 
-    private function writePage($operation)
+    private function writeView($operation)
     {
         [$from, $to] = $this->fromTo();
 
@@ -63,7 +65,7 @@ class ViewsWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${depth}'           => str_repeat('../', $this->depth),
+            '${depth}' => str_repeat('../', $this->depth),
         ];
 
         return [

@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers\Helpers;
+namespace LaravelEnso\StructureManager\app\Commands\Helpers;
 
 class Symbol
 {

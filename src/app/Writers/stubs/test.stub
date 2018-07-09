@@ -21,7 +21,7 @@
     "menu": {
         "name": "Tree",
         "icon": "tree",
-        "parentMenu": "Projects",
+        "parentMenu": "Administration",
         "link": "administration.projects.trees.index",
         "order_index": 0,
         "has_children": false

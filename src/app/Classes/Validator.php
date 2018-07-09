@@ -65,8 +65,16 @@ class Validator
         $errors = collect();
         $menu = $this->choices->get('menu');
 
-        if ($menu->get('link') && $menu->get('has_children')) {
-            $errors->push('A parent menu must have the link attribute empty.');
+        if ($menu->get('link')) {
+            if ($menu->get('has_children')) {
+                $errors->push('A parent menu must have the link attribute empty');
+            }
+
+            if ($this->choices->has('permissionGroup') &&
+                $this->choices->get('permissionGroup')->get('name')
+                !== collect(explode('.', $menu->get('link')))->slice(0, -1)->implode('.')) {
+                $errors->push('The menu\'s link does not match the configured permission group');
+            }
         }
 
         if (!$menu->get('link') && !$menu->get('has_children')) {

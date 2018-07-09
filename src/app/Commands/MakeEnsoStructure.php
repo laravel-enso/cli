@@ -4,9 +4,10 @@ namespace LaravelEnso\StructureManager\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\StructureWriter;
 use LaravelEnso\StructureManager\app\Classes\Validator;
-use LaravelEnso\StructureManager\app\Writers\Helpers\Symbol;
+use LaravelEnso\StructureManager\app\Helpers\TestConfig;
+use LaravelEnso\StructureManager\app\Classes\StructureWriter;
+use LaravelEnso\StructureManager\app\Commands\Helpers\Symbol;
 use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
 
 class MakeEnsoStructure extends Command
@@ -167,7 +168,9 @@ class MakeEnsoStructure extends Command
 
     private function attemptWrite()
     {
-        // $this->setTestConfig();
+        // $this->choices = TestConfig::load();
+        // $this->configured = collect($this->choices)->keys();
+
         if ($this->failsValidation()) {
             $this->index();
 
@@ -314,22 +317,5 @@ class MakeEnsoStructure extends Command
                 $this->attributes($choice)
             );
         });
-    }
-
-    private function setTestConfig()
-    {
-        $this->choices = new Obj(
-            (array) json_decode(\File::get(__DIR__.'/../Writers/stubs/test.stub'))
-        );
-
-        $this->configured = collect($this->choices)->keys();
-
-        collect($this->choices)->keys()
-            ->each(function ($choice) {
-                $this->choices->set(
-                    $choice,
-                    new Obj((array) $this->choices->get($choice))
-                );
-            });
     }
 }

@@ -21,8 +21,8 @@ class SelectWriter
 
     public function run()
     {
-        $this->createFolders();
-        $this->write();
+        $this->createFolders()
+            ->write();
     }
 
     private function createFolders()
@@ -30,6 +30,8 @@ class SelectWriter
         if (!\File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
+
+        return $this;
     }
 
     private function write()
