@@ -95,7 +95,7 @@ class TableWriter
 
         $array = [
             '${namespace}' => 'App\\Tables\\Builders\\'
-                .$this->segments->slice(0, 1)->implode('\\'),
+                .$this->segments->slice(0, -1)->implode('\\'),
             '${Model}'        => $model,
             '${models}'       => str_plural(strtolower($model)),
             '${depth}'        => str_repeat('../', $this->segments->count() - 1),
@@ -134,7 +134,7 @@ class TableWriter
             '${namespace}' => 'App\\Http\\Controllers\\'
                 .$this->segments->implode('\\'),
             '${builderNamespace}' => 'App\\Tables\\Builders\\'
-                .$this->segments->slice(0, 1)->implode('\\'),
+                .$this->segments->slice(0, -1)->implode('\\'),
             '${Model}' => $this->choices->get('model')->get('name'),
         ];
 

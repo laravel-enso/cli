@@ -28,12 +28,13 @@ class StructureWriter
             return;
         }
 
-        $this->writeModelAndMigration()
-            ->writeRoutes()
-            ->writeViews()
-            ->writeForm()
-            ->writeTable()
-            ->writeSelect();
+        $this
+            // ->writeModelAndMigration()
+            // ->writeRoutes()
+            // ->writeViews()
+            // ->writeForm()
+            ->writeTable();
+            // ->writeSelect();
     }
 
     private function writeStructure()

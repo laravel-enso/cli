@@ -29,7 +29,7 @@ class RoutesGenerator
         $array = [
             '${namespace}'      => $this->namespace(),
             '${prefix}'         => $this->choices->get('permissionGroup')->get('name'),
-            '${resourcePrefix}' => $this->segments->slice(0, 1)->implode('.'),
+            '${resourcePrefix}' => $this->segments->slice(0, -1)->implode('.'),
             '${Model}'          => $model,
             '${Models}'         => str_plural($model),
             '${models}'         => str_plural(strtolower($model)),
