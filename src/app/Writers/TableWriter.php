@@ -58,9 +58,11 @@ class TableWriter
 
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${Models}'          => str_plural($model),
-            '${models}'          => str_plural(strtolower($model)),
-            '${icon}'            => $this->choices->get('menu')->get('icon'),
+            '${Models}' => str_plural($model),
+            '${models}' => str_plural(strtolower($model)),
+            '${icon}' => $this->choices->has('menu')
+                ? $this->choices->get('menu')->get('icon')
+                : null,
         ];
 
         return [
@@ -96,9 +98,9 @@ class TableWriter
         $array = [
             '${namespace}' => 'App\\Tables\\Builders\\'
                 .$this->segments->slice(0, -1)->implode('\\'),
-            '${Model}'        => $model,
-            '${models}'       => str_plural(strtolower($model)),
-            '${depth}'        => str_repeat('../', $this->segments->count() - 1),
+            '${Model}' => $model,
+            '${models}' => str_plural(strtolower($model)),
+            '${depth}' => str_repeat('../', $this->segments->count() - 1),
             '${relativePath}' => $this->segments->slice(0, -1)->implode('/'),
         ];
 
