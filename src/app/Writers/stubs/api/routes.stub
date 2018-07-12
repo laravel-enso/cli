@@ -13,7 +13,7 @@ Route::namespace('${namespace}')
    });
 
 Route::namespace('${namespace}')
-    ->prefix('${resourcePrefix}')->as('${resourcePrefix}.')
+    ${resourcePrefix}
     ->group(function () {
         Route::resource('${models}', '${Model}Controller'); // if it's the case, use `except` or `only` to avoid generating unused routes
     });

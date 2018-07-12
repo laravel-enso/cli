@@ -2,7 +2,7 @@
 
 namespace ${namespace};
 
-use ${builderNamespace}\${Model}Table;
+use ${builderNamespace}${Model}Table;
 use App\Http\Controllers\Controller;
 use LaravelEnso\VueDatatable\app\Traits\Excel;
 use LaravelEnso\VueDatatable\app\Traits\Datatable;

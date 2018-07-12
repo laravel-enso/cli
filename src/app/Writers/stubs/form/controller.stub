@@ -3,9 +3,9 @@
 namespace ${namespace};
 
 use App\${Model};
-use ${builderNamespace}\${Model}Form;
+use ${builderNamespace}${Model}Form;
 use App\Http\Controllers\Controller;
-use ${requestNamespace}\Validate${Model}Request;
+use ${requestNamespace}Validate${Model}Request;
 
 
 class ${Model}Controller extends Controller

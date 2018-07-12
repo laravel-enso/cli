@@ -27,11 +27,11 @@ class StructureMigrationWriter
     private function replaceFromTo()
     {
         $array = [
-            '${Entity}'          => str_plural($this->entity()),
-            '${menu}'            => $this->menu(),
-            '${parentMenu}'      => $this->parentMenu(),
+            '${Entity}' => str_plural($this->entity()),
+            '${menu}' => $this->menu(),
+            '${parentMenu}' => $this->parentMenu(),
             '${permissionGroup}' => $this->permissionGroup(),
-            '${permissions}'     => $this->permissions(),
+            '${permissions}' => $this->permissions(),
         ];
 
         return [
@@ -65,7 +65,7 @@ class StructureMigrationWriter
             );
         }
 
-        return isset($stub) && $stub ? $stub : 'null';
+        return isset($stub) && $stub ? $stub : null;
     }
 
     private function permissionGroup()
@@ -111,7 +111,7 @@ class StructureMigrationWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}'           => strtolower($this->model()),
+            '${model}' => strtolower($this->model()),
         ];
 
         return [
