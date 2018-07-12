@@ -231,7 +231,7 @@ class MakeEnsoStructure extends Command
             collect($this->choices->get('files'))
                 ->each(function ($chosen, $type) {
                     if (!$chosen) {
-                        $this->choices->get('files')->forget($key);
+                        $this->choices->get('files')->forget($type);
                     }
                 });
         }
