@@ -1,7 +1,8 @@
 <?php
-use Tests\TestCase;
-use LaravelEnso\StructureManager\app\Helpers\TestConfig;
+
 use LaravelEnso\StructureManager\app\Classes\StructureWriter;
+use LaravelEnso\StructureManager\app\Helpers\TestConfig;
+use Tests\TestCase;
 
 class StrucutreWriterTest extends TestCase
 {
