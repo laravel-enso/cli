@@ -3,7 +3,7 @@
         "name": "Tree"
     },
     "permissionGroup": {
-        "name": "administration.projects.trees"
+        "name": "testing.projects.trees"
     },
     "permissions": {
         "index": true,
@@ -21,8 +21,8 @@
     "menu": {
         "name": "Tree",
         "icon": "tree",
-        "parentMenu": "Administration",
-        "link": "administration.projects.trees.index",
+        "parentMenu": "Testing",
+        "link": "testing.projects.trees.index",
         "order_index": 0,
         "has_children": false
     },
