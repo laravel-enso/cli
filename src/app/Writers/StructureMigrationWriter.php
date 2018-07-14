@@ -7,7 +7,6 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 class StructureMigrationWriter
 {
     private $choices;
-    private $name;
 
     public function __construct(Obj $choices)
     {
@@ -27,11 +26,11 @@ class StructureMigrationWriter
     private function replaceFromTo()
     {
         $array = [
-            '${Entity}'          => str_plural($this->entity()),
-            '${menu}'            => $this->menu(),
-            '${parentMenu}'      => $this->parentMenu(),
+            '${Entity}' => str_plural($this->entity()),
+            '${menu}' => $this->menu(),
+            '${parentMenu}' => $this->parentMenu(),
             '${permissionGroup}' => $this->permissionGroup(),
-            '${permissions}'     => $this->permissions(),
+            '${permissions}' => $this->permissions(),
         ];
 
         return [
@@ -111,7 +110,7 @@ class StructureMigrationWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}'           => strtolower($this->model()),
+            '${model}' => strtolower($this->model()),
         ];
 
         return [
