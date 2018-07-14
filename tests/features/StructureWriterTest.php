@@ -103,12 +103,11 @@ class StrucutreWriterTest extends TestCase
         \File::deleteDirectory('app/Forms/Templates/Testing');
         \File::deleteDirectory('app/Tables/Builders/Testing');
         \File::deleteDirectory('app/Tables/Templates/Testing');
-        \File::deleteDirectory('app/Http/Controllers/Testing/Projects');
+        \File::deleteDirectory('app/Http/Controllers/Testing');
         \File::deleteDirectory('app/Http/Requests/Testing');
-        \File::deleteDirectory('resources/assets/js/pages/testing/projects');
-        \File::deleteDirectory('resources/assets/js/routes/testing/projects');
+        \File::deleteDirectory('resources/assets/js/pages/testing');
+        \File::deleteDirectory('resources/assets/js/routes/testing');
         \File::delete('resources/assets/js/routes/testing.js');
-        \File::delete('resources/assets/js/routes/testing/projects.js');
         $this->deleteMigration('create_trees_table');
         $this->deleteMigration('create_structure_for_trees');
 
