@@ -80,8 +80,10 @@ class FormWriter
         $model = $this->choices->get('model')->get('name');
 
         $array = [
-            '${relativePath}' => $this->segments->slice(0, -1)->implode('/'),
-            '${namespace}'    => 'App\\Forms\\Builders'
+            '${relativePath}' => $this->segments->count() > 1
+                ? $this->segments->slice(0, -1)->implode('/').'/'
+                : '',
+            '${namespace}' => 'App\\Forms\\Builders'
                 .($this->segments->count() > 1
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
@@ -137,13 +139,17 @@ class FormWriter
     {
         $model = $this->choices->get('model')->get('name');
 
+        $builderNamespaceSuffix = $this->segments->count() > 1
+            ? $this->segments->slice(0, -1)->implode('\\').'\\'
+            : '';
+
         $array = [
-            '${Model}'            => $model,
-            '${model}'            => strtolower($model),
-            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
-            '${builderNamespace}' => 'App\\Forms\\Builders\\'.$this->segments->slice(0, -1)->implode('\\'),
-            '${requestNamespace}' => 'App\\Http\\Requests\\'.$this->segments->slice(0, -1)->implode('\\'),
+            '${Model}' => $model,
+            '${model}' => strtolower($model),
+            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
+            '${builderNamespace}' => 'App\\Forms\\Builders\\'.$builderNamespaceSuffix,
+            '${requestNamespace}' => 'App\\Http\\Requests\\'.$builderNamespaceSuffix,
         ];
 
         return [
