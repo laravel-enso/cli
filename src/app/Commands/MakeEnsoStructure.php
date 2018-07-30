@@ -110,7 +110,7 @@ class MakeEnsoStructure extends Command
 
         $value = is_bool($config->get($key))
             ? $this->confirm($key)
-            : $this->anticipate($key, [$config->get($key)]);
+            : $this->anticipate($key, [$config->get($key) ?? '']);
 
         if ($this->isValid($type, $value)) {
             return $type === 'integer'
