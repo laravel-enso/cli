@@ -28,14 +28,14 @@ class RoutesGenerator
         $prefix = $this->segments->slice(0, -1)->implode('.');
 
         $array = [
-            '${namespace}'      => $this->namespace(),
-            '${prefix}'         => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}' => $this->namespace(),
+            '${prefix}' => $this->choices->get('permissionGroup')->get('name'),
             '${resourcePrefix}' => $prefix
                 ? "->prefix('".$prefix."')->as('".$prefix.".')"
                 : '',
-            '${Model}'  => $model,
+            '${Model}' => $model,
             '${Models}' => str_plural($model),
-            '${models}' => str_plural(strtolower($model)),
+            '${models}' => str_plural(lcfirst($model)),
         ];
 
         return [
