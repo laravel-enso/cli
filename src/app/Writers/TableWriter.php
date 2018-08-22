@@ -98,7 +98,7 @@ class TableWriter
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
             '${Model}' => $model,
-            '${models}' => str_plural(strtolower($model)),
+            '${models}' => snake_case(str_plural($model)),
             '${depth}' => str_repeat('../', $this->segments->count() - 1),
             '${relativePath}' => $this->segments->count() > 1
                 ? $this->segments->slice(0, -1)->implode('/').'/'
