@@ -72,7 +72,7 @@ class TableWriter
     {
         return $this->templatePath()
             .DIRECTORY_SEPARATOR
-            .str_plural(strtolower($this->choices->get('model')->get('name')))
+            .snake_case(str_plural($this->choices->get('model')->get('name')))
             .'.json';
     }
 
