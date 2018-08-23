@@ -1,5 +1,5 @@
 Route::namespace('${namespace}')
-    ->prefix('${prefix}')->as('${prefix}.')
+    ${groupPrefix}
     ->group(function () {
        Route::get('initTable', '${Model}TableController@init')
            ->name('initTable');

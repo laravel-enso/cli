@@ -64,8 +64,9 @@ class ViewsWriter
     private function fromTo()
     {
         $array = [
+            '${models}' => str_plural(lcfirst($this->choices->get('model')->get('name'))),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${depth}'           => str_repeat('../', $this->depth),
+            '${depth}' => str_repeat('../', $this->depth),
         ];
 
         return [
