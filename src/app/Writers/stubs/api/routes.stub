@@ -15,5 +15,5 @@ Route::namespace('${namespace}')
 Route::namespace('${namespace}')
     ${resourcePrefix}
     ->group(function () {
-        Route::resource('${models}', '${Model}Controller'); // if it's the case, use `except` or `only` to avoid generating unused routes
+        Route::resource('${resource}', '${Model}Controller'); // if it's the case, use `except` or `only` to avoid generating unused routes
     });
