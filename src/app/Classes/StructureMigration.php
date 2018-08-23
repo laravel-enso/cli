@@ -24,10 +24,6 @@ abstract class StructureMigration extends Migration
 
     public function down()
     {
-        if (config('app.env') == 'testing') {
-            return;
-        }
-
         \DB::transaction(function () {
             (new Destroyer())
                 ->menu($this->menu)
