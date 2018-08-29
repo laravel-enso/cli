@@ -4,12 +4,13 @@ use LaravelEnso\StructureManager\app\Classes\StructureWriter;
 use LaravelEnso\StructureManager\app\Helpers\TestConfig;
 use Tests\TestCase;
 
-class StrucutreWriterTest extends TestCase
+class StructureWriterTest extends TestCase
 {
     protected function setUp()
     {
-        parent::setUp();
         // $this->withoutExceptionHandling();
+
+        parent::setUp();
     }
 
     public function tearDown()
