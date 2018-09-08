@@ -67,20 +67,20 @@ class StructureWriterTest extends TestCase
 
     private function pagesCreated()
     {
-        return File::exists('resources/assets/js/pages/testing/projects/trees/Create.vue')
-            && File::exists('resources/assets/js/pages/testing/projects/trees/Edit.vue')
-            && File::exists('resources/assets/js/pages/testing/projects/trees/Index.vue')
-            && File::exists('resources/assets/js/pages/testing/projects/trees/Show.vue');
+        return File::exists('resources/js/pages/testing/projects/trees/Create.vue')
+            && File::exists('resources/js/pages/testing/projects/trees/Edit.vue')
+            && File::exists('resources/js/pages/testing/projects/trees/Index.vue')
+            && File::exists('resources/js/pages/testing/projects/trees/Show.vue');
     }
 
     private function routesCreated()
     {
-        return File::exists('resources/assets/js/routes/testing/projects.js')
-            && File::exists('resources/assets/js/routes/testing/projects/trees.js')
-            && File::exists('resources/assets/js/routes/testing/projects/trees/create.js')
-            && File::exists('resources/assets/js/routes/testing/projects/trees/edit.js')
-            && File::exists('resources/assets/js/routes/testing/projects/trees/index.js')
-            && File::exists('resources/assets/js/routes/testing/projects/trees/show.js');
+        return File::exists('resources/js/routes/testing/projects.js')
+            && File::exists('resources/js/routes/testing/projects/trees.js')
+            && File::exists('resources/js/routes/testing/projects/trees/create.js')
+            && File::exists('resources/js/routes/testing/projects/trees/edit.js')
+            && File::exists('resources/js/routes/testing/projects/trees/index.js')
+            && File::exists('resources/js/routes/testing/projects/trees/show.js');
     }
 
     private function migrationsCreated()
@@ -106,9 +106,9 @@ class StructureWriterTest extends TestCase
         \File::deleteDirectory('app/Tables/Templates/Testing');
         \File::deleteDirectory('app/Http/Controllers/Testing');
         \File::deleteDirectory('app/Http/Requests/Testing');
-        \File::deleteDirectory('resources/assets/js/pages/testing');
-        \File::deleteDirectory('resources/assets/js/routes/testing');
-        \File::delete('resources/assets/js/routes/testing.js');
+        \File::deleteDirectory('resources/js/pages/testing');
+        \File::deleteDirectory('resources/js/routes/testing');
+        \File::delete('resources/js/routes/testing.js');
         $this->deleteMigration('create_trees_table');
         $this->deleteMigration('create_structure_for_trees');
 
