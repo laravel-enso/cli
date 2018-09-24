@@ -58,8 +58,8 @@ class TableWriter
 
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${Models}'          => str_plural($model),
-            '${models}'          => str_plural(strtolower($model)),
+            '${Models}' => str_plural($model),
+            '${models}' => str_plural(camel_case($model)),
         ];
 
         return [
@@ -72,7 +72,7 @@ class TableWriter
     {
         return $this->templatePath()
             .DIRECTORY_SEPARATOR
-            .snake_case(str_plural($this->choices->get('model')->get('name')))
+            .camel_case(str_plural($this->choices->get('model')->get('name')))
             .'.json';
     }
 
@@ -97,9 +97,9 @@ class TableWriter
                 .($this->segments->count() > 1
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
-            '${Model}'        => $model,
-            '${models}'       => snake_case(str_plural($model)),
-            '${depth}'        => str_repeat('../', $this->segments->count() - 1),
+            '${Model}' => $model,
+            '${models}' => camel_case(str_plural($model)),
+            '${depth}' => str_repeat('../', $this->segments->count() - 1),
             '${relativePath}' => $this->segments->count() > 1
                 ? $this->segments->slice(0, -1)->implode('/').'/'
                 : '',

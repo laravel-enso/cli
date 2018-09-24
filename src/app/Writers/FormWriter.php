@@ -59,7 +59,7 @@ class FormWriter
     {
         return $this->templatePath()
             .DIRECTORY_SEPARATOR
-            .strtolower($this->choices->get('model')->get('name'))
+            .camel_case($this->choices->get('model')->get('name'))
             .'.json';
     }
 
@@ -88,7 +88,7 @@ class FormWriter
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
             '${depth}' => str_repeat('../', $this->segments->count()),
-            '${model}' => strtolower($model),
+            '${model}' => camel_case($model),
             '${Model}' => $model,
         ];
 
@@ -144,10 +144,10 @@ class FormWriter
             : '';
 
         $array = [
-            '${Model}'            => $model,
-            '${model}'            => strtolower($model),
-            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
+            '${Model}' => $model,
+            '${model}' => camel_case($model),
+            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
             '${builderNamespace}' => 'App\\Forms\\Builders\\'.$builderNamespaceSuffix,
             '${requestNamespace}' => 'App\\Http\\Requests\\'.$builderNamespaceSuffix,
         ];
