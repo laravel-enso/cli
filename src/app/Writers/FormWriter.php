@@ -144,10 +144,10 @@ class FormWriter
             : '';
 
         $array = [
-            '${Model}' => $model,
-            '${model}' => camel_case($model),
-            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
+            '${Model}'            => $model,
+            '${model}'            => camel_case($model),
+            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
             '${builderNamespace}' => 'App\\Forms\\Builders\\'.$builderNamespaceSuffix,
             '${requestNamespace}' => 'App\\Http\\Requests\\'.$builderNamespaceSuffix,
         ];
