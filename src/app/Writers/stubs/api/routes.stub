@@ -8,8 +8,8 @@ Route::namespace('${namespace}')
        Route::get('exportExcel', '${Model}TableController@excel')
            ->name('exportExcel');
 
-       Route::get('selectOptions', '${Model}SelectController@options')
-           ->name('selectOptions');
+       Route::get('options', '${Model}SelectController@options')
+           ->name('options');
    });
 
 Route::namespace('${namespace}')

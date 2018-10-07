@@ -16,10 +16,11 @@ class StructureWriterTest extends TestCase
     public function tearDown()
     {
         $this->cleanUp();
+        parent::tearDown();
     }
 
     /** @test */
-    public function creates_files()
+    public function can_generate_files()
     {
         $config = TestConfig::load();
 

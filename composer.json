@@ -19,10 +19,10 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel-enso/core": "3.0.*",
-        "laravel-enso/menumanager": "2.1.*",
-        "laravel-enso/permissionmanager": "2.1.*",
-        "laravel-enso/rolemanager": "2.3.*"
+        "laravel-enso/core": "3.1.*",
+        "laravel-enso/menumanager": "2.2.*",
+        "laravel-enso/permissionmanager": "2.2.*",
+        "laravel-enso/rolemanager": "2.4.*"
     },
     "autoload": {
         "psr-4": {

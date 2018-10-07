@@ -16,7 +16,7 @@
         "initTable": true,
         "getTableData": true,
         "exportExcel": true,
-        "selectOptions": true
+        "options": true
     },
     "menu": {
         "name": "Tree",
