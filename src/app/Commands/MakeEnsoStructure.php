@@ -19,7 +19,7 @@ class MakeEnsoStructure extends Command
         'Menu',
         'Files',
         'Generate',
-        'Validation'
+        'Validation',
     ];
 
     protected $signature = 'enso:make:structure';
@@ -59,7 +59,7 @@ class MakeEnsoStructure extends Command
         }
 
         if ($choice === $this->validation()) {
-            $this->validates = ! $this->validates;
+            $this->validates = !$this->validates;
             $this->error('Validation '.($this->validates ? 'enabled' : 'disabled'));
             $this->line('');
             sleep(1);
@@ -109,7 +109,7 @@ class MakeEnsoStructure extends Command
                 $config->set($key, $input);
             });
 
-        if (! $this->configured->contains($choice)) {
+        if (!$this->configured->contains($choice)) {
             $this->configured->push($choice);
         }
     }
@@ -240,7 +240,7 @@ class MakeEnsoStructure extends Command
         if ($this->choices->has('files')) {
             collect($this->choices->get('files'))
                 ->each(function ($chosen, $type) {
-                    if (! $chosen) {
+                    if (!$chosen) {
                         $this->choices->get('files')->forget($type);
                     }
                 });
