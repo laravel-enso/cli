@@ -19,6 +19,7 @@ class MakeEnsoStructure extends Command
         'Menu',
         'Files',
         'Generate',
+        'Validation'
     ];
 
     protected $signature = 'enso:make:structure';
@@ -26,12 +27,14 @@ class MakeEnsoStructure extends Command
 
     private $choices;
     private $configured;
+    private $validates;
     private $validator;
 
     public function handle()
     {
         $this->configured = collect();
         $this->setChoices();
+        $this->validates = true;
 
         $this->info('Create a new Laravel Enso Structure');
         $this->line('');
@@ -53,6 +56,13 @@ class MakeEnsoStructure extends Command
             $this->attemptWrite();
 
             return;
+        }
+
+        if ($choice === $this->validation()) {
+            $this->validates = ! $this->validates;
+            $this->error('Validation '.($this->validates ? 'enabled' : 'disabled'));
+            $this->line('');
+            sleep(1);
         }
 
         $this->index();
@@ -99,7 +109,7 @@ class MakeEnsoStructure extends Command
                 $config->set($key, $input);
             });
 
-        if (!$this->configured->contains($choice)) {
+        if (! $this->configured->contains($choice)) {
             $this->configured->push($choice);
         }
     }
@@ -171,7 +181,7 @@ class MakeEnsoStructure extends Command
         // $this->choices = TestConfig::load();
         // $this->configured = collect($this->choices)->keys();
 
-        if ($this->failsValidation()) {
+        if ($this->validates && $this->failsValidation()) {
             $this->index();
 
             return;
@@ -230,7 +240,7 @@ class MakeEnsoStructure extends Command
         if ($this->choices->has('files')) {
             collect($this->choices->get('files'))
                 ->each(function ($chosen, $type) {
-                    if (!$chosen) {
+                    if (! $chosen) {
                         $this->choices->get('files')->forget($type);
                     }
                 });
@@ -299,12 +309,17 @@ class MakeEnsoStructure extends Command
 
     private function action()
     {
+        return collect(self::Menu)->slice(-2, 1)->first();
+    }
+
+    private function validation()
+    {
         return collect(self::Menu)->pop();
     }
 
     private function choices()
     {
-        return collect(self::Menu)->slice(0, -1);
+        return collect(self::Menu)->slice(0, -2);
     }
 
     private function setChoices()
