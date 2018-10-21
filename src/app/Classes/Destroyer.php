@@ -35,7 +35,7 @@ class Destroyer extends Structure implements EnsoStructure
         $group = PermissionGroup::whereName($permissionGroup['name'])
             ->first();
 
-        if (!$group->permissions()->count()) {
+        if (! $group->permissions()->count()) {
             $group->delete();
         }
     }
