@@ -57,32 +57,32 @@ abstract class Structure
     private function validatesParentMenu($menu)
     {
         return is_string($menu)
-            && ! empty($menu);
+            && !empty($menu);
     }
 
     private function validatesMenu($menu)
     {
-        return ! is_null($menu)
+        return !is_null($menu)
             && is_array($menu)
-            && ! empty($menu)
+            && !empty($menu)
             && $this->validatesStructure(self::MenuAttributes, $menu);
     }
 
     private function validatesPermissionGroup($permissionGroup)
     {
-        return ! is_null($permissionGroup)
+        return !is_null($permissionGroup)
             && is_array($permissionGroup)
-            && ! empty($permissionGroup)
+            && !empty($permissionGroup)
             && $this->validatesStructure(self::PermissionGroupAttributes, $permissionGroup);
     }
 
     private function validatesPermissions($permissions)
     {
         return is_array($permissions)
-            && ! empty($permissions)
+            && !empty($permissions)
             && collect($permissions)
                 ->filter(function ($permission) {
-                    return ! $this->validatesStructure(self::PermissionAttributes, $permission);
+                    return !$this->validatesStructure(self::PermissionAttributes, $permission);
                 })->isEmpty();
     }
 
@@ -94,7 +94,7 @@ abstract class Structure
                 ->diff(collect($structure)->values())
                 ->isEmpty();
 
-        if (! $valid) {
+        if (!$valid) {
             throw new EnsoStructureException(__(
                 'The current structure element is wrongly defined. Check the exception trace below'
             ));

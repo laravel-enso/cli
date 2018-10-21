@@ -24,7 +24,7 @@ class StructureWriter
     {
         $this->writeStructure();
 
-        if (! $this->choices->has('files')) {
+        if (!$this->choices->has('files')) {
             return;
         }
 
