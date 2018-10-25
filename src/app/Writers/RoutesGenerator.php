@@ -29,13 +29,13 @@ class RoutesGenerator
         $resourcePrefix = $this->segments->slice(0, -1);
 
         $array = [
-            '${namespace}' => $this->namespace(),
-            '${groupPrefix}' => "->prefix('".$this->segments->implode('/')."')->as('".$this->segments->implode('.').".')",
+            '${namespace}'      => $this->namespace(),
+            '${groupPrefix}'    => "->prefix('".$this->segments->implode('/')."')->as('".$this->segments->implode('.').".')",
             '${resourcePrefix}' => $resourcePrefix->isNotEmpty()
                 ? "->prefix('".$resourcePrefix->implode('/')."')->as('".$resourcePrefix->implode('.').".')"
                 : '',
-            '${Model}' => $model,
-            '${Models}' => Str::plural($model),
+            '${Model}'    => $model,
+            '${Models}'   => Str::plural($model),
             '${resource}' => Str::camel(Str::plural($model)),
         ];
 

@@ -28,7 +28,7 @@ class SelectWriter
 
     private function createFolders()
     {
-        if (! \File::isDirectory($this->path)) {
+        if (!\File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
@@ -49,7 +49,7 @@ class SelectWriter
     {
         $array = [
             '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
-            '${Model}' => $this->structure->get('model')->get('name'),
+            '${Model}'     => $this->structure->get('model')->get('name'),
         ];
 
         return [

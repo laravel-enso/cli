@@ -2,13 +2,13 @@
 
 namespace LaravelEnso\StructureManager\app\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\Validator;
-use LaravelEnso\StructureManager\app\Helpers\TestConfig;
 use LaravelEnso\StructureManager\app\Classes\StructureWriter;
+use LaravelEnso\StructureManager\app\Classes\Validator;
 use LaravelEnso\StructureManager\app\Commands\Helpers\Symbol;
+use LaravelEnso\StructureManager\app\Helpers\TestConfig;
 use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
 
 class MakeEnsoStructure extends Command
@@ -55,7 +55,7 @@ class MakeEnsoStructure extends Command
         }
 
         if ($choice === $this->validation()) {
-            $this->validates = ! $this->validates;
+            $this->validates = !$this->validates;
             $this->error('Validation '.($this->validates ? 'enabled' : 'disabled'));
             $this->line('');
             sleep(1);
@@ -105,7 +105,7 @@ class MakeEnsoStructure extends Command
                 $config->set($key, $input);
             });
 
-        if (! $this->configured->contains($choice)) {
+        if (!$this->configured->contains($choice)) {
             $this->configured->push($choice);
         }
     }
@@ -236,7 +236,7 @@ class MakeEnsoStructure extends Command
         if ($this->choices->has('files')) {
             collect($this->choices->get('files'))
                 ->each(function ($chosen, $type) {
-                    if (! $chosen) {
+                    if (!$chosen) {
                         $this->choices->get('files')->forget($type);
                     }
                 });

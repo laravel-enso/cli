@@ -27,15 +27,15 @@ class FormWriter
 
     private function createFolders()
     {
-        if (! \File::isDirectory($this->builderPath())) {
+        if (!\File::isDirectory($this->builderPath())) {
             \File::makeDirectory($this->builderPath(), 0755, true);
         }
 
-        if (! \File::isDirectory($this->templatePath())) {
+        if (!\File::isDirectory($this->templatePath())) {
             \File::makeDirectory($this->templatePath(), 0755, true);
         }
 
-        if (! \File::isDirectory($this->controllerPath())) {
+        if (!\File::isDirectory($this->controllerPath())) {
             \File::makeDirectory($this->controllerPath(), 0755, true);
         }
 
@@ -145,10 +145,10 @@ class FormWriter
             : '';
 
         $array = [
-            '${Model}' => $model,
-            '${model}' => Str::camel($model),
-            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
+            '${Model}'            => $model,
+            '${model}'            => Str::camel($model),
+            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
             '${builderNamespace}' => 'App\\Forms\\Builders\\'.$builderNamespaceSuffix,
             '${requestNamespace}' => 'App\\Http\\Requests\\'.$builderNamespaceSuffix,
         ];

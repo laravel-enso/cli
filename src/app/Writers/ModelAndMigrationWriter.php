@@ -18,9 +18,9 @@ class ModelAndMigrationWriter
     {
         $model = $this->choices->get('model')->get('name');
 
-        if (! class_exists('App\\'.$model)) {
+        if (!class_exists('App\\'.$model)) {
             \Artisan::call('make:model', [
-                'name' => $this->choices->get('model')->get('name'),
+                'name'        => $this->choices->get('model')->get('name'),
                 '--migration' => $this->choices->get('files')->has('migration'),
             ]);
 
