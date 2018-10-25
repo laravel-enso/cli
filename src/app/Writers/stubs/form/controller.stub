@@ -24,7 +24,7 @@ class ${Model}Controller extends Controller
         return [
             'message' => __('The ${model} was successfully created'),
             'redirect' => '${permissionGroup}.edit',
-            'id' => $${model}->id,
+            'param' => ['${model}' => $${model}->id],
         ];
     }
 

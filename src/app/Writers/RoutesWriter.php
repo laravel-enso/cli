@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\StructureManager\app\Writers;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesWriter
@@ -38,7 +39,7 @@ class RoutesWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
+        if (! \File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
@@ -73,10 +74,11 @@ class RoutesWriter
         $group = $this->choices->get('permissionGroup')->get('name');
 
         $array = [
-            '${Model}'        => $this->choices->get('model')->get('name'),
+            '${Model}' => $this->choices->get('model')->get('name'),
+            '${model}' => Str::camel($this->choices->get('model')->get('name')),
             '${relativePath}' => $this->segments->implode('/'),
-            '${prefix}'       => $group,
-            '${depth}'        => str_repeat('../', $this->segments->count()),
+            '${prefix}' => $group,
+            '${depth}' => str_repeat('../', $this->segments->count()),
         ];
 
         return [
@@ -111,10 +113,10 @@ class RoutesWriter
     private function segmentFromTo($segment, $depth)
     {
         $array = [
-            '${segment}'         => $segment,
-            '${depth}'           => str_repeat('../', $depth),
+            '${segment}' => $segment,
+            '${depth}' => str_repeat('../', $depth),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${relativePath}'    => $depth === 0 ?
+            '${relativePath}' => $depth === 0 ?
                 '/'.$segment
                 : $segment,
         ];

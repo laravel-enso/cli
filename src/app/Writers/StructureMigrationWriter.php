@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\StructureManager\app\Writers;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class StructureMigrationWriter
@@ -26,11 +27,10 @@ class StructureMigrationWriter
     private function replaceFromTo()
     {
         $array = [
-            '${Entity}'          => str_plural($this->entity()),
-            '${menu}'            => $this->menu(),
-            '${parentMenu}'      => $this->parentMenu(),
-            '${permissionGroup}' => $this->permissionGroup(),
-            '${permissions}'     => $this->permissions(),
+            '${Entity}' => Str::plural($this->entity()),
+            '${menu}' => $this->menu(),
+            '${parentMenu}' => $this->parentMenu(),
+            '${permissions}' => $this->permissions(),
         ];
 
         return [
@@ -67,26 +67,6 @@ class StructureMigrationWriter
         return isset($stub) && $stub ? $stub : null;
     }
 
-    private function permissionGroup()
-    {
-        if ($this->choices->has('permissionGroup')) {
-            $group = $this->choices->get('permissionGroup');
-
-            $group->set(
-                'description',
-                str_plural($this->model()).' Permission Group'
-            );
-
-            $stub = str_replace(
-                $this->mapping($group->keys()),
-                $group->values(),
-                $this->stub('permissionGroup')
-            );
-        }
-
-        return $stub ?? 'null';
-    }
-
     private function permissions()
     {
         if ($this->choices->has('permissions')) {
@@ -110,7 +90,7 @@ class StructureMigrationWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}'           => strtolower(str_replace('_', ' ', snake_case($this->model()))),
+            '${model}' => strtolower(str_replace('_', ' ', Str::snake($this->model()))),
         ];
 
         return [
@@ -157,7 +137,7 @@ class StructureMigrationWriter
     {
         return now()->format('Y_m_d_His')
             .'_create_structure_for_'
-            .snake_case(str_plural($this->entity()))
+            .Str::snake(Str::plural($this->entity()))
             .'.php';
     }
 

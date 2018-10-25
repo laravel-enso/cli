@@ -2,7 +2,7 @@ const ${Model}Show = () => import('${depth}../pages/${relativePath}/Show.vue');
 
 export default {
     name: '${prefix}.show',
-    path: ':id',
+    path: ':${model}',
     component: ${Model}Show,
     meta: {
         breadcrumb: 'show',

@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\StructureManager\app\Classes;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\MenuManager\app\Models\Menu;
 
@@ -21,7 +22,7 @@ class Validator
     public function run()
     {
         $this->configured->each(function ($choice) {
-            $this->{'validate'.ucfirst(camel_case($choice))}();
+            $this->{'validate'.Str::ucfirst(Str::camel($choice))}();
         });
 
         return $this;
@@ -42,13 +43,8 @@ class Validator
     {
         $this->choices->get('model')->set(
             'name',
-            ucfirst($this->choices->get('model')->get('name'))
+            Str::ucfirst($this->choices->get('model')->get('name'))
         );
-    }
-
-    private function validatePermissionGroup()
-    {
-        //
     }
 
     private function validatePermissions()
@@ -58,27 +54,27 @@ class Validator
 
     private function validateMenu()
     {
-        if (!$this->choices->has('menu')) {
+        if (! $this->choices->has('menu')) {
             return;
         }
 
         $errors = collect();
         $menu = $this->choices->get('menu');
 
-        if ($menu->get('link')) {
+        if ($menu->get('route')) {
             if ($menu->get('has_children')) {
-                $errors->push('A parent menu must have the link attribute empty');
+                $errors->push('A parent menu must have the route attribute empty');
             }
 
             if ($this->choices->has('permissionGroup') &&
                 $this->choices->get('permissionGroup')->get('name')
-                !== collect(explode('.', $menu->get('link')))->slice(0, -1)->implode('.')) {
-                $errors->push('The menu\'s link does not match the configured permission group');
+                !== collect(explode('.', $menu->get('route')))->slice(0, -1)->implode('.')) {
+                $errors->push('The menu\'s route does not match the configured permission group');
             }
         }
 
-        if (!$menu->get('link') && !$menu->get('has_children')) {
-            $errors->push('A regular menu must have the link attribute filled');
+        if (! $menu->get('route') && ! $menu->get('has_children')) {
+            $errors->push('A regular menu must have the route attribute filled');
         }
 
         if ($menu->filled('parentMenu')

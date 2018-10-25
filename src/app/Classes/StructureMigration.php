@@ -8,7 +8,6 @@ abstract class StructureMigration extends Migration
 {
     protected $parentMenu;
     protected $menu;
-    protected $permissionGroup;
     protected $permissions;
 
     public function up()
@@ -16,9 +15,8 @@ abstract class StructureMigration extends Migration
         \DB::transaction(function () {
             (new Creator())
                 ->parentMenu($this->parentMenu)
-                ->menu($this->menu)
-                ->permissionGroup($this->permissionGroup)
-                ->permissions($this->permissions);
+                ->permissions($this->permissions)
+                ->menu($this->menu);
         });
     }
 
@@ -27,8 +25,7 @@ abstract class StructureMigration extends Migration
         \DB::transaction(function () {
             (new Destroyer())
                 ->menu($this->menu)
-                ->permissions($this->permissions)
-                ->permissionGroup($this->permissionGroup);
+                ->permissions($this->permissions);
         });
     }
 }

@@ -14,7 +14,7 @@
         "update": true,
         "destroy": true,
         "initTable": true,
-        "getTableData": true,
+        "tableData": true,
         "exportExcel": true,
         "options": true
     },
@@ -22,7 +22,7 @@
         "name": "Tree",
         "icon": "tree",
         "parentMenu": "Testing",
-        "link": "testing.projects.trees.index",
+        "route": "testing.projects.trees.index",
         "order_index": 0,
         "has_children": false
     },

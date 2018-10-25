@@ -4,7 +4,6 @@ namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\MenuManager\app\Models\Menu;
 use LaravelEnso\PermissionManager\app\Models\Permission;
-use LaravelEnso\PermissionManager\app\Models\PermissionGroup;
 use LaravelEnso\StructureManager\app\Contracts\EnsoStructure;
 
 class Destroyer extends Structure implements EnsoStructure
@@ -28,15 +27,5 @@ class Destroyer extends Structure implements EnsoStructure
                 $permission->roles()->detach();
                 $permission->delete();
             });
-    }
-
-    public function handlePermissionGroup($permissionGroup)
-    {
-        $group = PermissionGroup::whereName($permissionGroup['name'])
-            ->first();
-
-        if (!$group->permissions()->count()) {
-            $group->delete();
-        }
     }
 }

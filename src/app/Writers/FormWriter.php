@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\StructureManager\app\Writers;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class FormWriter
@@ -26,15 +27,15 @@ class FormWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->builderPath())) {
+        if (! \File::isDirectory($this->builderPath())) {
             \File::makeDirectory($this->builderPath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->templatePath())) {
+        if (! \File::isDirectory($this->templatePath())) {
             \File::makeDirectory($this->templatePath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->controllerPath())) {
+        if (! \File::isDirectory($this->controllerPath())) {
             \File::makeDirectory($this->controllerPath(), 0755, true);
         }
 
@@ -59,7 +60,7 @@ class FormWriter
     {
         return $this->templatePath()
             .DIRECTORY_SEPARATOR
-            .camel_case($this->choices->get('model')->get('name'))
+            .Str::camel($this->choices->get('model')->get('name'))
             .'.json';
     }
 
@@ -88,7 +89,7 @@ class FormWriter
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
             '${depth}' => str_repeat('../', $this->segments->count()),
-            '${model}' => camel_case($model),
+            '${model}' => Str::camel($model),
             '${Model}' => $model,
         ];
 
@@ -144,10 +145,10 @@ class FormWriter
             : '';
 
         $array = [
-            '${Model}'            => $model,
-            '${model}'            => camel_case($model),
-            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
+            '${Model}' => $model,
+            '${model}' => Str::camel($model),
+            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
             '${builderNamespace}' => 'App\\Forms\\Builders\\'.$builderNamespaceSuffix,
             '${requestNamespace}' => 'App\\Http\\Requests\\'.$builderNamespaceSuffix,
         ];
@@ -202,7 +203,7 @@ class FormWriter
         $this->segments = collect(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
         )->map(function ($segment) {
-            return ucfirst($segment);
+            return Str::ucfirst($segment);
         });
     }
 }

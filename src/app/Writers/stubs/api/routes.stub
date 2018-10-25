@@ -3,8 +3,8 @@ Route::namespace('${namespace}')
     ->group(function () {
        Route::get('initTable', '${Model}TableController@init')
            ->name('initTable');
-       Route::get('getTableData', '${Model}TableController@data')
-           ->name('getTableData');
+       Route::get('tableData', '${Model}TableController@data')
+           ->name('tableData');
        Route::get('exportExcel', '${Model}TableController@excel')
            ->name('exportExcel');
 

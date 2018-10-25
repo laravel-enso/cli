@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\StructureManager\app\Writers;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class SelectWriter
@@ -27,7 +28,7 @@ class SelectWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
+        if (! \File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
@@ -48,7 +49,7 @@ class SelectWriter
     {
         $array = [
             '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
-            '${Model}'     => $this->structure->get('model')->get('name'),
+            '${Model}' => $this->structure->get('model')->get('name'),
         ];
 
         return [
@@ -78,7 +79,7 @@ class SelectWriter
         $this->segments = collect(
             explode('.', $this->structure->get('permissionGroup')->get('name'))
         )->map(function ($segment) {
-            return ucfirst($segment);
+            return Str::ucfirst($segment);
         });
     }
 }

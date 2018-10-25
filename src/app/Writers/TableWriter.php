@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\StructureManager\app\Writers;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class TableWriter
@@ -25,15 +26,15 @@ class TableWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->builderPath())) {
+        if (! \File::isDirectory($this->builderPath())) {
             \File::makeDirectory($this->builderPath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->templatePath())) {
+        if (! \File::isDirectory($this->templatePath())) {
             \File::makeDirectory($this->templatePath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->controllerPath())) {
+        if (! \File::isDirectory($this->controllerPath())) {
             \File::makeDirectory($this->controllerPath(), 0755, true);
         }
 
@@ -58,8 +59,8 @@ class TableWriter
 
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${Models}'          => str_plural($model),
-            '${models}'          => str_plural(camel_case($model)),
+            '${Models}' => Str::plural($model),
+            '${models}' => Str::plural(Str::camel($model)),
         ];
 
         return [
@@ -72,8 +73,9 @@ class TableWriter
     {
         return $this->templatePath()
             .DIRECTORY_SEPARATOR
-            .camel_case(str_plural($this->choices->get('model')->get('name')))
-            .'.json';
+            .Str::camel(Str::plural(
+                $this->choices->get('model')->get('name'))
+            ).'.json';
     }
 
     private function writeBuilder()
@@ -97,10 +99,10 @@ class TableWriter
                 .($this->segments->count() > 1
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
-            '${Model}'        => $model,
-            '${models}'       => camel_case(str_plural($model)),
-            '${table}'        => snake_case(str_plural($model)),
-            '${depth}'        => str_repeat('../', $this->segments->count() - 1),
+            '${Model}' => $model,
+            '${models}' => Str::camel(Str::plural($model)),
+            '${table}' => Str::snake(Str::plural($model)),
+            '${depth}' => str_repeat('../', $this->segments->count() - 1),
             '${relativePath}' => $this->segments->count() > 1
                 ? $this->segments->slice(0, -1)->implode('/').'/'
                 : '',
