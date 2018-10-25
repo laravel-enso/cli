@@ -27,9 +27,9 @@ class StructureMigrationWriter
     private function replaceFromTo()
     {
         $array = [
-            '${Entity}'      => Str::plural($this->entity()),
-            '${menu}'        => $this->menu(),
-            '${parentMenu}'  => $this->parentMenu(),
+            '${Entity}' => Str::plural($this->entity()),
+            '${menu}' => $this->menu(),
+            '${parentMenu}' => $this->parentMenu(),
             '${permissions}' => $this->permissions(),
         ];
 
@@ -90,7 +90,7 @@ class StructureMigrationWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}'           => strtolower(str_replace('_', ' ', Str::snake($this->model()))),
+            '${model}' => strtolower(str_replace('_', ' ', Str::snake($this->model()))),
         ];
 
         return [
@@ -129,7 +129,9 @@ class StructureMigrationWriter
                     : 'false';
             }
 
-            return $value;
+            return is_string($value) && empty($value)
+                ? null
+                : $value;
         })->toArray();
     }
 
