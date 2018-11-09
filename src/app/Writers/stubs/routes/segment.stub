@@ -7,7 +7,7 @@ export default {
     path: '${relativePath}',
     component: RouterView,
     meta: {
-        breadcrumb: '${segment}',
+        breadcrumb: '${breadcrumb}',
     },
     children: routes,
 };

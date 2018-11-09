@@ -7,7 +7,7 @@ export default {
     path: '${relativePath}',
     component: RouterView,
     meta: {
-        breadcrumb: '${segment}',
+        breadcrumb: '${breadcrumb}',
         route: '${permissionGroup}.index',
     },
     children: routes,
