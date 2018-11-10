@@ -17,9 +17,7 @@ class ${Model}Controller extends Controller
 
     public function store(Validate${Model}Request $request)
     {
-        $${model} = new ${Model}($request->all());
-
-        $${model}->save();
+        $${model} = ${Model}::create($request->all());
 
         return [
             'message' => __('The ${model} was successfully created'),
@@ -40,9 +38,7 @@ class ${Model}Controller extends Controller
 
     public function update(Validate${Model}Request $request, ${Model} $${model})
     {
-        $${model}->fill($request->all());
-
-        $${model}->save();
+        $${model}->update($request->all());
 
         return ['message' => __('The ${model} was successfully updated')];
     }
