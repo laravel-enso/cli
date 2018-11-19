@@ -6,6 +6,6 @@ export default {
     component: ${Model}Edit,
     meta: {
         breadcrumb: 'edit',
-        title: 'Edit ${Model}',
+        title: 'Edit ${title}',
     },
 };

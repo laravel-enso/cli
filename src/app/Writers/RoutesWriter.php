@@ -72,10 +72,15 @@ class RoutesWriter
     private function crudFromTo()
     {
         $group = $this->choices->get('permissionGroup')->get('name');
-
+        $model = $this->choices->get('model')->get('name');
+        $title = collect(explode('_', Str::snake($model)))->map(function ($word) {
+            return Str::ucfirst($word);
+        })->implode(' ');
+        
         $array = [
-            '${Model}'        => $this->choices->get('model')->get('name'),
-            '${model}'        => Str::camel($this->choices->get('model')->get('name')),
+            '${Model}'        => $model,
+            '${title}'        => $title,
+            '${model}'        => Str::camel($model),
             '${relativePath}' => $this->segments->implode('/'),
             '${prefix}'       => $group,
             '${depth}'        => str_repeat('../', $this->segments->count()),
@@ -113,8 +118,8 @@ class RoutesWriter
     private function segmentFromTo($segment, $depth)
     {
         $array = [
-            '${segment}'         => collect(explode('_', Str::snake($segment)))->implode(' '),
-            '${breadcrumb}'      => $segment,
+            '${segment}'         => $segment,
+            '${breadcrumb}'      => collect(explode('_', Str::snake($segment)))->implode(' '),
             '${depth}'           => str_repeat('../', $depth),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
             '${relativePath}'    => $depth === 0 ?
@@ -137,3 +142,4 @@ class RoutesWriter
         );
     }
 }
+s
