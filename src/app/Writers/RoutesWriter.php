@@ -76,7 +76,7 @@ class RoutesWriter
         $title = collect(explode('_', Str::snake($model)))->map(function ($word) {
             return Str::ucfirst($word);
         })->implode(' ');
-        
+
         $array = [
             '${Model}'        => $model,
             '${title}'        => $title,
@@ -142,4 +142,3 @@ class RoutesWriter
         );
     }
 }
-s
