@@ -3,6 +3,7 @@
 namespace ${namespace};
 
 use App\${Model};
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use LaravelEnso\Select\app\Traits\OptionsBuilder;
 
@@ -14,7 +15,7 @@ class ${Model}SelectController extends Controller
 
     //protected $queryAttributes = ['name'];
 
-    //public function query()
+    //public function query(Request $request)
     //{
     //    return ${Model}::query();
     //}
