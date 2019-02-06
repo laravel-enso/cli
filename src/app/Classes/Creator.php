@@ -3,8 +3,8 @@
 namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\MenuManager\app\Models\Menu;
-use LaravelEnso\RoleManager\app\Models\Role;
 use LaravelEnso\PermissionManager\app\Models\Permission;
+use LaravelEnso\RoleManager\app\Models\Role;
 use LaravelEnso\StructureManager\app\Contracts\EnsoStructure;
 
 class Creator extends Structure implements EnsoStructure

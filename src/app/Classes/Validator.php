@@ -59,7 +59,7 @@ class Validator
 
     private function validateMenu()
     {
-        if (! $this->choices->has('menu')) {
+        if (!$this->choices->has('menu')) {
             return;
         }
 
@@ -79,7 +79,7 @@ class Validator
             }
         }
 
-        if (! $menu->get('route') && ! $menu->get('has_children')) {
+        if (!$menu->get('route') && !$menu->get('has_children')) {
             $errors->push('A regular menu must have the route attribute filled');
         }
 
@@ -131,7 +131,7 @@ class Validator
 
             $dottedMenu = $parent->name;
 
-            while (! is_null($parent->parent_id)) {
+            while (!is_null($parent->parent_id)) {
                 $parent = $parent->parent;
                 $dottedMenu = $parent->name.'.'.$dottedMenu;
 
