@@ -3,8 +3,8 @@
 namespace LaravelEnso\StructureManager\app\Classes;
 
 use LaravelEnso\MenuManager\app\Models\Menu;
-use LaravelEnso\PermissionManager\app\Models\Permission;
 use LaravelEnso\RoleManager\app\Models\Role;
+use LaravelEnso\PermissionManager\app\Models\Permission;
 use LaravelEnso\StructureManager\app\Contracts\EnsoStructure;
 
 class Creator extends Structure implements EnsoStructure
@@ -24,6 +24,7 @@ class Creator extends Structure implements EnsoStructure
     {
         $menu['permission_id'] = optional(Permission::whereName($menu['route'])
             ->first())->id;
+
         unset($menu['route']);
 
         (Menu::create($menu + [

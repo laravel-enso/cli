@@ -59,7 +59,7 @@ class Validator
 
     private function validateMenu()
     {
-        if (!$this->choices->has('menu')) {
+        if (! $this->choices->has('menu')) {
             return;
         }
 
@@ -73,22 +73,34 @@ class Validator
 
             if ($this->choices->has('permissionGroup') &&
                 $this->choices->get('permissionGroup')->get('name')
-                !== collect(explode('.', $menu->get('route')))->slice(0, -1)->implode('.')) {
+                    !== collect(explode('.', $menu->get('route')))
+                        ->slice(0, -1)->implode('.')) {
                 $errors->push('The menu\'s route does not match the configured permission group');
             }
         }
 
-        if (!$menu->get('route') && !$menu->get('has_children')) {
+        if (! $menu->get('route') && ! $menu->get('has_children')) {
             $errors->push('A regular menu must have the route attribute filled');
         }
 
-        if ($menu->filled('parentMenu')
-            && Menu::whereName($menu->get('parentMenu'))->first() === null) {
-            $errors->push(
-                'The parent menu '
-                .$menu->get('parentMenu')
-                .' does not exist in the system'
-            );
+        if ($menu->filled('parentMenu')) {
+            $matches = $this->parentMenuMatches($menu);
+
+            if ($matches === 0) {
+                $errors->push(
+                    'The parent menu '
+                        .$menu->get('parentMenu')
+                        .' does not exist in the system'
+                );
+            }
+
+            if ($matches > 1) {
+                $errors->push(
+                    'The parent menu '
+                        .$menu->get('parentMenu')
+                        .' is ambiguous. Please use dotted notation to specify its parent too.'
+                );
+            }
         }
 
         if ($errors->count()) {
@@ -99,5 +111,37 @@ class Validator
     private function validateFiles()
     {
         //
+    }
+
+    private function parentMenuMatches($menu)
+    {
+        $parentMenu = collect(explode('.', $menu->get('parentMenu')))
+            ->pop();
+
+        $parents = Menu::whereName($parentMenu)
+            ->whereHasChildren(true)
+            ->get();
+
+        return $parents->reduce(function ($matches, $parent) use ($menu) {
+            if ($parent->name === $menu->get('parentMenu')) {
+                $matches++;
+
+                return $matches;
+            }
+
+            $dottedMenu = $parent->name;
+
+            while (! is_null($parent->parent_id)) {
+                $parent = $parent->parent;
+                $dottedMenu = $parent->name.'.'.$dottedMenu;
+
+                if ($dottedMenu === $menu->get('parentMenu')) {
+                    $matches++;
+                    break;
+                }
+            }
+
+            return $matches;
+        }, 0);
     }
 }
