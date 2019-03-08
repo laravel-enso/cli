@@ -1,4 +1,4 @@
-const ${Model}Show = () => import('${depth}../pages/${relativePath}/Show.vue');
+const ${Model}Show = () => import('@pages/${relativePath}/Show.vue');
 
 export default {
     name: '${prefix}.show',

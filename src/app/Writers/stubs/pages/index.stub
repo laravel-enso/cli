@@ -1,6 +1,5 @@
 <template>
     <vue-table class="box has-background-light is-paddingless raises-on-hover is-rounded"
-        :path="path"
         id="${models}"/>
 </template>
 
@@ -9,13 +8,10 @@
 import VueTable from '${depth}../components/enso/vuedatatable/VueTable.vue';
 
 export default {
+    name: 'Index',
+
     components: { VueTable },
-
-    data: () => ({
-        path: route('${permissionGroup}.initTable'),
-    }),
 };
-
 </script>
 
 <style lang="scss">

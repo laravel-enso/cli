@@ -34,7 +34,7 @@ class ViewsWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
+        if (! \File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
@@ -68,8 +68,7 @@ class ViewsWriter
             '${models}' => Str::plural(Str::snake(
                 $this->choices->get('model')->get('name'))
             ),
-            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${depth}'           => str_repeat('../', $this->depth),
+            '${depth}' => str_repeat('../', $this->depth),
         ];
 
         return [

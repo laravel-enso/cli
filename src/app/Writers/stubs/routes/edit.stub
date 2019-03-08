@@ -1,4 +1,4 @@
-const ${Model}Edit = () => import('${depth}../pages/${relativePath}/Edit.vue');
+const ${Model}Edit = () => import('@pages/${relativePath}/Edit.vue');
 
 export default {
     name: '${prefix}.edit',

@@ -1,4 +1,4 @@
-const ${Model}Create = () => import('${depth}../pages/${relativePath}/Create.vue');
+const ${Model}Create = () => import('@pages/${relativePath}/Create.vue');
 
 export default {
     name: '${prefix}.create',

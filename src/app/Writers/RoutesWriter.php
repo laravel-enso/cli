@@ -39,7 +39,7 @@ class RoutesWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
+        if (! \File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
@@ -78,12 +78,11 @@ class RoutesWriter
         })->implode(' ');
 
         $array = [
-            '${Model}'        => $model,
-            '${title}'        => $title,
-            '${model}'        => Str::camel($model),
+            '${Model}' => $model,
+            '${title}' => $title,
+            '${model}' => Str::camel($model),
             '${relativePath}' => $this->segments->implode('/'),
-            '${prefix}'       => $group,
-            '${depth}'        => str_repeat('../', $this->segments->count()),
+            '${prefix}' => $group,
         ];
 
         return [
@@ -118,11 +117,10 @@ class RoutesWriter
     private function segmentFromTo($segment, $depth)
     {
         $array = [
-            '${segment}'         => $segment,
-            '${breadcrumb}'      => collect(explode('_', Str::snake($segment)))->implode(' '),
-            '${depth}'           => str_repeat('../', $depth),
+            '${segment}' => $segment,
+            '${breadcrumb}' => collect(explode('_', Str::snake($segment)))->implode(' '),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${relativePath}'    => $depth === 0 ?
+            '${relativePath}' => $depth === 0 ?
                 '/'.$segment
                 : $segment,
         ];
