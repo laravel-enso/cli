@@ -6,14 +6,14 @@ use Tests\TestCase;
 
 class StructureWriterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         // $this->withoutExceptionHandling();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cleanUp();
         parent::tearDown();
