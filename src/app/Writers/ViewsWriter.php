@@ -34,7 +34,7 @@ class ViewsWriter
 
     private function createFolders()
     {
-        if (! \File::isDirectory($this->path)) {
+        if (!\File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
