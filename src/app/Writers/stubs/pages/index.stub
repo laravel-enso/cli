@@ -1,5 +1,5 @@
 <template>
-    <vue-table class="box has-background-light is-paddingless raises-on-hover is-rounded"
+    <vue-table class="box is-paddingless raises-on-hover"
         id="${models}"/>
 </template>
 
