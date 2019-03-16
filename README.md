@@ -20,7 +20,7 @@ or later when new routes and permissions are required and can create menus, assi
 
 ### Configuration & Usage
 
-Be sure to check out the full documentation for this package available at [docs.laravel-enso.com](https://docs.laravel-enso.com/packages/structure-manager.html)
+Be sure to check out the full documentation for this package available at [docs.laravel-enso.com](https://docs.laravel-enso.com/backend/structure-manager.html)
 
 ### Contributions
 
