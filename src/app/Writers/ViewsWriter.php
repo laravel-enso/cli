@@ -12,7 +12,6 @@ class ViewsWriter
 
     private $choices;
     private $path;
-    private $depth;
 
     public function __construct(Obj $choices)
     {
@@ -23,7 +22,6 @@ class ViewsWriter
         );
 
         $this->path = resource_path(self::PathPrefix.'/'.$segments->implode('/'));
-        $this->depth = $segments->count();
     }
 
     public function run()
@@ -34,7 +32,7 @@ class ViewsWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
+        if (! \File::isDirectory($this->path)) {
             \File::makeDirectory($this->path, 0755, true);
         }
 
@@ -68,7 +66,6 @@ class ViewsWriter
             '${models}' => Str::plural(Str::snake(
                 $this->choices->get('model')->get('name'))
             ),
-            '${depth}' => str_repeat('../', $this->depth),
         ];
 
         return [
