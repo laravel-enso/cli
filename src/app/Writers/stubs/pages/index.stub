@@ -1,16 +1,16 @@
 <template>
-    <vue-table class="box is-paddingless raises-on-hover"
+    <enso-table class="box is-paddingless raises-on-hover"
         id="${models}"/>
 </template>
 
 <script>
 
-import VueTable from '@enso-ui/tables/bulma';
+import { EnsoTable } from '@enso-ui/bulma';
 
 export default {
     name: 'Index',
 
-    components: { VueTable },
+    components: { EnsoTable },
 };
 </script>
 
