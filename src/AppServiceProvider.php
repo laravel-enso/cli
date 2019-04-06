@@ -9,25 +9,22 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands([
-            MakeEnsoStructure::class,
-        ]);
+        $this->commands(MakeEnsoStructure::class);
 
         $this->loadDependencies()
             ->publishDependencies();
     }
 
-    public function register()
-    {
-        //
-    }
-
     private function loadDependencies()
     {
         $this->mergeConfigFrom(__DIR__.'/config/model.php', 'enso.structures.model');
+
         $this->mergeConfigFrom(__DIR__.'/config/menu.php', 'enso.structures.menu');
+
         $this->mergeConfigFrom(__DIR__.'/config/permissionGroup.php', 'enso.structures.permissionGroup');
+
         $this->mergeConfigFrom(__DIR__.'/config/permissions.php', 'enso.structures.permissions');
+
         $this->mergeConfigFrom(__DIR__.'/config/files.php', 'enso.structures.files');
 
         return $this;
