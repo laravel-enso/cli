@@ -59,7 +59,7 @@ class TableWriter
 
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${Models}'          => Str::plural($model),
+            '${Models}'          => Str::plural(Str::snake($model)),
             '${models}'          => Str::plural(Str::camel($model)),
         ];
 
