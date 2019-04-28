@@ -1,4 +1,5 @@
 {
+    "name": "${Models}",
     "routePrefix": "${permissionGroup}",
     "crtNo": true,
     "buttons": ["excel", "create", "show", "edit", "destroy"],
