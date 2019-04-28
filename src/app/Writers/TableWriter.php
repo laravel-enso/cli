@@ -26,15 +26,15 @@ class TableWriter
 
     private function createFolders()
     {
-        if (! \File::isDirectory($this->builderPath())) {
+        if (!\File::isDirectory($this->builderPath())) {
             \File::makeDirectory($this->builderPath(), 0755, true);
         }
 
-        if (! \File::isDirectory($this->templatePath())) {
+        if (!\File::isDirectory($this->templatePath())) {
             \File::makeDirectory($this->templatePath(), 0755, true);
         }
 
-        if (! \File::isDirectory($this->controllerPath())) {
+        if (!\File::isDirectory($this->controllerPath())) {
             \File::makeDirectory($this->controllerPath(), 0755, true);
         }
 
@@ -59,7 +59,7 @@ class TableWriter
 
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${Models}' => Str::title(
+            '${Models}'          => Str::title(
                     collect(explode('_', Str::snake($model)))->implode(' ')
                 ),
             '${models}' => Str::plural(Str::camel($model)),
@@ -101,10 +101,10 @@ class TableWriter
                 .($this->segments->count() > 1
                     ? '\\'.$this->segments->slice(0, -1)->implode('\\')
                     : ''),
-            '${Model}' => $model,
-            '${models}' => Str::camel(Str::plural($model)),
-            '${table}' => Str::snake(Str::plural($model)),
-            '${depth}' => str_repeat('../', $this->segments->count() - 1),
+            '${Model}'        => $model,
+            '${models}'       => Str::camel(Str::plural($model)),
+            '${table}'        => Str::snake(Str::plural($model)),
+            '${depth}'        => str_repeat('../', $this->segments->count() - 1),
             '${relativePath}' => $this->segments->count() > 1
                 ? $this->segments->slice(0, -1)->implode('/').'/'
                 : '',
