@@ -62,7 +62,7 @@ class TableWriter
             '${Models}' => Str::title(
                     collect(explode('_', Str::snake($model)))->implode(' ')
                 ),
-            '${models}' => Str::plural(Str::camel($model)),
+            '${models}' => Str::snake(Str::plural($model)),
         ];
 
         return [
