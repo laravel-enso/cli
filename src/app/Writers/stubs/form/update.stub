@@ -1,0 +1,17 @@
+<?php
+
+namespace ${namespace};
+
+use ${modelNamespace}\${Model};
+use Illuminate\Routing\Controller;
+use ${requestNamespace}\${request};
+
+class Update extends Controller
+{
+    public function __invoke(${request} $request, ${Model} $${model})
+    {
+        $${model}->update($request->validated());
+
+        return ['message' => __('The ${model} was successfully updated')];
+    }
+}

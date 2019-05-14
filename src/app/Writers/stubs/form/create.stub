@@ -1,0 +1,14 @@
+<?php
+
+namespace ${namespace};
+
+use Illuminate\Routing\Controller;
+use ${builderNamespace}\${Model}Form;
+
+class Create extends Controller
+{
+    public function __invoke(${Model}Form $form)
+    {
+        return ['form' => $form->create()];
+    }
+}

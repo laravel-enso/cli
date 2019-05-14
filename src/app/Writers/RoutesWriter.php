@@ -1,8 +1,9 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers;
+namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class RoutesWriter
@@ -39,8 +40,8 @@ class RoutesWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
-            \File::makeDirectory($this->path, 0755, true);
+        if (! File::isDirectory($this->path)) {
+            File::makeDirectory($this->path, 0755, true);
         }
 
         return $this;
@@ -63,7 +64,7 @@ class RoutesWriter
     {
         [$from, $to] = $this->crudFromTo();
 
-        \File::put(
+        File::put(
             $this->path.DIRECTORY_SEPARATOR.$permission.'.js',
             str_replace($from, $to, $this->stub($permission))
         );
@@ -106,7 +107,7 @@ class RoutesWriter
             ? 'parentSegment'
             : 'segment';
 
-        \File::put(
+        File::put(
             $this->pathPrefix.DIRECTORY_SEPARATOR.$segment.'.js',
             str_replace($from, $to, $this->stub($stub))
         );
@@ -133,7 +134,7 @@ class RoutesWriter
 
     private function stub($permission)
     {
-        return \File::get(
+        return File::get(
             __DIR__.DIRECTORY_SEPARATOR.'stubs'
             .DIRECTORY_SEPARATOR.'routes'
             .DIRECTORY_SEPARATOR.$permission.'.stub'

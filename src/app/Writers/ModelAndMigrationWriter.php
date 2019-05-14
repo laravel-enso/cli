@@ -1,8 +1,9 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers;
+namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Artisan;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class ModelAndMigrationWriter
@@ -16,11 +17,11 @@ class ModelAndMigrationWriter
 
     public function run()
     {
-        $model = $this->choices->get('model')->get('name');
+        $model = $this->choices->get('model');
 
-        if (!class_exists('App\\'.$model)) {
-            \Artisan::call('make:model', [
-                'name'        => $this->choices->get('model')->get('name'),
+        if (! class_exists('App\\'.$model)) {
+            Artisan::call('make:model', [
+                'name'        => $model->get('namespace').'\\'.$model->get('name'),
                 '--migration' => $this->choices->get('files')->has('migration'),
             ]);
 
@@ -28,7 +29,7 @@ class ModelAndMigrationWriter
         }
 
         if ($this->choices->get('files')->has('migration')) {
-            \Artisan::call('make:migration', [
+            Artisan::call('make:migration', [
                 'name' => 'create_table_for_'.Str::plural(Str::snake($model)),
             ]);
         }

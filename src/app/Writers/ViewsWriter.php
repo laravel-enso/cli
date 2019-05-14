@@ -1,8 +1,9 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers;
+namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class ViewsWriter
@@ -16,12 +17,6 @@ class ViewsWriter
     public function __construct(Obj $choices)
     {
         $this->choices = $choices;
-
-        $segments = collect(
-            explode('.', $this->choices->get('permissionGroup')->get('name'))
-        );
-
-        $this->path = resource_path(self::PathPrefix.'/'.$segments->implode('/'));
     }
 
     public function run()
@@ -32,8 +27,8 @@ class ViewsWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->path)) {
-            \File::makeDirectory($this->path, 0755, true);
+        if (! File::isDirectory($this->path())) {
+            File::makeDirectory($this->path(), 0755, true);
         }
 
         return $this;
@@ -54,7 +49,7 @@ class ViewsWriter
     {
         [$from, $to] = $this->fromTo();
 
-        \File::put(
+        File::put(
             $this->filename($operation),
             str_replace($from, $to, $this->stub($operation))
         );
@@ -76,15 +71,28 @@ class ViewsWriter
 
     private function filename($operation)
     {
-        return $this->path.DIRECTORY_SEPARATOR.Str::ucfirst($operation).'.vue';
+        return $this->path()
+            .DIRECTORY_SEPARATOR
+            .Str::ucfirst($operation).'.vue';
     }
 
     private function stub($operation)
     {
-        return \File::get(
+        return File::get(
             __DIR__.DIRECTORY_SEPARATOR.'stubs'
             .DIRECTORY_SEPARATOR.'pages'
             .DIRECTORY_SEPARATOR.$operation.'.stub'
         );
+    }
+
+    private function path()
+    {
+        return $this->path
+            ?? $this->path = resource_path(
+                self::PathPrefix.DIRECTORY_SEPARATOR
+                .collect(
+                    explode('.', $this->choices->get('permissionGroup')->get('name'))
+                )->implode(DIRECTORY_SEPARATOR));
+
     }
 }

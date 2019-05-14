@@ -1,12 +1,12 @@
 {
-    "name": "laravel-enso/structuremanager",
-    "description": "Structure Manager dependency for Laravel Enso",
+    "name": "laravel-enso/cli",
+    "description": "Cli dependency for Laravel Enso",
     "keywords": [
         "laravel-enso",
-        "structuremanager",
+        "cli",
         "enso-helper"
     ],
-    "homepage": "https://github.com/laravel-enso/StructureManager",
+    "homepage": "https://github.com/laravel-enso/cli",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -19,21 +19,21 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel-enso/core": "4.2.*",
-        "laravel-enso/helpers": "1.10.*",
-        "laravel-enso/menumanager": "3.0.*",
-        "laravel-enso/permissionmanager": "3.0.*",
-        "laravel-enso/rolemanager": "3.0.*"
+        "laravel-enso/core": "4.3.*",
+        "laravel-enso/helpers": "1.11.*",
+        "laravel-enso/menus": "3.1.*",
+        "laravel-enso/permissions": "3.1.*",
+        "laravel-enso/roles": "3.1.*"
     },
     "autoload": {
         "psr-4": {
-            "LaravelEnso\\StructureManager\\": "src/"
+            "LaravelEnso\\Cli\\": "src/"
         }
     },
         "extra": {
             "laravel": {
                 "providers": [
-                    "LaravelEnso\\StructureManager\\AppServiceProvider"
+                    "LaravelEnso\\Cli\\AppServiceProvider"
                 ],
                 "aliases": {}
             }

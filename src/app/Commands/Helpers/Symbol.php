@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Commands\Helpers;
+namespace LaravelEnso\Cli\app\Commands\Helpers;
 
 class Symbol
 {
@@ -32,6 +32,8 @@ class Symbol
 
     private static function output($symbol, $color)
     {
-        return '<fg='.$color.'>'.html_entity_decode($symbol, ENT_NOQUOTES, 'UTF-8').'</>';
+        return '<fg='.$color.'>'
+            .html_entity_decode($symbol, ENT_NOQUOTES, 'UTF-8')
+            .'</>';
     }
 }

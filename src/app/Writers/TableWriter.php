@@ -1,8 +1,9 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers;
+namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class TableWriter
@@ -13,7 +14,6 @@ class TableWriter
     public function __construct(Obj $choices)
     {
         $this->choices = $choices;
-        $this->setSegments();
     }
 
     public function run()
@@ -26,16 +26,16 @@ class TableWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->builderPath())) {
-            \File::makeDirectory($this->builderPath(), 0755, true);
+        if (! File::isDirectory($this->builderPath())) {
+            File::makeDirectory($this->builderPath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->templatePath())) {
-            \File::makeDirectory($this->templatePath(), 0755, true);
+        if (! File::isDirectory($this->templatePath())) {
+            File::makeDirectory($this->templatePath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->controllerPath())) {
-            \File::makeDirectory($this->controllerPath(), 0755, true);
+        if (! File::isDirectory($this->controllerPath())) {
+            File::makeDirectory($this->controllerPath(), 0755, true);
         }
 
         return $this;
@@ -45,7 +45,7 @@ class TableWriter
     {
         [$from, $to] = $this->templateFromTo();
 
-        \File::put(
+        File::put(
             $this->templateName(),
             str_replace($from, $to, $this->stub('template'))
         );
@@ -84,7 +84,7 @@ class TableWriter
     {
         [$from, $to] = $this->builderFromTo();
 
-        \File::put(
+        File::put(
             $this->builderName(),
             str_replace($from, $to, $this->stub('builder'))
         );
@@ -94,19 +94,20 @@ class TableWriter
 
     private function builderFromTo()
     {
-        $model = $this->choices->get('model')->get('name');
+        $model = $this->choices->get('model');
 
         $array = [
             '${namespace}' => 'App\\Tables\\Builders'
-                .($this->segments->count() > 1
-                    ? '\\'.$this->segments->slice(0, -1)->implode('\\')
+                .($this->segments()->count() > 1
+                    ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
-            '${Model}'        => $model,
-            '${models}'       => Str::camel(Str::plural($model)),
-            '${table}'        => Str::snake(Str::plural($model)),
-            '${depth}'        => str_repeat('../', $this->segments->count() - 1),
-            '${relativePath}' => $this->segments->count() > 1
-                ? $this->segments->slice(0, -1)->implode('/').'/'
+            '${modelNamespace}' => $model->get('namespace'),
+            '${Model}'        => $model->get('name'),
+            '${models}'       => Str::camel(Str::plural($model->get('name'))),
+            '${table}'        => Str::snake(Str::plural($model->get('name'))),
+            '${depth}'        => str_repeat('../', $this->segments()->count() - 1),
+            '${relativePath}' => $this->segments()->count() > 1
+                ? $this->segments()->slice(0, -1)->implode('/').'/'
                 : '',
         ];
 
@@ -128,7 +129,7 @@ class TableWriter
     {
         [$from, $to] = $this->controllerFromTo();
 
-        \File::put(
+        File::put(
             $this->controllerName(),
             str_replace($from, $to, $this->stub('controller'))
         );
@@ -140,10 +141,10 @@ class TableWriter
     {
         $array = [
             '${namespace}' => 'App\\Http\\Controllers\\'
-                .$this->segments->implode('\\'),
+                .$this->segments()->implode('\\'),
             '${builderNamespace}' => 'App\\Tables\\Builders\\'
-                .($this->segments->count() > 1
-                    ? $this->segments->slice(0, -1)->implode('\\').'\\'
+                .($this->segments()->count() > 1
+                    ? $this->segments()->slice(0, -1)->implode('\\').'\\'
                     : ''),
             '${Model}' => $this->choices->get('model')->get('name'),
         ];
@@ -158,46 +159,52 @@ class TableWriter
     {
         return $this->controllerPath()
             .DIRECTORY_SEPARATOR
-            .$this->choices->get('model')->get('name')
-            .'TableController.php';
+            .'Table.php';
     }
 
     private function builderPath()
     {
         return app_path(
-            'Tables/Builders'.'/'.$this->segments->slice(0, -1)->implode('/')
+            'Tables'.DIRECTORY_SEPARATOR
+            .'Builders'.DIRECTORY_SEPARATOR.
+            $this->segments()->slice(0, -1)->implode(DIRECTORY_SEPARATOR)
         );
     }
 
     private function templatePath()
     {
         return app_path(
-            'Tables/Templates'.'/'.$this->segments->slice(0, -1)->implode('/')
+            'Tables'.DIRECTORY_SEPARATOR
+            .'Templates'.DIRECTORY_SEPARATOR.
+            $this->segments()->slice(0, -1)->implode(DIRECTORY_SEPARATOR)
         );
     }
 
     private function controllerPath()
     {
         return app_path(
-            'Http/Controllers'.'/'.$this->segments->implode('/')
+            'Http'.DIRECTORY_SEPARATOR.
+            'Controllers'.DIRECTORY_SEPARATOR.
+            $this->segments()->implode(DIRECTORY_SEPARATOR)
         );
     }
 
     private function stub($file)
     {
-        return \File::get(
+        return File::get(
             __DIR__.DIRECTORY_SEPARATOR.'stubs'
             .DIRECTORY_SEPARATOR.'table'
             .DIRECTORY_SEPARATOR.$file.'.stub'
         );
     }
 
-    private function setSegments()
+    private function segments()
     {
-        $this->segments = collect(
-            explode('.', $this->choices->get('permissionGroup')->get('name'))
-        )->map(function ($segment) {
-            return ucfirst($segment);
-        });
+        return $this->segments
+            ?? $this->segments = collect(
+                explode('.', $this->choices->get('permissionGroup')->get('name'))
+            )->map(function ($segment) {
+                return ucfirst($segment);
+            });
     }
 }

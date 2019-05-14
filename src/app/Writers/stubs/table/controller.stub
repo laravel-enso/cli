@@ -3,11 +3,11 @@
 namespace ${namespace};
 
 use ${builderNamespace}${Model}Table;
-use App\Http\Controllers\Controller;
-use LaravelEnso\VueDatatable\app\Traits\Excel;
-use LaravelEnso\VueDatatable\app\Traits\Datatable;
+use Illuminate\Routing\Controller;
+use LaravelEnso\Tables\app\Traits\Excel;
+use LaravelEnso\Tables\app\Traits\Datatable;
 
-class ${Model}TableController extends Controller
+class Table extends Controller
 {
     use Datatable, Excel;
 

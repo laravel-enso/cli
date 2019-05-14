@@ -1,24 +1,24 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Commands;
+namespace LaravelEnso\Cli\app\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Classes\StructureWriter;
-use LaravelEnso\StructureManager\app\Classes\Validator;
-use LaravelEnso\StructureManager\app\Commands\Helpers\Symbol;
-use LaravelEnso\StructureManager\app\Helpers\TestConfig;
-use LaravelEnso\StructureManager\app\Writers\RoutesGenerator;
+use LaravelEnso\Cli\app\Helpers\TestConfig;
+use LaravelEnso\Cli\app\Services\Structure;
+use LaravelEnso\Cli\app\Services\Validator;
+use LaravelEnso\Cli\app\Writers\RouteGenerator;
+use LaravelEnso\Cli\app\Commands\Helpers\Symbol;
 
-class MakeEnsoStructure extends Command
+class Cli extends Command
 {
     const Menu = [
         'Model', 'Permission Group', 'Permissions', 'Menu',
         'Files', 'Generate', 'Validation',
     ];
 
-    protected $signature = 'enso:make:structure';
+    protected $signature = 'enso:cli';
     protected $description = 'Create a new Laravel Enso Structure';
 
     private $choices;
@@ -120,7 +120,7 @@ class MakeEnsoStructure extends Command
 
         if ($this->isValid($type, $value)) {
             return $type === 'integer'
-                ? intval($value)
+                ? (int) $value
                 : $value;
         }
 
@@ -133,7 +133,7 @@ class MakeEnsoStructure extends Command
     private function isValid($type, $value)
     {
         return $type === 'NULL'
-            || ($type === 'integer' && (string) intval($value) === $value)
+            || ($type === 'integer' && (string) $value === $value)
             || (gettype($value) === $type);
     }
 
@@ -247,7 +247,7 @@ class MakeEnsoStructure extends Command
 
     private function write()
     {
-        (new StructureWriter($this->choices))
+        (new Structure($this->choices))
             ->run();
 
         return $this;
@@ -256,8 +256,7 @@ class MakeEnsoStructure extends Command
     private function output()
     {
         if ($this->choices->has('permissions')) {
-            $routes = (new RoutesGenerator($this->choices))
-                ->run();
+            $routes = (new RouteGenerator($this->choices))->run();
 
             $this->info('Copy and paste the following code into your api.php routes file:');
             $this->line('');

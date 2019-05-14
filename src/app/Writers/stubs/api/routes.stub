@@ -1,19 +1,3 @@
 Route::namespace('${namespace}')
     ${groupPrefix}
-    ->group(function () {
-       Route::get('initTable', '${Model}TableController@init')
-           ->name('initTable');
-       Route::get('tableData', '${Model}TableController@data')
-           ->name('tableData');
-       Route::get('exportExcel', '${Model}TableController@excel')
-           ->name('exportExcel');
-
-       Route::get('options', '${Model}SelectController@options')
-           ->name('options');
-   });
-
-Route::namespace('${namespace}')
-    ${resourcePrefix}
-    ->group(function () {
-        Route::resource('${resource}', '${Model}Controller'); // if it's the case, use `except` or `only` to avoid generating unused routes
-    });
+    ->group(function () {${routes}});

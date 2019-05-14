@@ -1,0 +1,22 @@
+<?php
+
+namespace ${namespace};
+
+use ${modelNamespace}\${Model};
+use Illuminate\Routing\Controller;
+use ${requestNamespace}\${request};
+
+class Store extends Controller
+{
+    public function __invoke(${request} $request, ${Model} $${model})
+    {
+        tap($${model})->fill($request->validated())
+            ->save();
+
+        return [
+            'message' => __('The ${model} was successfully created'),
+            'redirect' => '${permissionGroup}.edit',
+            'param' => ['${model}' => $${model}->id],
+        ];
+    }
+}

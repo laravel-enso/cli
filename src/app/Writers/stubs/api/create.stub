@@ -1,0 +1,1 @@
+Route::get('create', 'Create')->name('create');

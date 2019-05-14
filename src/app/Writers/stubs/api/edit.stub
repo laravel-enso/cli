@@ -1,0 +1,1 @@
+Route::get('${model}/edit', 'Edit')->name('edit');

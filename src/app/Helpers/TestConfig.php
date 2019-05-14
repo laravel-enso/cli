@@ -1,7 +1,8 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Helpers;
+namespace LaravelEnso\Cli\app\Helpers;
 
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class TestConfig
@@ -9,7 +10,7 @@ class TestConfig
     public static function load()
     {
         $choices = new Obj(json_decode(
-            \File::get(__DIR__.'/../Writers/stubs/test.stub')
+            File::get(__DIR__.'/../Writers/stubs/test.stub')
         ));
 
         collect($choices)->keys()

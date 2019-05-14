@@ -2,8 +2,8 @@
 
 namespace ${namespace};
 
-use App\${Model};
-use LaravelEnso\VueDatatable\app\Classes\Table;
+use ${modelNamespace}\${Model};
+use LaravelEnso\Tables\app\Services\Table;
 
 class ${Model}Table extends Table
 {
@@ -11,8 +11,8 @@ class ${Model}Table extends Table
 
     public function query()
     {
-        return ${Model}::select(\DB::raw('
+        return ${Model}::selectRaw('
             ${table}.id as "dtRowId"
-        '));
+        ');
     }
 }

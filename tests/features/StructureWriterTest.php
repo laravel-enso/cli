@@ -1,8 +1,8 @@
 <?php
 
-use LaravelEnso\StructureManager\app\Classes\StructureWriter;
-use LaravelEnso\StructureManager\app\Helpers\TestConfig;
 use Tests\TestCase;
+use LaravelEnso\Cli\app\Helpers\TestConfig;
+use LaravelEnso\Cli\app\Services\Structure;
 
 class StructureWriterTest extends TestCase
 {
@@ -24,8 +24,7 @@ class StructureWriterTest extends TestCase
     {
         $config = TestConfig::load();
 
-        (new StructureWriter($config))
-            ->run();
+        (new Structure($config))->handle();
 
         $this->assertTrue($this->formFilesCreated());
         $this->assertTrue($this->tableFilesCreated());
@@ -61,9 +60,15 @@ class StructureWriterTest extends TestCase
 
     private function controllersCreated()
     {
-        return File::exists('app/Http/Controllers/Testing/Projects/Trees/TreeController.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/TreeSelectController.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/TreeTableController.php');
+        return File::exists('app/Http/Controllers/Testing/Projects/Trees/Index.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Create.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Edit.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Update.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Store.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Show.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Destroy.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Select.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Table.php');
     }
 
     private function pagesCreated()

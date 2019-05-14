@@ -1,0 +1,15 @@
+<?php
+
+namespace ${namespace};
+
+use ${modelNamespace}\${Model};
+use Illuminate\Routing\Controller;
+use ${builderNamespace}\${Model}Form;
+
+class Edit extends Controller
+{
+    public function __invoke(${Model} $${model}, ${Model}Form $form)
+    {
+        return ['form' => $form->edit($${model})];
+    }
+}

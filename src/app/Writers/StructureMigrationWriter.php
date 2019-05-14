@@ -1,8 +1,9 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers;
+namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class StructureMigrationWriter
@@ -18,7 +19,7 @@ class StructureMigrationWriter
     {
         [$from, $to] = $this->replaceFromTo();
 
-        \File::put(
+        File::put(
             database_path('migrations/'.$this->name()),
             str_replace($from, $to, $this->stub('migration'))
         );
@@ -27,9 +28,9 @@ class StructureMigrationWriter
     private function replaceFromTo()
     {
         $array = [
-            '${Entity}'      => Str::plural($this->entity()),
-            '${menu}'        => $this->menu(),
-            '${parentMenu}'  => $this->parentMenu(),
+            '${Entity}' => Str::plural($this->entity()),
+            '${menu}' => $this->menu(),
+            '${parentMenu}' => $this->parentMenu(),
             '${permissions}' => $this->permissions(),
         ];
 
@@ -90,7 +91,7 @@ class StructureMigrationWriter
     {
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}'           => strtolower(str_replace('_', ' ', Str::snake($this->model()))),
+            '${model}' => strtolower(str_replace('_', ' ', Str::snake($this->model()))),
         ];
 
         return [
@@ -145,7 +146,7 @@ class StructureMigrationWriter
 
     private function stub($stub)
     {
-        return \File::get(
+        return File::get(
             __DIR__.DIRECTORY_SEPARATOR.'stubs'
             .DIRECTORY_SEPARATOR.'structure'
             .DIRECTORY_SEPARATOR.$stub.'.stub'

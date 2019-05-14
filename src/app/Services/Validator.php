@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Classes;
+namespace LaravelEnso\Cli\app\Services;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\MenuManager\app\Models\Menu;
+use LaravelEnso\Menus\app\Models\Menu;
 
 class Validator
 {
@@ -41,10 +41,17 @@ class Validator
 
     private function validateModel()
     {
-        $this->choices->get('model')->set(
-            'name',
-            Str::ucfirst($this->choices->get('model')->get('name'))
-        );
+        $errors = collect();
+
+        $model = $this->choices->get('model')->get('name');
+
+        if (Str::contains(str_replace('\\\\', '', $model), '\\')) {
+            $errors->push('Namespaced models must use double backslash');
+        }  
+
+        if ($errors->count()) {
+            $this->errors['Model'] = $errors;
+        }
     }
 
     private function validatePermissionGroup()
@@ -131,7 +138,7 @@ class Validator
 
             $dottedMenu = $parent->name;
 
-            while (!is_null($parent->parent_id)) {
+            while ($parent->parent_id !== null) {
                 $parent = $parent->parent;
                 $dottedMenu = $parent->name.'.'.$dottedMenu;
 

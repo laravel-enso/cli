@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'requires'   => ['Model'],
+    'requires' => ['Model'],
     'attributes' => [
         'name' => null,
     ],

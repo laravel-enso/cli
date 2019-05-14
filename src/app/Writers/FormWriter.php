@@ -1,19 +1,22 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Writers;
+namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class FormWriter
 {
+    private const CrudOperations = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
+
     private $choices;
     private $segments;
 
     public function __construct(Obj $choices)
     {
         $this->choices = $choices;
-        $this->setSegments();
     }
 
     public function run()
@@ -27,16 +30,16 @@ class FormWriter
 
     private function createFolders()
     {
-        if (!\File::isDirectory($this->builderPath())) {
-            \File::makeDirectory($this->builderPath(), 0755, true);
+        if (! File::isDirectory($this->builderPath())) {
+            File::makeDirectory($this->builderPath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->templatePath())) {
-            \File::makeDirectory($this->templatePath(), 0755, true);
+        if (! File::isDirectory($this->templatePath())) {
+            File::makeDirectory($this->templatePath(), 0755, true);
         }
 
-        if (!\File::isDirectory($this->controllerPath())) {
-            \File::makeDirectory($this->controllerPath(), 0755, true);
+        if (! File::isDirectory($this->controllerPath())) {
+            File::makeDirectory($this->controllerPath(), 0755, true);
         }
 
         return $this;
@@ -44,7 +47,7 @@ class FormWriter
 
     private function writeTemplate()
     {
-        \File::put(
+        File::put(
             $this->templateName(),
             str_replace(
                 '${permissionGroup}',
@@ -68,7 +71,7 @@ class FormWriter
     {
         [$from, $to] = $this->builderFromTo();
 
-        \File::put(
+        File::put(
             $this->builderName(),
             str_replace($from, $to, $this->stub('builder'))
         );
@@ -78,19 +81,20 @@ class FormWriter
 
     private function builderFromTo()
     {
-        $model = $this->choices->get('model')->get('name');
+        $model = $this->choices->get('model');
 
         $array = [
-            '${relativePath}' => $this->segments->count() > 1
-                ? $this->segments->slice(0, -1)->implode('/').'/'
+            '${relativePath}' => $this->segments()->count() > 1
+                ? $this->segments()->slice(0, -1)->implode('/').'/'
                 : '',
             '${namespace}' => 'App\\Forms\\Builders'
-                .($this->segments->count() > 1
-                    ? '\\'.$this->segments->slice(0, -1)->implode('\\')
+                .($this->segments()->count() > 1
+                    ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
-            '${depth}' => str_repeat('../', $this->segments->count()),
-            '${model}' => Str::camel($model),
-            '${Model}' => $model,
+            '${modelNamespace}' => $model->get('namespace'),
+            '${depth}' => str_repeat('../', $this->segments()->count()),
+            '${model}' => Str::camel($model->get('name')),
+            '${Model}' => $model->get('name'),
         ];
 
         return [
@@ -109,7 +113,7 @@ class FormWriter
 
     private function writeRequest()
     {
-        \Artisan::call('make:request', [
+        Artisan::call('make:request', [
             'name' => $this->request(),
         ]);
 
@@ -118,10 +122,8 @@ class FormWriter
 
     private function request()
     {
-        return $this->segments->slice(0, -1)
-            ->implode('\\')
-            .'\\'
-            .'Validate'
+        return $this->segments()->slice(0, -1)->implode('\\')
+            .'\\'.'Validate'
             .$this->choices->get('model')->get('name')
             .'Request';
     }
@@ -130,27 +132,39 @@ class FormWriter
     {
         [$from, $to] = $this->controllerFromTo();
 
-        \File::put(
-            $this->controllerName(),
-            str_replace($from, $to, $this->stub('controller'))
-        );
+        collect($this->choices->get('permissions')->all())
+            ->filter()
+            ->keys()
+            ->intersect(self::CrudOperations)
+            ->each(function ($permission) use ($from, $to) {
+                if ($stub = $this->stub($permission)) {
+                    File::put(
+                        $this->controllerName($permission),
+                        str_replace($from, $to, $stub)
+                    );
+                }
+            });
+
+        return $this;
     }
 
     private function controllerFromTo()
     {
-        $model = $this->choices->get('model')->get('name');
+        $model = $this->choices->get('model');
 
-        $builderNamespaceSuffix = $this->segments->count() > 1
-            ? $this->segments->slice(0, -1)->implode('\\').'\\'
+        $namespaceSuffix = $this->segments()->count() > 1
+            ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
             : '';
 
         $array = [
-            '${Model}'            => $model,
-            '${model}'            => Str::camel($model),
-            '${permissionGroup}'  => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}'        => 'App\\Http\\Controllers\\'.$this->segments->implode('\\'),
-            '${builderNamespace}' => 'App\\Forms\\Builders\\'.$builderNamespaceSuffix,
-            '${requestNamespace}' => 'App\\Http\\Requests\\'.$builderNamespaceSuffix,
+            '${Model}' => $model->get('name'),
+            '${model}' => Str::lower($model->get('name')),
+            '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
+            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments()->implode('\\'),
+            '${modelNamespace}' => $model->get('namespace'),
+            '${builderNamespace}' => 'App\\Forms\\Builders'.$namespaceSuffix,
+            '${requestNamespace}' => 'App\\Http\\Requests'.$namespaceSuffix,
+            '${request}' => 'Validate'.$model->get('name').'Request',
         ];
 
         return [
@@ -159,51 +173,60 @@ class FormWriter
         ];
     }
 
-    private function controllerName()
+    private function controllerName($permission)
     {
         return $this->controllerPath()
             .DIRECTORY_SEPARATOR
-            .$this->choices->get('model')->get('name')
-            .'Controller.php';
+            .Str::ucfirst($permission).
+            '.php';
     }
 
     private function builderPath()
     {
         return app_path(
-            'Forms/Builders'.'/'.$this->segments->slice(0, -1)->implode('/')
+            'Forms'.DIRECTORY_SEPARATOR
+            .'Builders'.DIRECTORY_SEPARATOR
+            .$this->segments()->slice(0, -1)
+                ->implode(DIRECTORY_SEPARATOR)
         );
     }
 
     private function templatePath()
     {
         return app_path(
-            'Forms/Templates'.'/'.$this->segments->slice(0, -1)->implode('/')
+            'Forms'.DIRECTORY_SEPARATOR
+            .'Templates'.DIRECTORY_SEPARATOR
+            .$this->segments()->slice(0, -1)
+                ->implode(DIRECTORY_SEPARATOR)
         );
     }
 
     private function controllerPath()
     {
         return app_path(
-            'Http/Controllers'.'/'.$this->segments->implode('/')
+            'Http'.DIRECTORY_SEPARATOR.
+            'Controllers'.DIRECTORY_SEPARATOR
+            .$this->segments()->implode(DIRECTORY_SEPARATOR)
         );
     }
 
     private function stub($file)
     {
-        return \File::get(
-            __DIR__
-            .DIRECTORY_SEPARATOR.'stubs'
-            .DIRECTORY_SEPARATOR.'form'
-            .DIRECTORY_SEPARATOR.$file.'.stub'
+        return File::get(
+            __DIR__.DIRECTORY_SEPARATOR
+            .'stubs'.DIRECTORY_SEPARATOR
+            .'form'.DIRECTORY_SEPARATOR
+            .$file.'.stub'
         );
     }
 
-    private function setSegments()
+    private function segments()
     {
-        $this->segments = collect(
-            explode('.', $this->choices->get('permissionGroup')->get('name'))
-        )->map(function ($segment) {
-            return Str::ucfirst($segment);
-        });
+        return $this->segments
+            ?? $this->segments = collect(
+                explode('.', $this->choices->get('permissionGroup')->get('name'))
+            )->map(function ($segment) {
+                return Str::ucfirst($segment);
+            });
     }
 }

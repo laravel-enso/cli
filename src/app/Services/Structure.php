@@ -1,30 +1,32 @@
 <?php
 
-namespace LaravelEnso\StructureManager\app\Classes;
+namespace LaravelEnso\Cli\app\Services;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\StructureManager\app\Writers\FormWriter;
-use LaravelEnso\StructureManager\app\Writers\ModelAndMigrationWriter;
-use LaravelEnso\StructureManager\app\Writers\RoutesWriter;
-use LaravelEnso\StructureManager\app\Writers\SelectWriter;
-use LaravelEnso\StructureManager\app\Writers\StructureMigrationWriter;
-use LaravelEnso\StructureManager\app\Writers\TableWriter;
-use LaravelEnso\StructureManager\app\Writers\ViewsWriter;
+use LaravelEnso\Cli\app\Writers\FormWriter;
+use LaravelEnso\Cli\app\Writers\TableWriter;
+use LaravelEnso\Cli\app\Writers\ViewsWriter;
+use LaravelEnso\Cli\app\Writers\RoutesWriter;
+use LaravelEnso\Cli\app\Writers\OptionstWriter;
+use LaravelEnso\Cli\app\Writers\ModelAndMigrationWriter;
+use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
 
-class StructureWriter
+class Structure
 {
     private $choices;
 
     public function __construct(Obj $choices)
     {
         $this->choices = $choices;
+        $this->prepareModel();
     }
 
-    public function run()
+    public function handle()
     {
         $this->writeStructure();
 
-        if (!$this->choices->has('files')) {
+        if (! $this->choices->has('files')) {
             return;
         }
 
@@ -33,7 +35,7 @@ class StructureWriter
             ->writeViews()
             ->writeForm()
             ->writeTable()
-            ->writeSelect();
+            ->writeOptions();
     }
 
     private function writeStructure()
@@ -95,13 +97,28 @@ class StructureWriter
         return $this;
     }
 
-    private function writeSelect()
+    private function writeOptions()
     {
-        if ($this->choices->get('files')->has('select')) {
-            (new SelectWriter($this->choices))
+        if ($this->choices->get('files')->has('options')) {
+            (new OptionstWriter($this->choices))
                 ->run();
         }
 
         return $this;
+    }
+
+    private function prepareModel()
+    {
+        $model = $this->choices->get('model');
+
+        if (! Str::contains($model->get('name'), '\\\\')) {
+            $model->set('namespace', 'App');
+
+            return;
+        }
+
+        $segments = collect(explode('\\\\', $model->get('name')));
+        $model->set('name', $segments->pop());
+        $model->set('namespace', $segments->implode('\\'));
     }
 }

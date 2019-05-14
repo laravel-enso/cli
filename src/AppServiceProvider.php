@@ -1,15 +1,15 @@
 <?php
 
-namespace LaravelEnso\StructureManager;
+namespace LaravelEnso\Cli;
 
+use LaravelEnso\Cli\app\Commands\Cli;
 use Illuminate\Support\ServiceProvider;
-use LaravelEnso\StructureManager\app\Commands\MakeEnsoStructure;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands(MakeEnsoStructure::class);
+        $this->commands(Cli::class);
 
         $this->loadDependencies()
             ->publishDependencies();
@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/config' => config_path('enso/structures'),
-        ], 'structuremanager-config');
+        ], 'cli-config');
 
         $this->publishes([
             __DIR__.'/config' => config_path('enso/structures'),
