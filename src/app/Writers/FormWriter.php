@@ -25,7 +25,7 @@ class FormWriter
             ->writeTemplate()
             ->writeBuilder()
             ->writeRequest()
-            ->writeController();
+            ->writeControllers();
     }
 
     private function createFolders()
@@ -128,7 +128,7 @@ class FormWriter
             .'Request';
     }
 
-    private function writeController()
+    private function writeControllers()
     {
         [$from, $to] = $this->controllerFromTo();
 
@@ -137,12 +137,10 @@ class FormWriter
             ->keys()
             ->intersect(self::CrudOperations)
             ->each(function ($permission) use ($from, $to) {
-                if ($stub = $this->stub($permission)) {
-                    File::put(
-                        $this->controllerName($permission),
-                        str_replace($from, $to, $stub)
-                    );
-                }
+                File::put(
+                    $this->controllerName($permission),
+                    str_replace($from, $to, $this->stub($permission))
+                );
             });
 
         return $this;

@@ -8,6 +8,8 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class TableWriter
 {
+    private const TableOperations = ['initTable', 'tableData', 'exportExcel'];
+
     private $choices;
     private $segments;
 
@@ -21,7 +23,7 @@ class TableWriter
         $this->createFolders()
             ->writeTemplate()
             ->writeBuilder()
-            ->writeController();
+            ->writeControllers();
     }
 
     private function createFolders()
@@ -59,7 +61,7 @@ class TableWriter
 
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${Models}'          => Str::title(
+            '${Models}' => Str::title(
                     collect(explode('_', Str::snake($model)))->implode(' ')
                 ),
             '${models}' => Str::snake(Str::plural($model)),
@@ -102,10 +104,10 @@ class TableWriter
                     ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
             '${modelNamespace}' => $model->get('namespace'),
-            '${Model}'        => $model->get('name'),
-            '${models}'       => Str::camel(Str::plural($model->get('name'))),
-            '${table}'        => Str::snake(Str::plural($model->get('name'))),
-            '${depth}'        => str_repeat('../', $this->segments()->count() - 1),
+            '${Model}' => $model->get('name'),
+            '${models}' => Str::camel(Str::plural($model->get('name'))),
+            '${table}' => Str::snake(Str::plural($model->get('name'))),
+            '${depth}' => str_repeat('../', $this->segments()->count() - 1),
             '${relativePath}' => $this->segments()->count() > 1
                 ? $this->segments()->slice(0, -1)->implode('/').'/'
                 : '',
@@ -125,14 +127,20 @@ class TableWriter
             .'Table.php';
     }
 
-    private function writeController()
+    private function writeControllers()
     {
         [$from, $to] = $this->controllerFromTo();
 
-        File::put(
-            $this->controllerName(),
-            str_replace($from, $to, $this->stub('controller'))
-        );
+        collect($this->choices->get('permissions')->all())
+            ->filter()
+            ->keys()
+            ->intersect(self::TableOperations)
+            ->each(function ($permission) use ($from, $to) {
+                File::put(
+                    $this->controllerName($permission),
+                    str_replace($from, $to, $this->stub($permission))
+                );
+            });
 
         return $this;
     }
@@ -155,11 +163,12 @@ class TableWriter
         ];
     }
 
-    private function controllerName()
+    private function controllerName($permission)
     {
         return $this->controllerPath()
             .DIRECTORY_SEPARATOR
-            .'Table.php';
+            .Str::ucfirst($permission).
+            '.php';
     }
 
     private function builderPath()
@@ -167,7 +176,8 @@ class TableWriter
         return app_path(
             'Tables'.DIRECTORY_SEPARATOR
             .'Builders'.DIRECTORY_SEPARATOR.
-            $this->segments()->slice(0, -1)->implode(DIRECTORY_SEPARATOR)
+            $this->segments()->slice(0, -1)
+                ->implode(DIRECTORY_SEPARATOR)
         );
     }
 
@@ -176,7 +186,8 @@ class TableWriter
         return app_path(
             'Tables'.DIRECTORY_SEPARATOR
             .'Templates'.DIRECTORY_SEPARATOR.
-            $this->segments()->slice(0, -1)->implode(DIRECTORY_SEPARATOR)
+            $this->segments()->slice(0, -1)
+                ->implode(DIRECTORY_SEPARATOR)
         );
     }
 
@@ -201,9 +212,9 @@ class TableWriter
     private function segments()
     {
         return $this->segments
-            ?? $this->segments = collect(
-                explode('.', $this->choices->get('permissionGroup')->get('name'))
-            )->map(function ($segment) {
+            ?? $this->segments = collect(explode(
+                '.', $this->choices->get('permissionGroup')->get('name')
+            ))->map(function ($segment) {
                 return ucfirst($segment);
             });
     }

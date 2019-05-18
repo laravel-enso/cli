@@ -55,7 +55,7 @@ class Cli extends Command
         }
 
         if ($choice === $this->validation()) {
-            $this->validates = !$this->validates;
+            $this->validates = ! $this->validates;
             $this->error('Validation '.($this->validates ? 'enabled' : 'disabled'));
             $this->line('');
             sleep(1);
@@ -105,7 +105,7 @@ class Cli extends Command
                 $config->set($key, $input);
             });
 
-        if (!$this->configured->contains($choice)) {
+        if (! $this->configured->contains($choice)) {
             $this->configured->push($choice);
         }
     }
@@ -236,7 +236,7 @@ class Cli extends Command
         if ($this->choices->has('files')) {
             collect($this->choices->get('files'))
                 ->each(function ($chosen, $type) {
-                    if (!$chosen) {
+                    if (! $chosen) {
                         $this->choices->get('files')->forget($type);
                     }
                 });

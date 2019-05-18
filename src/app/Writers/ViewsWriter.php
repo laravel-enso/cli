@@ -93,6 +93,5 @@ class ViewsWriter
                 .collect(
                     explode('.', $this->choices->get('permissionGroup')->get('name'))
                 )->implode(DIRECTORY_SEPARATOR));
-
     }
 }

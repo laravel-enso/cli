@@ -21,7 +21,7 @@ class ModelAndMigrationWriter
 
         if (! class_exists('App\\'.$model)) {
             Artisan::call('make:model', [
-                'name'        => $model->get('namespace').'\\'.$model->get('name'),
+                'name' => $model->get('namespace').'\\'.$model->get('name'),
                 '--migration' => $this->choices->get('files')->has('migration'),
             ]);
 

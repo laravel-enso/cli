@@ -49,7 +49,7 @@ class OptionstWriter
         $array = [
             '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
-            '${Model}'     => $model->get('name'),
+            '${Model}' => $model->get('name'),
         ];
 
         return [
