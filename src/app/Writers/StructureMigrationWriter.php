@@ -71,7 +71,7 @@ class StructureMigrationWriter
     private function permissions()
     {
         if ($this->choices->has('permissions')) {
-            $stub = collect($this->choices->get('permissions'))
+            $stub = $this->choices->get('permissions')
                 ->filter()
                 ->keys()
                 ->reduce(function ($content, $permission) {
@@ -114,16 +114,16 @@ class StructureMigrationWriter
             : $this->choices->get('menu')->get('name');
     }
 
-    private function mapping($keys)
+    private function mapping(Obj $keys)
     {
-        return collect($keys)->map(function ($key) {
+        return $keys->map(function ($key) {
             return '${'.$key.'}';
         })->toArray();
     }
 
-    private function writableValues($values)
+    private function writableValues(Obj $values)
     {
-        return collect($values)->map(function ($value) {
+        return $values->map(function ($value) {
             if (is_bool($value)) {
                 return $value
                     ? 'true'

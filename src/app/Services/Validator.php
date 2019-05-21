@@ -3,8 +3,8 @@
 namespace LaravelEnso\Cli\app\Services;
 
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Menus\app\Models\Menu;
+use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Validator
 {

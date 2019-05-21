@@ -49,7 +49,7 @@ class RoutesWriter
 
     private function writeCrudRoutes()
     {
-        collect($this->choices->get('permissions'))
+        $this->choices->get('permissions')
             ->filter(function ($chosen, $permission) {
                 return $chosen && collect(self::Operations)->contains($permission);
             })->keys()

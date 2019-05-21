@@ -36,7 +36,7 @@ class ViewsWriter
 
     private function writeViews()
     {
-        collect($this->choices->get('permissions'))
+        $this->choices->get('permissions')
             ->filter(function ($chosen, $operation) {
                 return $chosen && collect(self::Operations)->contains($operation);
             })->keys()

@@ -131,7 +131,7 @@ class TableWriter
     {
         [$from, $to] = $this->controllerFromTo();
 
-        collect($this->choices->get('permissions')->all())
+        $this->choices->get('permissions')
             ->filter()
             ->keys()
             ->intersect(self::TableOperations)

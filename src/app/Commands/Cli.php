@@ -83,27 +83,25 @@ class Cli extends Command
     {
         $config = $this->choices->get(Str::camel($choice));
 
-        collect($config->keys())
-            ->each(function ($key) use ($config) {
-                $this->line(
-                    $key.' => '.(
-                    is_bool($config->get($key))
-                        ? Symbol::bool($config->get($key))
-                        : $config->get($key)
-                    )
-                );
-            });
+        $config->keys()->each(function ($key) use ($config) {
+            $this->line(
+                $key.' => '.(
+                is_bool($config->get($key))
+                    ? Symbol::bool($config->get($key))
+                    : $config->get($key)
+                )
+            );
+        });
     }
 
     private function updateConfiguration($choice)
     {
         $config = $this->choices->get(Str::camel($choice));
 
-        collect($config->keys())
-            ->each(function ($key) use ($config, $choice) {
-                $input = $this->input($config, $key);
-                $config->set($key, $input);
-            });
+        $config->keys()->each(function ($key) use ($config, $choice) {
+            $input = $this->input($config, $key);
+            $config->set($key, $input);
+        });
 
         if (! $this->configured->contains($choice)) {
             $this->configured->push($choice);
@@ -163,7 +161,7 @@ class Cli extends Command
             $this->line('');
             $this->info('Will generate:');
             $this->line('structure migration');
-            collect($this->choices->get('files'))
+            $this->choices->get('files')
                 ->each(function ($chosen, $file) {
                     if ($chosen) {
                         $this->line($file);
@@ -175,7 +173,7 @@ class Cli extends Command
     private function attemptWrite()
     {
         // $this->choices = TestConfig::load();
-        // $this->configured = collect($this->choices)->keys();
+        // $this->configured = $this->choices->keys();
 
         if ($this->validates && $this->failsValidation()) {
             $this->index();
@@ -224,17 +222,16 @@ class Cli extends Command
 
     private function filter()
     {
-        collect($this->choices->keys())
-            ->each(function ($key) {
-                if ($this->configured->first(function ($attribute) use ($key) {
-                    return Str::camel($attribute) === $key;
-                }) === null) {
-                    $this->choices->forget($key);
-                }
-            });
+        $this->choices->keys()->each(function ($key) {
+            if ($this->configured->first(function ($attribute) use ($key) {
+                return Str::camel($attribute) === $key;
+            }) === null) {
+                $this->choices->forget($key);
+            }
+        });
 
         if ($this->choices->has('files')) {
-            collect($this->choices->get('files'))
+            $this->choices->get('files')
                 ->each(function ($chosen, $type) {
                     if (! $chosen) {
                         $this->choices->get('files')->forget($type);
@@ -294,7 +291,7 @@ class Cli extends Command
 
     private function requires($choice)
     {
-        return collect($this->config($choice, 'requires'));
+        return new Obj($this->config($choice, 'requires'));
     }
 
     private function config($choice, $param)
