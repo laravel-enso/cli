@@ -245,7 +245,7 @@ class Cli extends Command
     private function write()
     {
         (new Structure($this->choices))
-            ->run();
+            ->handle();
 
         return $this;
     }
