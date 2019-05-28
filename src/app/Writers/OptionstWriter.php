@@ -62,7 +62,7 @@ class OptionstWriter
     {
         return $this->path()
             .DIRECTORY_SEPARATOR
-            .'Select.php';
+            .'Options.php';
     }
 
     private function stub($file)
