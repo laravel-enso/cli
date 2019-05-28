@@ -67,7 +67,7 @@ class StructureWriterTest extends TestCase
             && File::exists('app/Http/Controllers/Testing/Projects/Trees/Store.php')
             && File::exists('app/Http/Controllers/Testing/Projects/Trees/Show.php')
             && File::exists('app/Http/Controllers/Testing/Projects/Trees/Destroy.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Select.php')
+            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Options.php')
             && File::exists('app/Http/Controllers/Testing/Projects/Trees/InitTable.php')
             && File::exists('app/Http/Controllers/Testing/Projects/Trees/TableData.php')
             && File::exists('app/Http/Controllers/Testing/Projects/Trees/ExportExcel.php');
