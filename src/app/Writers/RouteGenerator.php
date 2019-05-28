@@ -52,7 +52,7 @@ class RouteGenerator
         $array = [
             '${namespace}' => $this->namespace(),
             '${groupPrefix}' => $groupPrefix,
-            '${Model}' => $model,
+            '${model}' => $model,
         ];
 
         return [
