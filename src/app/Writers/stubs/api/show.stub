@@ -1,1 +1,1 @@
-Route::get('${model}', 'Show')->name('show');
+Route::get('{${model}}', 'Show')->name('show');

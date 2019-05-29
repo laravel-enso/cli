@@ -1,1 +1,1 @@
-Route::delete('${model}', 'Destroy')->name('destroy');
+Route::delete('{${model}}', 'Destroy')->name('destroy');
