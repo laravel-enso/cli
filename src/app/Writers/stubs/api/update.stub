@@ -1,1 +1,1 @@
-Route::patch('${model}', 'Update')->name('update');
+Route::patch('{${model}}', 'Update')->name('update');
