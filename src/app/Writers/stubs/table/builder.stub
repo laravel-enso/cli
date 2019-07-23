@@ -12,7 +12,7 @@ class ${Model}Table extends Table
     public function query()
     {
         return ${Model}::selectRaw('
-            ${table}.id as "dtRowId"
+            ${table}.id as "dtRowId", ${table}.id
         ');
     }
 }

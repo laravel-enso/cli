@@ -5,8 +5,8 @@
     "buttons": ["excel", "create", "show", "edit", "destroy"],
     "columns": [{
         "label": "Id",
-        "name": "dtRowId",
-        "data": "${models}.dtRowId",
+        "name": "id",
+        "data": "${models}.id",
         "meta": [
             "searchable",
             "sortable"
