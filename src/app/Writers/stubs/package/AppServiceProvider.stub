@@ -1,0 +1,39 @@
+<?php
+
+namespace ${namespace};
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+
+    public function boot()
+    {
+        $this->load();
+        $this->publish();
+    }
+
+    private function load()
+    {
+        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->mergeConfigFrom(__DIR__.'/config/${package}.php', '${package}');
+    }
+
+    private function publish()
+    {
+        $this->publishes([
+            __DIR__ . '/config' => config_path('${vendor}'),
+        ], '${package}-config');
+
+        $this->publishes([
+            __DIR__.'/resources/js' => resource_path('js'),
+        ], '${package}-assets');
+
+    }
+
+    public function register()
+    {
+        //
+    }
+}

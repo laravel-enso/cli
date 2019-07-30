@@ -12,11 +12,13 @@ class ViewsWriter
     const Operations = ['create', 'edit', 'index', 'show'];
 
     private $choices;
+    private $params;
     private $path;
 
-    public function __construct(Obj $choices)
+    public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
+        $this->params = $params;
     }
 
     public function run()
@@ -87,11 +89,15 @@ class ViewsWriter
 
     private function path()
     {
-        return $this->path
-            ?? $this->path = resource_path(
-                self::PathPrefix.DIRECTORY_SEPARATOR
+        $this->path =
+            $this->params->get('root')
+                .'resources'
+                .DIRECTORY_SEPARATOR
+                .self::PathPrefix.DIRECTORY_SEPARATOR
                 .collect(
                     explode('.', $this->choices->get('permissionGroup')->get('name'))
-                )->implode(DIRECTORY_SEPARATOR));
+                )->implode(DIRECTORY_SEPARATOR);
+
+        return $this->path;
     }
 }

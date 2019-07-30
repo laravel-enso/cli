@@ -9,18 +9,24 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 class StructureMigrationWriter
 {
     private $choices;
+    private $params;
 
-    public function __construct(Obj $choices)
+    public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
+        $this->params = $params;
     }
 
     public function run()
     {
         [$from, $to] = $this->replaceFromTo();
 
+        if (! File::isDirectory($this->path())) {
+            File::makeDirectory($this->path(), 0755, true);
+        }
+
         File::put(
-            database_path('migrations/'.$this->name()),
+            $this->path().$this->name(),
             str_replace($from, $to, $this->stub('migration'))
         );
     }
@@ -142,6 +148,15 @@ class StructureMigrationWriter
             .'_create_structure_for_'
             .Str::snake(Str::plural($this->entity()))
             .'.php';
+    }
+
+    public function path()
+    {
+        return $this->params->get('root')
+            .'database'
+            .DIRECTORY_SEPARATOR
+            .'migrations'
+            .DIRECTORY_SEPARATOR;
     }
 
     private function stub($stub)

@@ -6,15 +6,19 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
-class OptionstWriter
+class ValidatorWriter
 {
-    private $structure;
+    private const Actions = ['store', 'update'];
+
+    private $choices;
     private $segments;
     private $path;
+    private $model;
 
-    public function __construct(Obj $structure)
+    public function __construct(Obj $choices, Obj $params)
     {
-        $this->structure = $structure;
+        $this->choices = $choices;
+        $this->params = $params;
     }
 
     public function run()
@@ -36,20 +40,25 @@ class OptionstWriter
     {
         [$from, $to] = $this->fromTo();
 
-        File::put(
-            $this->filename(),
-            str_replace($from, $to, $this->stub('controller'))
-        );
+        $this->choices->get('permissions')
+            ->filter()
+            ->keys()
+            ->intersect(self::Actions)
+            ->each(function ($operation) use ($from, $to) {
+                File::put(
+                    $this->filename($operation),
+                    str_replace($from, $to, $this->stub($operation))
+                );
+            });
     }
 
     private function fromTo()
     {
-        $model = $this->structure->get('model');
+        $this->model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments()->implode('\\'),
-            '${modelNamespace}' => $model->get('namespace'),
-            '${Model}' => $model->get('name'),
+            '${namespace}' => $this->params->get('namespace').'Http\\Requests',
+            '${Model}' => $this->model->get('name'),
         ];
 
         return [
@@ -58,18 +67,19 @@ class OptionstWriter
         ];
     }
 
-    private function filename()
+    private function filename($operation)
     {
         return $this->path()
             .DIRECTORY_SEPARATOR
-            .'Options.php';
+            .'Validate'.$this->model->get('name').Str::ucfirst($operation)
+            .'.php';
     }
 
     private function stub($file)
     {
         return File::get(
             __DIR__.DIRECTORY_SEPARATOR.'stubs'
-            .DIRECTORY_SEPARATOR.'options'
+            .DIRECTORY_SEPARATOR.'validator'
             .DIRECTORY_SEPARATOR.$file.'.stub'
         );
     }
@@ -77,18 +87,17 @@ class OptionstWriter
     private function path()
     {
         return $this->path
-            ?? $this->path = app_path(
-                'Http'.DIRECTORY_SEPARATOR.
-                'Controllers'.DIRECTORY_SEPARATOR
-                .$this->segments()->implode(DIRECTORY_SEPARATOR)
-            );
+            ?? $this->path = $this->params->get('root')
+                .'app'.DIRECTORY_SEPARATOR
+                .'Http'.DIRECTORY_SEPARATOR
+                .'Requests';
     }
 
     private function segments()
     {
         return $this->segments
             ?? $this->segments = collect(
-                explode('.', $this->structure->get('permissionGroup')->get('name'))
+                explode('.', $this->choices->get('permissionGroup')->get('name'))
             )->map(function ($segment) {
                 return Str::ucfirst($segment);
             });

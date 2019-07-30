@@ -34,5 +34,11 @@
         "form": true,
         "table": true,
         "options": true
+    },
+    "package": {
+        "name": "",
+        "vendor": "laravel-enso",
+        "providers": true,
+        "config": true
     }
 }

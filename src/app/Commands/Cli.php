@@ -15,23 +15,31 @@ class Cli extends Command
 {
     const Menu = [
         'Model', 'Permission Group', 'Permissions', 'Menu',
-        'Files', 'Generate', 'Validation',
+        'Files', 'Package', 'Generate', 'Toggle Validation',
     ];
 
     protected $signature = 'enso:cli';
     protected $description = 'Create a new Laravel Enso Structure';
 
     private $choices;
+    private $params;
     private $configured;
     private $validates;
     private $validator;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->configured = collect();
+        $this->setChoices()
+            ->setParams();
+
+        $this->validates = true;
+    }
+
     public function handle()
     {
-        $this->configured = collect();
-        $this->setChoices();
-        $this->validates = true;
-
         $this->info('Create a new Laravel Enso Structure');
         $this->line('');
 
@@ -86,9 +94,9 @@ class Cli extends Command
         $config->keys()->each(function ($key) use ($config) {
             $this->line(
                 $key.' => '.(
-                is_bool($config->get($key))
-                    ? Symbol::bool($config->get($key))
-                    : $config->get($key)
+                    is_bool($config->get($key))
+                        ? Symbol::bool($config->get($key))
+                        : $config->get($key)
                 )
             );
         });
@@ -172,8 +180,8 @@ class Cli extends Command
 
     private function attemptWrite()
     {
-        // $this->choices = TestConfig::load();
-        // $this->configured = $this->choices->keys();
+        $this->choices = TestConfig::loadStructure();
+        $this->configured = $this->choices->keys();
 
         if ($this->validates && $this->failsValidation()) {
             $this->index();
@@ -244,7 +252,7 @@ class Cli extends Command
 
     private function write()
     {
-        (new Structure($this->choices))
+        (new Structure($this->choices, $this->params))
             ->handle();
 
         return $this;
@@ -253,12 +261,14 @@ class Cli extends Command
     private function output()
     {
         if ($this->choices->has('permissions')) {
-            $routes = (new RouteGenerator($this->choices))->run();
+            $routes = (new RouteGenerator($this->choices, $this->params))->run();
 
-            $this->info('Copy and paste the following code into your api.php routes file:');
-            $this->line('');
-            $this->warning($routes);
-            $this->line('');
+            if ($routes) {
+                $this->info('Copy and paste the following code into your api.php routes file:');
+                $this->line('');
+                $this->warning($routes);
+                $this->line('');
+            }
         }
 
         $this->info('The new structure is created, you can start playing');
@@ -324,5 +334,14 @@ class Cli extends Command
                 $this->attributes($choice)
             );
         });
+
+        return $this;
+    }
+
+    private function setParams()
+    {
+        $this->params = $this->attributes('params');
+
+        return $this;
     }
 }

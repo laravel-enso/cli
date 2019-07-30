@@ -14,11 +14,13 @@ class RouteGenerator
     ];
 
     private $choices;
+    private $params;
     private $segments;
 
-    public function __construct(Obj $choices)
+    public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
+        $this->params = $params;
     }
 
     public function run()
@@ -36,14 +38,31 @@ class RouteGenerator
         $from[] = '${routes}';
         $to[] = $routes;
 
+        if ($this->choices->get('package')->get('name')) {
+            if (! File::isDirectory($this->packageRoutesPath())) {
+                File::makeDirectory($this->packageRoutesPath(), 0755, true);
+            }
+
+            File::put(
+                $this->packageRoutesPath().'api.php',
+                str_replace($from, $to, $this->stub('routes'))
+            );
+
+            return;
+        }
+
         return str_replace($from, $to, $this->stub('routes'));
     }
 
     private function fromTo()
     {
         $model = Str::lower($this->choices->get('model')->get('name'));
+        $packagePrefix = $this->choices->get('package')->get('name')
+            ? 'api/'
+            : '';
 
         $groupPrefix = "->prefix('"
+            .$packagePrefix
             .$this->segments()->implode('/')
             ."')->as('"
             .$this->segments()->implode('.')
@@ -92,5 +111,12 @@ class RouteGenerator
             ?? $this->segments = collect(
                 explode('.', $this->choices->get('permissionGroup')->get('name'))
             );
+    }
+
+    private function packageRoutesPath()
+    {
+        return $this->params->get('root')
+            .'routes'
+            .DIRECTORY_SEPARATOR;
     }
 }
