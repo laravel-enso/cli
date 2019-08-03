@@ -180,8 +180,8 @@ class Cli extends Command
 
     private function attemptWrite()
     {
-        $this->choices = TestConfig::loadStructure();
-        $this->configured = $this->choices->keys();
+        // $this->choices = TestConfig::loadStructure();
+        // $this->configured = $this->choices->keys();
 
         if ($this->validates && $this->failsValidation()) {
             $this->index();
@@ -204,8 +204,9 @@ class Cli extends Command
             return true;
         }
 
-        $this->validator = (new Validator($this->choices, $this->configured))
-            ->run();
+        $this->validator = (new Validator(
+            $this->choices, $this->configured
+        ))->run();
 
         if ($this->validator->fails()) {
             $this->warning('Your configuration has errors:');
@@ -239,12 +240,11 @@ class Cli extends Command
         });
 
         if ($this->choices->has('files')) {
-            $this->choices->get('files')
-                ->each(function ($chosen, $type) {
-                    if (! $chosen) {
-                        $this->choices->get('files')->forget($type);
-                    }
-                });
+            $this->choices->get('files')->each(function ($chosen, $type) {
+                if (! $chosen) {
+                    $this->choices->get('files')->forget($type);
+                }
+            });
         }
 
         return $this;
@@ -252,8 +252,7 @@ class Cli extends Command
 
     private function write()
     {
-        (new Structure($this->choices, $this->params))
-            ->handle();
+        (new Structure($this->choices, $this->params))->handle();
 
         return $this;
     }
@@ -282,8 +281,7 @@ class Cli extends Command
 
     private function missesRequired($choice)
     {
-        $diff = $this->requires($choice)
-            ->diff($this->configured);
+        $diff = $this->requires($choice)->diff($this->configured);
 
         if ($diff->isNotEmpty()) {
             $this->warning('You must configure first: '.$diff->implode(', '));

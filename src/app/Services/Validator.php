@@ -115,6 +115,11 @@ class Validator
         }
     }
 
+    private function validateFiles()
+    {
+        //
+    }
+
     private function parentMenuMatches($menu)
     {
         $parentMenu = collect(explode('.', $menu->get('parentMenu')))

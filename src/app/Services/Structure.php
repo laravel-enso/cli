@@ -161,15 +161,11 @@ class Structure
 
     private function packageRoot()
     {
-        return
-        'vendor'
-        .DIRECTORY_SEPARATOR
+        return 'vendor'.DIRECTORY_SEPARATOR
         .Str::kebab($this->choices->get('package')->get('vendor'))
         .DIRECTORY_SEPARATOR
         .Str::kebab($this->choices->get('package')->get('name'))
-        .DIRECTORY_SEPARATOR
-        .'src'
-        .DIRECTORY_SEPARATOR;
+        .DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR;
     }
 
     private function modelNamespace()

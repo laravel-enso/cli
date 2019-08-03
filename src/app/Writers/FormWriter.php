@@ -142,7 +142,8 @@ class FormWriter
             '${Model}' => $model->get('name'),
             '${model}' => Str::lower($model->get('name')),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}' => $this->params->get('namespace').'Http\\Controllers\\'.$this->segments()->implode('\\'),
+            '${namespace}' => $this->params->get('namespace')
+                .'Http\\Controllers\\'.$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
             '${builderNamespace}' => $this->params->get('namespace').'Forms\\Builders'.$namespaceSuffix,
             '${requestNamespace}' => $this->params->get('namespace').'Http\\Requests'.$namespaceSuffix,
