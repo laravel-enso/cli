@@ -9,7 +9,7 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 class FormWriter
 {
     private const CrudOperations = [
-        'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
+        'index', 'create', 'store', 'show', 'edit', 'update', 'destroy',
     ];
 
     private $choices;

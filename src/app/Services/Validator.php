@@ -83,14 +83,14 @@ class Validator
                 && $this->choices->get('permissionGroup')
                     ->get('name') !== collect(explode('.', $menu->get('route')))
                         ->slice(0, -1)->implode('.')) {
-                            $errors->push('The menu\'s route does not match the configured permission group');
-                        }
+                $errors->push('The menu\'s route does not match the configured permission group');
+            }
 
             if (! collect($this->choices->get('permissions')->all())
                 ->filter()->keys()
                 ->contains(collect(explode('.', $menu->get('route')))->last())) {
-                    $errors->push('The menu\'s route does not match the configured permissions');
-                }
+                $errors->push('The menu\'s route does not match the configured permissions');
+            }
         }
 
         if (! $menu->get('route') && ! $menu->get('has_children')) {

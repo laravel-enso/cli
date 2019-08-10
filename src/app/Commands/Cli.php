@@ -163,7 +163,7 @@ class Cli extends Command
                     ? Symbol::exclamation()
                     : Symbol::bool($this->configured->contains($choice))
                 ));
-            });
+        });
 
         if ($this->configured->isNotEmpty()) {
             $this->line('');
