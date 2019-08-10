@@ -88,18 +88,15 @@ class ModelAndMigrationWriter
     {
         return $this->params->get('root')
             .'database'
-            .DIRECTORY_SEPARATOR
-            .'migrations';
+            .DIRECTORY_SEPARATOR.'migrations';
     }
 
     private function modelPath()
     {
-        if ($this->choices->get('package')->get('name')) {
+        if (optional($this->choices->get('package'))->get('name')) {
             return $this->params->get('root')
-                .DIRECTORY_SEPARATOR
-                .'app'
-                .DIRECTORY_SEPARATOR
-                .'Models';
+                .DIRECTORY_SEPARATOR.'app'
+                .DIRECTORY_SEPARATOR.'Models';
         }
 
         return 'app'.DIRECTORY_SEPARATOR.'Models';

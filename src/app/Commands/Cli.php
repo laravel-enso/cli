@@ -5,7 +5,7 @@ namespace LaravelEnso\Cli\app\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Helpers\TestConfig;
+// use LaravelEnso\Cli\app\Helpers\TestConfig;
 use LaravelEnso\Cli\app\Services\Structure;
 use LaravelEnso\Cli\app\Services\Validator;
 use LaravelEnso\Cli\app\Writers\RouteGenerator;
@@ -19,6 +19,7 @@ class Cli extends Command
     ];
 
     protected $signature = 'enso:cli';
+
     protected $description = 'Create a new Laravel Enso Structure';
 
     private $choices;
@@ -32,6 +33,7 @@ class Cli extends Command
         parent::__construct();
 
         $this->configured = collect();
+
         $this->setChoices()
             ->setParams();
 
@@ -155,16 +157,14 @@ class Cli extends Command
     {
         $this->info('Current configuration status:');
 
-        $this->choices()
-            ->each(function ($choice) {
-                $this->line(
-                    $choice.' '.(
-                        $this->hasError($choice)
-                            ? Symbol::exclamation()
-                            : Symbol::bool($this->configured->contains($choice))
-                    )
-                );
+        $this->choices()->each(function ($choice) {
+            $this->line($choice.' '.(
+                $this->hasError($choice)
+                    ? Symbol::exclamation()
+                    : Symbol::bool($this->configured->contains($choice))
+                ));
             });
+
         if ($this->configured->isNotEmpty()) {
             $this->line('');
             $this->info('Will generate:');

@@ -71,6 +71,7 @@ class Validator
         }
 
         $errors = collect();
+
         $menu = $this->choices->get('menu');
 
         if ($menu->get('route')) {
@@ -78,12 +79,18 @@ class Validator
                 $errors->push('A parent menu must have the route attribute empty');
             }
 
-            if ($this->choices->has('permissionGroup') &&
-                $this->choices->get('permissionGroup')->get('name')
-                    !== collect(explode('.', $menu->get('route')))
+            if ($this->choices->has('permissionGroup')
+                && $this->choices->get('permissionGroup')
+                    ->get('name') !== collect(explode('.', $menu->get('route')))
                         ->slice(0, -1)->implode('.')) {
-                $errors->push('The menu\'s route does not match the configured permission group');
-            }
+                            $errors->push('The menu\'s route does not match the configured permission group');
+                        }
+
+            if (! collect($this->choices->get('permissions')->all())
+                ->filter()->keys()
+                ->contains(collect(explode('.', $menu->get('route')))->last())) {
+                    $errors->push('The menu\'s route does not match the configured permissions');
+                }
         }
 
         if (! $menu->get('route') && ! $menu->get('has_children')) {
@@ -120,6 +127,11 @@ class Validator
         //
     }
 
+    private function validatePackage()
+    {
+        //
+    }
+
     private function parentMenuMatches($menu)
     {
         $parentMenu = collect(explode('.', $menu->get('parentMenu')))
@@ -136,13 +148,13 @@ class Validator
                 return $matches;
             }
 
-            $dottedMenu = $parent->name;
+            $nestedMenu = $parent->name;
 
             while ($parent->parent_id !== null) {
                 $parent = $parent->parent;
-                $dottedMenu = $parent->name.'.'.$dottedMenu;
+                $nestedMenu = $parent->name.'.'.$nestedMenu;
 
-                if ($dottedMenu === $menu->get('parentMenu')) {
+                if ($nestedMenu === $menu->get('parentMenu')) {
                     $matches++;
                     break;
                 }

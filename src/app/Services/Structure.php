@@ -28,7 +28,7 @@ class Structure
 
     public function handle()
     {
-        if ($this->choices->get('package')->get('name')) {
+        if (optional($this->choices->get('package'))->get('name')) {
             $this->params->set('root', $this->packageRoot());
             $this->params->set('namespace', $this->packageNamespace());
             $this->choices->get('model')->set('namespace', $this->modelNamespace());
@@ -51,15 +51,18 @@ class Structure
 
     private function writeStructure()
     {
-        (new StructureMigrationWriter($this->choices, $this->params))
-            ->run();
+        (new StructureMigrationWriter(
+            $this->choices, $this->params
+        ))->run();
 
         return $this;
     }
 
     public function writePackage()
     {
-        (new PackageWriter($this->choices, $this->params))->run();
+        (new PackageWriter(
+            $this->choices, $this->params
+        ))->run();
 
         return $this;
     }
@@ -68,8 +71,9 @@ class Structure
     {
         if ($this->choices->get('files')->has('model')
             || $this->choices->get('files')->has('table migration')) {
-            (new ModelAndMigrationWriter($this->choices, $this->params))
-                ->run();
+            (new ModelAndMigrationWriter(
+                $this->choices, $this->params
+            ))->run();
         }
 
         return $this;
@@ -78,8 +82,9 @@ class Structure
     private function writeRoutes()
     {
         if ($this->choices->get('files')->has('routes')) {
-            (new RoutesWriter($this->choices, $this->params))
-                ->run();
+            (new RoutesWriter(
+                $this->choices, $this->params
+            ))->run();
         }
 
         return $this;
@@ -88,8 +93,9 @@ class Structure
     private function writeViews()
     {
         if ($this->choices->get('files')->has('views')) {
-            (new ViewsWriter($this->choices, $this->params))
-                ->run();
+            (new ViewsWriter(
+                $this->choices, $this->params
+            ))->run();
         }
 
         return $this;
@@ -98,10 +104,13 @@ class Structure
     private function writeForm()
     {
         if ($this->choices->get('files')->has('form')) {
-            (new FormWriter($this->choices, $this->params))
-                ->run();
-            (new ValidatorWriter($this->choices, $this->params))
-                ->run();
+            (new FormWriter(
+                $this->choices, $this->params
+            ))->run();
+
+            (new ValidatorWriter(
+                $this->choices, $this->params
+            ))->run();
         }
 
         return $this;
@@ -110,8 +119,9 @@ class Structure
     private function writeTable()
     {
         if ($this->choices->get('files')->has('table')) {
-            (new TableWriter($this->choices, $this->params))
-                ->run();
+            (new TableWriter(
+                $this->choices, $this->params
+            ))->run();
         }
 
         return $this;
@@ -120,8 +130,9 @@ class Structure
     private function writeOptions()
     {
         if ($this->choices->get('files')->has('options')) {
-            (new OptionsWriter($this->choices, $this->params))
-                ->run();
+            (new OptionsWriter(
+                $this->choices, $this->params
+            ))->run();
         }
 
         return $this;

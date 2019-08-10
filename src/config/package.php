@@ -5,7 +5,7 @@ return [
     'attributes' => [
         'name' => null,
         'vendor' => 'laravel-enso',
-        'config' => true,
-        'serviceProvider' => true,
+        'config' => false,
+        'serviceProvider' => false,
     ],
 ];

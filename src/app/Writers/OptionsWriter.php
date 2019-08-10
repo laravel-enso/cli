@@ -48,7 +48,9 @@ class OptionsWriter
         $model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => $this->params->get('namespace').'Http\\Controllers\\'.$this->segments()->implode('\\'),
+            '${namespace}' => $this->params->get('namespace')
+                .'Http\\Controllers\\'
+                .$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
             '${Model}' => $model->get('name'),
         ];
