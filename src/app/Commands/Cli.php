@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
 // use LaravelEnso\Cli\app\Helpers\TestConfig;
+use LaravelEnso\Cli\app\Helpers\TestConfig;
 use LaravelEnso\Cli\app\Services\Structure;
 use LaravelEnso\Cli\app\Services\Validator;
 use LaravelEnso\Cli\app\Writers\RouteGenerator;
@@ -180,7 +181,7 @@ class Cli extends Command
 
     private function attemptWrite()
     {
-        // $this->choices = TestConfig::loadStructure();
+        // $this->choices = TestConfig::loadPackageStructure();
         // $this->configured = $this->choices->keys();
 
         if ($this->validates && $this->failsValidation()) {
@@ -270,7 +271,15 @@ class Cli extends Command
             }
         }
 
-        $this->info('The new structure is created, you can start playing');
+        $this->info('Your package is created, you can start playing!');
+
+        if (! ! optional($this->choices->get('package'))->get('config')) {
+            $this->warning('Please remember to add the package`s service provider to the `config/app.php` list of providers.');
+        }
+
+        if (! ! optional($this->choices->get('package'))->get('providers')) {
+            $this->warning('Add your package namespace and path inside your `composer.json` file under the `psr-4` key while developing.');
+        }
         $this->line('');
     }
 

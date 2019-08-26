@@ -14,6 +14,13 @@ class TestConfig
         ));
     }
 
+    public static function loadPackageStructure()
+    {
+        return new Obj(json_decode(
+            File::get(__DIR__.'/../Writers/stubs/testPackageStructure.stub')
+        ));
+    }
+
     public static function loadParams()
     {
         return new Obj(json_decode(

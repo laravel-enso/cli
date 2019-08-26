@@ -18,20 +18,21 @@ class Structure
 {
     private $choices;
     private $params;
+    private $isPackage;
 
     public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
         $this->params = $params;
+        $this->isPackage = !! optional($this->choices->get('package'))->get('name');
         $this->prepareModel();
     }
 
     public function handle()
     {
-        if (optional($this->choices->get('package'))->get('name')) {
+        if ($this->isPackage) {
             $this->params->set('root', $this->packageRoot());
             $this->params->set('namespace', $this->packageNamespace());
-            $this->choices->get('model')->set('namespace', $this->modelNamespace());
             $this->writePackage();
         }
 
@@ -142,15 +143,15 @@ class Structure
     {
         $model = $this->choices->get('model');
 
-        if (! Str::contains($model->get('name'), '\\\\')) {
+        if (! Str::contains($model->get('name'), '\\') && ! $this->isPackage) {
             $model->set('namespace', 'App');
 
             return;
         }
 
-        $segments = collect(explode('\\\\', $model->get('name')));
+        $segments = collect(explode('\\', $model->get('name')));
         $model->set('name', $segments->pop());
-        $model->set('namespace', $segments->implode('\\'));
+        $model->set('namespace', $this->modelNamespace($segments->filter()));
         $model->set('path', $segments->implode(DIRECTORY_SEPARATOR));
     }
 
@@ -179,8 +180,12 @@ class Structure
         .DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR;
     }
 
-    private function modelNamespace()
+    private function modelNamespace($segments)
     {
-        return $this->packageNamespace().'Models';
+        if ($this->isPackage) {
+            return $this->packageNamespace().($segments->implode('\\'));
+        }
+
+        return 'App\\'.$segments->implode('\\');
     }
 }

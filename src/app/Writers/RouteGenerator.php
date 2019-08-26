@@ -21,6 +21,7 @@ class RouteGenerator
     {
         $this->choices = $choices;
         $this->params = $params;
+        $this->isPackage = !! optional($this->choices->get('package'))->get('name');
     }
 
     public function run()
@@ -38,7 +39,7 @@ class RouteGenerator
         $from[] = '${routes}';
         $to[] = $routes;
 
-        if ($this->choices->get('package')->get('name')) {
+        if ($this->isPackage) {
             if (! File::isDirectory($this->packageRoutesPath())) {
                 File::makeDirectory($this->packageRoutesPath(), 0755, true);
             }
@@ -57,7 +58,7 @@ class RouteGenerator
     private function fromTo()
     {
         $model = Str::lower($this->choices->get('model')->get('name'));
-        $packagePrefix = $this->choices->get('package')->get('name')
+        $packagePrefix = $this->isPackage
             ? 'api/'
             : '';
 

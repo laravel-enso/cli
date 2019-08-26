@@ -27,11 +27,25 @@ class StructureWriterTest extends TestCase
     }
 
     /** @test */
-    public function can_generate_files()
+    public function can_generate_local_structure()
     {
-        $this->choices = TestConfig::loadStructure();
         $this->params = TestConfig::loadParams();
-        
+        $this->choices = TestConfig::loadStructure();
+
+        $this->generateFiles();
+    }
+
+    /** @test */
+    public function can_generate_package()
+    {
+        $this->params = TestConfig::loadParams();
+        $this->choices = TestConfig::loadPackageStructure();
+
+        $this->generateFiles();
+    }
+
+    private function generateFiles()
+    {   
         (new Structure($this->choices, $this->params))->handle();
         
         $this->root = $this->params->get('root');
@@ -48,7 +62,7 @@ class StructureWriterTest extends TestCase
 
     private function modelCreated()
     {
-        return File::exists($this->params->get('root').'app/Models/Tree.php');
+        return File::exists($this->params->get('root').'app/Test/Tree.php');
     }
 
     private function requestValidatorCreated()
@@ -123,7 +137,7 @@ class StructureWriterTest extends TestCase
             return;
         }
         
-        File::delete($this->root.'app/Models/Tree.php');
+        File::delete($this->root.'app/Test/Tree.php');
         File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
         File::deleteDirectory($this->root.'app/Forms/Templates/Testing');
         File::deleteDirectory($this->root.'app/Tables/Builders/Testing');

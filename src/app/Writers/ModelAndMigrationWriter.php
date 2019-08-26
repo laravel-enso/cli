@@ -93,12 +93,7 @@ class ModelAndMigrationWriter
 
     private function modelPath()
     {
-        if (optional($this->choices->get('package'))->get('name')) {
-            return $this->params->get('root')
-                .DIRECTORY_SEPARATOR.'app'
-                .DIRECTORY_SEPARATOR.'Models';
-        }
-
-        return 'app'.DIRECTORY_SEPARATOR.'Models';
+        return $this->params->get('root').'app'
+            .DIRECTORY_SEPARATOR.$this->model->get('path');
     }
 }

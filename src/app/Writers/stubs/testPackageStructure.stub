@@ -36,7 +36,7 @@
         "options": true
     },
     "package": {
-        "name": "",
+        "name": "test",
         "vendor": "laravel-enso",
         "providers": true,
         "config": true
