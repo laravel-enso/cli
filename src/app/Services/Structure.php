@@ -24,7 +24,7 @@ class Structure
     {
         $this->choices = $choices;
         $this->params = $params;
-        $this->isPackage = !! optional($this->choices->get('package'))->get('name');
+        $this->isPackage = (bool) optional($this->choices->get('package'))->get('name');
         $this->prepareModel();
     }
 

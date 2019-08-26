@@ -273,11 +273,11 @@ class Cli extends Command
 
         $this->info('Your package is created, you can start playing!');
 
-        if (! ! optional($this->choices->get('package'))->get('config')) {
+        if ((bool) optional($this->choices->get('package'))->get('config')) {
             $this->warning('Please remember to add the package`s service provider to the `config/app.php` list of providers.');
         }
 
-        if (! ! optional($this->choices->get('package'))->get('providers')) {
+        if ((bool) optional($this->choices->get('package'))->get('providers')) {
             $this->warning('Add your package namespace and path inside your `composer.json` file under the `psr-4` key while developing.');
         }
         $this->line('');
