@@ -23,7 +23,7 @@ class Cli extends Command
     private $configured;
     private $validates;
     private $validator;
-    
+
     protected $signature = 'enso:cli';
 
     protected $description = 'Create a new Laravel Enso Structure';
