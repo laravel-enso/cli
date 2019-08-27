@@ -1,0 +1,21 @@
+<?php
+
+namespace ${namespace};
+
+use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class Validate${Model}Store extends FormRequest
+{
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [
+            //
+        ];
+    }
+}

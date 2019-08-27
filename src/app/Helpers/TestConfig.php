@@ -7,10 +7,24 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class TestConfig
 {
-    public static function load()
+    public static function loadStructure()
     {
         return new Obj(json_decode(
-            File::get(__DIR__.'/../Writers/stubs/test.stub')
+            File::get(__DIR__.'/../Writers/stubs/testStructure.stub')
+        ));
+    }
+
+    public static function loadPackageStructure()
+    {
+        return new Obj(json_decode(
+            File::get(__DIR__.'/../Writers/stubs/testPackageStructure.stub')
+        ));
+    }
+
+    public static function loadParams()
+    {
+        return new Obj(json_decode(
+            File::get(__DIR__.'/../Writers/stubs/testParams.stub')
         ));
     }
 }

@@ -12,10 +12,12 @@ class TableWriter
 
     private $choices;
     private $segments;
+    private $params;
 
-    public function __construct(Obj $choices)
+    public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
+        $this->params = $params;
     }
 
     public function run()
@@ -62,7 +64,7 @@ class TableWriter
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
             '${Models}' => Str::title(
-                    collect(explode('_', Str::snake($model)))->implode(' ')
+                collect(explode('_', Str::snake($model)))->implode(' ')
                 ),
             '${models}' => Str::snake(Str::plural($model)),
         ];
@@ -77,8 +79,10 @@ class TableWriter
     {
         return $this->templatePath()
             .DIRECTORY_SEPARATOR
-            .Str::camel(Str::plural(
-                $this->choices->get('model')->get('name'))
+            .Str::camel(
+                Str::plural(
+                    $this->choices->get('model')->get('name')
+            )
             ).'.json';
     }
 
@@ -99,7 +103,8 @@ class TableWriter
         $model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => 'App\\Tables\\Builders'
+            '${namespace}' => $this->params->get('namespace')
+                .'Tables\\Builders'
                 .($this->segments()->count() > 1
                     ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
@@ -148,9 +153,10 @@ class TableWriter
     private function controllerFromTo()
     {
         $array = [
-            '${namespace}' => 'App\\Http\\Controllers\\'
+            '${namespace}' => $this->params->get('namespace')
+                .'Http\\Controllers\\'
                 .$this->segments()->implode('\\'),
-            '${builderNamespace}' => 'App\\Tables\\Builders\\'
+            '${builderNamespace}' => $this->params->get('namespace').'Tables\\Builders\\'
                 .($this->segments()->count() > 1
                     ? $this->segments()->slice(0, -1)->implode('\\').'\\'
                     : ''),
@@ -173,30 +179,32 @@ class TableWriter
 
     private function builderPath()
     {
-        return app_path(
-            'Tables'.DIRECTORY_SEPARATOR
-            .'Builders'.DIRECTORY_SEPARATOR.
-            $this->segments()->slice(0, -1)
-                ->implode(DIRECTORY_SEPARATOR)
-        );
+        return $this->params->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Tables'.DIRECTORY_SEPARATOR
+            .'Builders'.DIRECTORY_SEPARATOR
+            .$this->segments()->slice(0, -1)
+                ->implode(DIRECTORY_SEPARATOR);
     }
 
     private function templatePath()
     {
-        return app_path(
-            'Tables'.DIRECTORY_SEPARATOR
-            .'Templates'.DIRECTORY_SEPARATOR.
-            $this->segments()->slice(0, -1)
-                ->implode(DIRECTORY_SEPARATOR)
-        );
+        return $this->params->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Tables'.DIRECTORY_SEPARATOR
+            .'Templates'.DIRECTORY_SEPARATOR
+            .$this->segments()->slice(0, -1)
+                ->implode(DIRECTORY_SEPARATOR);
     }
 
     private function controllerPath()
     {
-        return app_path(
-            'Http'.DIRECTORY_SEPARATOR.
-            'Controllers'.DIRECTORY_SEPARATOR.
-            $this->segments()->implode(DIRECTORY_SEPARATOR)
+        return $this->params->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Http'.DIRECTORY_SEPARATOR
+            .'Controllers'.DIRECTORY_SEPARATOR
+            .$this->segments()->implode(
+                DIRECTORY_SEPARATOR
         );
     }
 
@@ -212,10 +220,13 @@ class TableWriter
     private function segments()
     {
         return $this->segments
-            ?? $this->segments = collect(explode(
-                '.', $this->choices->get('permissionGroup')->get('name')
-            ))->map(function ($segment) {
-                return ucfirst($segment);
+            ?? $this->segments = collect(
+                explode(
+                    '.',
+                    $this->choices->get('permissionGroup')->get('name')
+            )
+            )->map(function ($segment) {
+                return Str::ucfirst($segment);
             });
     }
 }

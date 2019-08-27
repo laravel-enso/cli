@@ -13,25 +13,35 @@ use LaravelEnso\Cli\app\Commands\Helpers\Symbol;
 
 class Cli extends Command
 {
-    const Menu = [
+    private const Menu = [
         'Model', 'Permission Group', 'Permissions', 'Menu',
-        'Files', 'Generate', 'Validation',
+        'Files', 'Package', 'Generate', 'Toggle Validation',
     ];
 
-    protected $signature = 'enso:cli';
-    protected $description = 'Create a new Laravel Enso Structure';
-
     private $choices;
+    private $params;
     private $configured;
     private $validates;
     private $validator;
 
+    protected $signature = 'enso:cli';
+
+    protected $description = 'Create a new Laravel Enso Structure';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->configured = collect();
+
+        $this->setChoices()
+            ->setParams();
+
+        $this->validates = true;
+    }
+
     public function handle()
     {
-        $this->configured = collect();
-        $this->setChoices();
-        $this->validates = true;
-
         $this->info('Create a new Laravel Enso Structure');
         $this->line('');
 
@@ -86,9 +96,9 @@ class Cli extends Command
         $config->keys()->each(function ($key) use ($config) {
             $this->line(
                 $key.' => '.(
-                is_bool($config->get($key))
-                    ? Symbol::bool($config->get($key))
-                    : $config->get($key)
+                    is_bool($config->get($key))
+                        ? Symbol::bool($config->get($key))
+                        : $config->get($key)
                 )
             );
         });
@@ -147,16 +157,14 @@ class Cli extends Command
     {
         $this->info('Current configuration status:');
 
-        $this->choices()
-            ->each(function ($choice) {
-                $this->line(
-                    $choice.' '.(
-                        $this->hasError($choice)
-                            ? Symbol::exclamation()
-                            : Symbol::bool($this->configured->contains($choice))
-                    )
-                );
-            });
+        $this->choices()->each(function ($choice) {
+            $this->line($choice.' '.(
+                $this->hasError($choice)
+                    ? Symbol::exclamation()
+                    : Symbol::bool($this->configured->contains($choice))
+                ));
+        });
+
         if ($this->configured->isNotEmpty()) {
             $this->line('');
             $this->info('Will generate:');
@@ -172,7 +180,8 @@ class Cli extends Command
 
     private function attemptWrite()
     {
-        // $this->choices = TestConfig::load();
+        // $this->choices = TestConfig::loadStructure();
+        // $this->choices = TestConfig::loadPackageStructure();
         // $this->configured = $this->choices->keys();
 
         if ($this->validates && $this->failsValidation()) {
@@ -196,18 +205,19 @@ class Cli extends Command
             return true;
         }
 
-        $this->validator = (new Validator($this->choices, $this->configured))
-            ->run();
+        $this->validator = (new Validator(
+            $this->choices, $this->configured
+        ))->run();
 
         if ($this->validator->fails()) {
-            $this->warning('Your configuration has errors:');
+            $this->warn('Your configuration has errors:');
             $this->line('');
 
             $this->validator->errors()
                 ->each(function ($errors, $type) {
                     $this->info($type.' '.Symbol::exclamation());
                     $errors->each(function ($error) {
-                        $this->warning('    '.$error);
+                        $this->warn('    '.$error);
                     });
                 });
 
@@ -231,12 +241,11 @@ class Cli extends Command
         });
 
         if ($this->choices->has('files')) {
-            $this->choices->get('files')
-                ->each(function ($chosen, $type) {
-                    if (! $chosen) {
-                        $this->choices->get('files')->forget($type);
-                    }
-                });
+            $this->choices->get('files')->each(function ($chosen, $type) {
+                if (! $chosen) {
+                    $this->choices->get('files')->forget($type);
+                }
+            });
         }
 
         return $this;
@@ -244,8 +253,7 @@ class Cli extends Command
 
     private function write()
     {
-        (new Structure($this->choices))
-            ->handle();
+        (new Structure($this->choices, $this->params))->handle();
 
         return $this;
     }
@@ -253,30 +261,34 @@ class Cli extends Command
     private function output()
     {
         if ($this->choices->has('permissions')) {
-            $routes = (new RouteGenerator($this->choices))->run();
+            $routes = (new RouteGenerator($this->choices, $this->params))->run();
 
-            $this->info('Copy and paste the following code into your api.php routes file:');
-            $this->line('');
-            $this->warning($routes);
-            $this->line('');
+            if ($routes) {
+                $this->info('Copy and paste the following code into your api.php routes file:');
+                $this->line('');
+                $this->warn($routes);
+                $this->line('');
+            }
         }
 
-        $this->info('The new structure is created, you can start playing');
-        $this->line('');
-    }
+        $this->info("Your package is created, you can start playing. Don't forget to run `git init` in the package root folder!");
 
-    private function warning($output)
-    {
-        return $this->line('<fg=yellow>'.$output.'</>');
+        if ((bool) optional($this->choices->get('package'))->get('config')) {
+            $this->warn('Add your package namespace and path inside your `composer.json` file under the `psr-4` key while developing.');
+        }
+
+        if ((bool) optional($this->choices->get('package'))->get('providers')) {
+            $this->warn('Remember to add the package`s service provider to the `config/app.php` list of providers.');
+        }
+        $this->line('');
     }
 
     private function missesRequired($choice)
     {
-        $diff = $this->requires($choice)
-            ->diff($this->configured);
+        $diff = $this->requires($choice)->diff($this->configured);
 
         if ($diff->isNotEmpty()) {
-            $this->warning('You must configure first: '.$diff->implode(', '));
+            $this->warn('You must configure first: '.$diff->implode(', '));
             $this->line('');
             sleep(1);
         }
@@ -324,5 +336,14 @@ class Cli extends Command
                 $this->attributes($choice)
             );
         });
+
+        return $this;
+    }
+
+    private function setParams()
+    {
+        $this->params = $this->attributes('params');
+
+        return $this;
     }
 }

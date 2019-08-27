@@ -1,0 +1,44 @@
+{
+    "model": {
+        "name": "Test\\Tree"
+    },
+    "permissionGroup": {
+        "name": "testing.projects.trees"
+    },
+    "permissions": {
+        "index": true,
+        "create": true,
+        "store": true,
+        "show": true,
+        "edit": true,
+        "update": true,
+        "destroy": true,
+        "initTable": true,
+        "tableData": true,
+        "exportExcel": true,
+        "options": true
+    },
+    "menu": {
+        "name": "Tree",
+        "icon": "tree",
+        "parentMenu": "Testing",
+        "route": "testing.projects.trees.index",
+        "order_index": 0,
+        "has_children": false
+    },
+    "files": {
+        "model": true,
+        "migration": true,
+        "routes": true,
+        "views": true,
+        "form": true,
+        "table": true,
+        "options": true
+    },
+    "package": {
+        "name": "",
+        "vendor": "laravel-enso",
+        "providers": true,
+        "config": true
+    }
+}

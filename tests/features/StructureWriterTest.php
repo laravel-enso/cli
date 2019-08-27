@@ -1,11 +1,18 @@
 <?php
 
 use Tests\TestCase;
+use Illuminate\Support\Facades\File;
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Helpers\TestConfig;
+use LaravelEnso\Cli\app\Helpers\TestParams;
 use LaravelEnso\Cli\app\Services\Structure;
 
 class StructureWriterTest extends TestCase
 {
+    private $choices;
+    private $params;
+    private $root;
+
     protected function setUp(): void
     {
         // $this->withoutExceptionHandling();
@@ -20,12 +27,29 @@ class StructureWriterTest extends TestCase
     }
 
     /** @test */
-    public function can_generate_files()
+    public function can_generate_local_structure()
     {
-        $config = TestConfig::load();
+        $this->params = TestConfig::loadParams();
+        $this->choices = TestConfig::loadStructure();
 
-        (new Structure($config))->handle();
+        $this->generateFiles();
+    }
 
+    /** @test */
+    public function can_generate_package()
+    {
+        $this->params = TestConfig::loadParams();
+        $this->choices = TestConfig::loadPackageStructure();
+
+        $this->generateFiles();
+    }
+
+    private function generateFiles()
+    {   
+        (new Structure($this->choices, $this->params))->handle();
+        
+        $this->root = $this->params->get('root');
+        
         $this->assertTrue($this->formFilesCreated());
         $this->assertTrue($this->tableFilesCreated());
         $this->assertTrue($this->modelCreated());
@@ -38,57 +62,58 @@ class StructureWriterTest extends TestCase
 
     private function modelCreated()
     {
-        return File::exists('app/Tree.php');
+        return File::exists($this->params->get('root').'app/Test/Tree.php');
     }
 
     private function requestValidatorCreated()
     {
-        return File::exists('app/Http/Requests/Testing/Projects/ValidateTreeRequest.php');
+        return File::exists($this->root.'app/Http/Requests/ValidateTreeUpdate.php')
+        && File::exists($this->root.'app/Http/Requests/ValidateTreeStore.php');
     }
 
     private function formFilesCreated()
     {
-        return File::exists('app/Forms/Builders/Testing/Projects/TreeForm.php')
-            && File::exists('app/Forms/Templates/Testing/Projects/tree.json');
+        return File::exists($this->root.'app/Forms/Builders/Testing/Projects/TreeForm.php')
+            && File::exists($this->root.'app/Forms/Templates/Testing/Projects/tree.json');
     }
 
     private function tableFilesCreated()
     {
-        return File::exists('app/Tables/Builders/Testing/Projects/TreeTable.php')
-            && File::exists('app/Tables/Templates/Testing/Projects/trees.json');
+        return File::exists($this->root.'app/Tables/Builders/Testing/Projects/TreeTable.php')
+            && File::exists($this->root.'app/Tables/Templates/Testing/Projects/trees.json');
     }
 
     private function controllersCreated()
     {
-        return File::exists('app/Http/Controllers/Testing/Projects/Trees/Index.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Create.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Edit.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Update.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Store.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Show.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Destroy.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/Options.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/InitTable.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/TableData.php')
-            && File::exists('app/Http/Controllers/Testing/Projects/Trees/ExportExcel.php');
+        return File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Index.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Create.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Edit.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Update.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Store.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Show.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Destroy.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Options.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/InitTable.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/TableData.php')
+            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/ExportExcel.php');
     }
 
     private function pagesCreated()
     {
-        return File::exists('resources/js/pages/testing/projects/trees/Create.vue')
-            && File::exists('resources/js/pages/testing/projects/trees/Edit.vue')
-            && File::exists('resources/js/pages/testing/projects/trees/Index.vue')
-            && File::exists('resources/js/pages/testing/projects/trees/Show.vue');
+        return File::exists($this->root.'resources/js/pages/testing/projects/trees/Create.vue')
+            && File::exists($this->root.'resources/js/pages/testing/projects/trees/Edit.vue')
+            && File::exists($this->root.'resources/js/pages/testing/projects/trees/Index.vue')
+            && File::exists($this->root.'resources/js/pages/testing/projects/trees/Show.vue');
     }
 
     private function routesCreated()
     {
-        return File::exists('resources/js/routes/testing/projects.js')
-            && File::exists('resources/js/routes/testing/projects/trees.js')
-            && File::exists('resources/js/routes/testing/projects/trees/create.js')
-            && File::exists('resources/js/routes/testing/projects/trees/edit.js')
-            && File::exists('resources/js/routes/testing/projects/trees/index.js')
-            && File::exists('resources/js/routes/testing/projects/trees/show.js');
+        return File::exists($this->root.'resources/js/routes/testing/projects.js')
+            && File::exists($this->root.'resources/js/routes/testing/projects/trees.js')
+            && File::exists($this->root.'resources/js/routes/testing/projects/trees/create.js')
+            && File::exists($this->root.'resources/js/routes/testing/projects/trees/edit.js')
+            && File::exists($this->root.'resources/js/routes/testing/projects/trees/index.js')
+            && File::exists($this->root.'resources/js/routes/testing/projects/trees/show.js');
     }
 
     private function migrationsCreated()
@@ -99,7 +124,7 @@ class StructureWriterTest extends TestCase
 
     private function migrationCreated($migration)
     {
-        return collect(File::files(database_path('migrations')))
+        return collect(File::files($this->root.'database/migrations'))
             ->filter(function ($file) use ($migration) {
                 return strpos($file->getFilename(), $migration) > 0;
             })->isNotEmpty();
@@ -107,16 +132,22 @@ class StructureWriterTest extends TestCase
 
     private function cleanUp()
     {
-        \File::delete('app/Tree.php');
-        \File::deleteDirectory('app/Forms/Builders/Testing');
-        \File::deleteDirectory('app/Forms/Templates/Testing');
-        \File::deleteDirectory('app/Tables/Builders/Testing');
-        \File::deleteDirectory('app/Tables/Templates/Testing');
-        \File::deleteDirectory('app/Http/Controllers/Testing');
-        \File::deleteDirectory('app/Http/Requests/Testing');
-        \File::deleteDirectory('resources/js/pages/testing');
-        \File::deleteDirectory('resources/js/routes/testing');
-        \File::delete('resources/js/routes/testing.js');
+        if (!empty($this->root)) {
+            File::deleteDirectory($this->root);
+            return;
+        }
+        
+        File::delete($this->root.'app/Test/Tree.php');
+        File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
+        File::deleteDirectory($this->root.'app/Forms/Templates/Testing');
+        File::deleteDirectory($this->root.'app/Tables/Builders/Testing');
+        File::deleteDirectory($this->root.'app/Tables/Templates/Testing');
+        File::deleteDirectory($this->root.'app/Http/Controllers/Testing');
+        File::deleteDirectory($this->root.'resources/js/pages/testing');
+        File::deleteDirectory($this->root.'resources/js/routes/testing');
+        File::delete($this->root.'app/Http/Requests/ValidateTreeStore.php');
+        File::delete($this->root.'app/Http/Requests/ValidateTreeUpdate.php');
+        File::delete($this->root.'resources/js/routes/testing.js');
         $this->deleteMigration('create_trees_table');
         $this->deleteMigration('create_structure_for_trees');
 
@@ -125,11 +156,11 @@ class StructureWriterTest extends TestCase
 
     private function deleteMigration($migration)
     {
-        $file = collect(File::files(database_path('migrations')))
+        $file = collect(File::files($this->root.'database/migrations'))
             ->filter(function ($file) use ($migration) {
                 return strpos($file->getFilename(), $migration) > 0;
             })->first();
 
-        \File::delete($file);
+        File::delete($file);
     }
 }

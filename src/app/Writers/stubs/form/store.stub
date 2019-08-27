@@ -4,11 +4,11 @@ namespace ${namespace};
 
 use ${modelNamespace}\${Model};
 use Illuminate\Routing\Controller;
-use ${requestNamespace}\${request};
+use ${requestNamespace}\${requestStore};
 
 class Store extends Controller
 {
-    public function __invoke(${request} $request, ${Model} $${model})
+    public function __invoke(${requestStore} $request, ${Model} $${model})
     {
         tap($${model})->fill($request->validated())
             ->save();

@@ -12,23 +12,25 @@ class RoutesWriter
     const Operations = ['create', 'edit', 'index', 'show'];
 
     private $choices;
+    private $params;
     private $path;
     private $segments;
     private $pathPrefix;
 
-    public function __construct(Obj $choices)
+    public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
-        $this->pathPrefix = resource_path(self::PathPrefix);
+        $this->params = $params;
+        $this->pathPrefix = $this->params->get('root').'resources//'.self::PathPrefix;
 
         $this->segments = collect(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
         );
 
-        $this->path = resource_path(
+        $this->path = $this->params->get('root').
+            'resources//'.
             self::PathPrefix.'/'
-            .$this->segments->implode('/')
-        );
+            .$this->segments->implode('/');
     }
 
     public function run()

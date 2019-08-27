@@ -4,19 +4,22 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Artisan;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class FormWriter
 {
-    private const CrudOperations = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
+    private const CrudOperations = [
+        'index', 'create', 'store', 'show', 'edit', 'update', 'destroy',
+    ];
 
     private $choices;
     private $segments;
+    private $params;
 
-    public function __construct(Obj $choices)
+    public function __construct(Obj $choices, Obj $params)
     {
         $this->choices = $choices;
+        $this->params = $params;
     }
 
     public function run()
@@ -24,7 +27,6 @@ class FormWriter
         $this->createFolders()
             ->writeTemplate()
             ->writeBuilder()
-            ->writeRequest()
             ->writeControllers();
     }
 
@@ -87,7 +89,8 @@ class FormWriter
             '${relativePath}' => $this->segments()->count() > 1
                 ? $this->segments()->slice(0, -1)->implode('/').'/'
                 : '',
-            '${namespace}' => 'App\\Forms\\Builders'
+            '${namespace}' => $this->params->get('namespace').
+                'Forms\\Builders'
                 .($this->segments()->count() > 1
                     ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
@@ -109,23 +112,6 @@ class FormWriter
             .DIRECTORY_SEPARATOR
             .$this->choices->get('model')->get('name')
             .'Form.php';
-    }
-
-    private function writeRequest()
-    {
-        Artisan::call('make:request', [
-            'name' => $this->request(),
-        ]);
-
-        return $this;
-    }
-
-    private function request()
-    {
-        return $this->segments()->slice(0, -1)->implode('\\')
-            .'\\'.'Validate'
-            .$this->choices->get('model')->get('name')
-            .'Request';
     }
 
     private function writeControllers()
@@ -158,11 +144,13 @@ class FormWriter
             '${Model}' => $model->get('name'),
             '${model}' => Str::lower($model->get('name')),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}' => 'App\\Http\\Controllers\\'.$this->segments()->implode('\\'),
+            '${namespace}' => $this->params->get('namespace')
+                .'Http\\Controllers\\'.$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
-            '${builderNamespace}' => 'App\\Forms\\Builders'.$namespaceSuffix,
-            '${requestNamespace}' => 'App\\Http\\Requests'.$namespaceSuffix,
-            '${request}' => 'Validate'.$model->get('name').'Request',
+            '${builderNamespace}' => $this->params->get('namespace').'Forms\\Builders'.$namespaceSuffix,
+            '${requestNamespace}' => $this->params->get('namespace').'Http\\Requests'.$namespaceSuffix,
+            '${requestStore}' => 'Validate'.$model->get('name').'Store',
+            '${requestUpdate}' => 'Validate'.$model->get('name').'Update',
         ];
 
         return [
@@ -181,31 +169,31 @@ class FormWriter
 
     private function builderPath()
     {
-        return app_path(
-            'Forms'.DIRECTORY_SEPARATOR
+        return $this->params->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Forms'.DIRECTORY_SEPARATOR
             .'Builders'.DIRECTORY_SEPARATOR
             .$this->segments()->slice(0, -1)
-                ->implode(DIRECTORY_SEPARATOR)
-        );
+                ->implode(DIRECTORY_SEPARATOR);
     }
 
     private function templatePath()
     {
-        return app_path(
-            'Forms'.DIRECTORY_SEPARATOR
+        return $this->params->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Forms'.DIRECTORY_SEPARATOR
             .'Templates'.DIRECTORY_SEPARATOR
             .$this->segments()->slice(0, -1)
-                ->implode(DIRECTORY_SEPARATOR)
-        );
+                ->implode(DIRECTORY_SEPARATOR);
     }
 
     private function controllerPath()
     {
-        return app_path(
-            'Http'.DIRECTORY_SEPARATOR.
-            'Controllers'.DIRECTORY_SEPARATOR
-            .$this->segments()->implode(DIRECTORY_SEPARATOR)
-        );
+        return $this->params->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Http'.DIRECTORY_SEPARATOR
+            .'Controllers'.DIRECTORY_SEPARATOR
+            .$this->segments()->implode(DIRECTORY_SEPARATOR);
     }
 
     private function stub($file)
