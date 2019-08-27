@@ -143,13 +143,13 @@ class Structure
     {
         $model = $this->choices->get('model');
 
-        if (! Str::contains($model->get('name'), '\\') && ! $this->isPackage) {
+        if (! Str::contains($model->get('name'), '\\\\') && ! $this->isPackage) {
             $model->set('namespace', 'App');
 
             return;
         }
 
-        $segments = collect(explode('\\', $model->get('name')));
+        $segments = collect(explode('\\\\', $model->get('name')));
         $model->set('name', $segments->pop());
         $model->set('namespace', $this->modelNamespace($segments->filter()));
         $model->set('path', $segments->implode(DIRECTORY_SEPARATOR));
