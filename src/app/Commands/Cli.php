@@ -5,7 +5,6 @@ namespace LaravelEnso\Cli\app\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use LaravelEnso\Helpers\app\Classes\Obj;
-// use LaravelEnso\Cli\app\Helpers\TestConfig;
 use LaravelEnso\Cli\app\Helpers\TestConfig;
 use LaravelEnso\Cli\app\Services\Structure;
 use LaravelEnso\Cli\app\Services\Validator;
@@ -14,20 +13,20 @@ use LaravelEnso\Cli\app\Commands\Helpers\Symbol;
 
 class Cli extends Command
 {
-    const Menu = [
+    private const Menu = [
         'Model', 'Permission Group', 'Permissions', 'Menu',
         'Files', 'Package', 'Generate', 'Toggle Validation',
     ];
-
-    protected $signature = 'enso:cli';
-
-    protected $description = 'Create a new Laravel Enso Structure';
 
     private $choices;
     private $params;
     private $configured;
     private $validates;
     private $validator;
+    
+    protected $signature = 'enso:cli';
+
+    protected $description = 'Create a new Laravel Enso Structure';
 
     public function __construct()
     {
@@ -181,6 +180,7 @@ class Cli extends Command
 
     private function attemptWrite()
     {
+        // $this->choices = TestConfig::loadStructure();
         // $this->choices = TestConfig::loadPackageStructure();
         // $this->configured = $this->choices->keys();
 
@@ -210,14 +210,14 @@ class Cli extends Command
         ))->run();
 
         if ($this->validator->fails()) {
-            $this->warning('Your configuration has errors:');
+            $this->warn('Your configuration has errors:');
             $this->line('');
 
             $this->validator->errors()
                 ->each(function ($errors, $type) {
                     $this->info($type.' '.Symbol::exclamation());
                     $errors->each(function ($error) {
-                        $this->warning('    '.$error);
+                        $this->warn('    '.$error);
                     });
                 });
 
@@ -266,26 +266,21 @@ class Cli extends Command
             if ($routes) {
                 $this->info('Copy and paste the following code into your api.php routes file:');
                 $this->line('');
-                $this->warning($routes);
+                $this->warn($routes);
                 $this->line('');
             }
         }
 
-        $this->info('Your package is created, you can start playing!');
+        $this->info("Your package is created, you can start playing. Don't forget to run `git init` in the package root folder!");
 
         if ((bool) optional($this->choices->get('package'))->get('config')) {
-            $this->warning('Please remember to add the package`s service provider to the `config/app.php` list of providers.');
+            $this->warn('Add your package namespace and path inside your `composer.json` file under the `psr-4` key while developing.');
         }
 
         if ((bool) optional($this->choices->get('package'))->get('providers')) {
-            $this->warning('Add your package namespace and path inside your `composer.json` file under the `psr-4` key while developing.');
+            $this->warn('Remember to add the package`s service provider to the `config/app.php` list of providers.');
         }
         $this->line('');
-    }
-
-    private function warning($output)
-    {
-        return $this->line('<fg=yellow>'.$output.'</>');
     }
 
     private function missesRequired($choice)
@@ -293,7 +288,7 @@ class Cli extends Command
         $diff = $this->requires($choice)->diff($this->configured);
 
         if ($diff->isNotEmpty()) {
-            $this->warning('You must configure first: '.$diff->implode(', '));
+            $this->warn('You must configure first: '.$diff->implode(', '));
             $this->line('');
             sleep(1);
         }
