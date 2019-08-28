@@ -45,8 +45,12 @@ class Validator
 
         $model = $this->choices->get('model')->get('name');
 
-        if (Str::contains(str_replace('\\\\', '', $model), '\\')) {
-            $errors->push('Namespaced models must use double backslash');
+        if (Str::contains($model, '\\')) {
+            $errors->push('Namespaced models must only use slashes ("/")');
+        }
+
+        if (collect(explode('/', $model))->contains('')) {
+            $errors->push('Namespaced models must only use one slash for each segment');
         }
 
         if ($errors->count()) {

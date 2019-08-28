@@ -2,9 +2,7 @@
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Helpers\TestConfig;
-use LaravelEnso\Cli\app\Helpers\TestParams;
 use LaravelEnso\Cli\app\Services\Structure;
 
 class StructureWriterTest extends TestCase
@@ -45,11 +43,11 @@ class StructureWriterTest extends TestCase
     }
 
     private function generateFiles()
-    {   
+    {
         (new Structure($this->choices, $this->params))->handle();
-        
+
         $this->root = $this->params->get('root');
-        
+
         $this->assertTrue($this->formFilesCreated());
         $this->assertTrue($this->tableFilesCreated());
         $this->assertTrue($this->modelCreated());
@@ -136,7 +134,6 @@ class StructureWriterTest extends TestCase
             File::deleteDirectory($this->root);
             return;
         }
-        
         File::delete($this->root.'app/Test/Tree.php');
         File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
         File::deleteDirectory($this->root.'app/Forms/Templates/Testing');

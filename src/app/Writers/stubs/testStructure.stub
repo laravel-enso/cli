@@ -1,6 +1,6 @@
 {
     "model": {
-        "name": "Test\\Tree"
+        "name": "Test/Tree"
     },
     "permissionGroup": {
         "name": "testing.projects.trees"
