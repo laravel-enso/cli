@@ -6,6 +6,6 @@ return [
         'name' => null,
         'vendor' => 'laravel-enso',
         'config' => false,
-        'serviceProvider' => false,
+        'providers' => false,
     ],
 ];

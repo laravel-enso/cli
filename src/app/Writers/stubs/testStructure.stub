@@ -38,7 +38,7 @@
     "package": {
         "name": "",
         "vendor": "laravel-enso",
-        "providers": true,
-        "config": true
+        "providers": false,
+        "config": false
     }
 }

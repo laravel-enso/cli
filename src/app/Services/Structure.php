@@ -183,7 +183,11 @@ class Structure
     private function modelNamespace($segments)
     {
         if ($this->isPackage) {
-            return $this->packageNamespace().($segments->implode('\\'));
+            return $segments->implode('\\')
+                ? $this->packageNamespace().$segments->implode('\\')
+                : collect(explode('\\', $this->packageNamespace()))
+                    ->slice(0, -1)
+                    ->implode('\\');
         }
 
         return 'App\\'.$segments->implode('\\');
