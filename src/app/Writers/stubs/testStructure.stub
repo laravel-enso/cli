@@ -1,6 +1,6 @@
 {
     "model": {
-        "name": "Test\\Tree"
+        "name": "Test/Tree"
     },
     "permissionGroup": {
         "name": "testing.projects.trees"
@@ -38,7 +38,7 @@
     "package": {
         "name": "",
         "vendor": "laravel-enso",
-        "providers": true,
-        "config": true
+        "providers": false,
+        "config": false
     }
 }
