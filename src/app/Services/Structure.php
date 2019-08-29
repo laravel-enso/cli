@@ -187,7 +187,8 @@ class Structure
                 ? $this->packageNamespace().$segments->implode('\\')
                 : collect(explode('\\', $this->packageNamespace()))
                     ->slice(0, -1)
-                    ->implode('\\');
+                    ->implode('\\')
+                    .$segments->implode('\\');
         }
 
         return 'App\\'.$segments->implode('\\');

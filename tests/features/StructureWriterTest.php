@@ -43,11 +43,11 @@ class StructureWriterTest extends TestCase
     }
 
     private function generateFiles()
-    {
+    {   
         (new Structure($this->choices, $this->params))->handle();
-
+        
         $this->root = $this->params->get('root');
-
+        
         $this->assertTrue($this->formFilesCreated());
         $this->assertTrue($this->tableFilesCreated());
         $this->assertTrue($this->modelCreated());
