@@ -8,9 +8,9 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class OptionsWriter
 {
+    private $path;
     private $choices;
     private $segments;
-    private $path;
 
     public function __construct(Obj $choices, Obj $params)
     {
@@ -52,7 +52,7 @@ class OptionsWriter
                 .'Http\\Controllers\\'
                 .$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
-            '${Model}' => $model->get('name'),
+            '${Model}' => ucfirst($model->get('name')),
         ];
 
         return [

@@ -57,7 +57,7 @@ class RouteGenerator
 
     private function fromTo()
     {
-        $model = Str::lower($this->choices->get('model')->get('name'));
+        $model = lcfirst($this->choices->get('model')->get('name'));
         $packagePrefix = $this->isPackage
             ? 'api/'
             : '';
@@ -91,10 +91,16 @@ class RouteGenerator
 
     private function namespace()
     {
-        return $this->segments()
+        $namespace = '';
+        if ($this->isPackage) {
+            $namespace .= $this->params->get('namespace').'Http\Controllers\\';
+        }
+        $namespace .= $this->segments()
             ->map(function ($segment) {
                 return Str::ucfirst($segment);
             })->implode('\\');
+
+        return $namespace;
     }
 
     private function stub($file)

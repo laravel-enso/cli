@@ -49,11 +49,11 @@ class Validator
             $errors->push('Namespaced models must only use slashes ("/")');
         }
 
-        if (collect(explode('/', $model))->contains('')) {
+        if (Str::contains($model, '//')) {
             $errors->push('Namespaced models must only use one slash for each segment');
         }
 
-        if ($errors->count()) {
+        if ($errors->isNotEmpty()) {
             $this->errors['Model'] = $errors;
         }
     }

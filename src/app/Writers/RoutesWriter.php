@@ -81,7 +81,7 @@ class RoutesWriter
         })->implode(' ');
 
         $array = [
-            '${Model}' => $model,
+            '${Model}' => ucfirst($model),
             '${title}' => $title,
             '${model}' => Str::camel($model),
             '${relativePath}' => $this->segments->implode('/'),

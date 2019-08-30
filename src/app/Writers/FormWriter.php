@@ -97,7 +97,7 @@ class FormWriter
             '${modelNamespace}' => $model->get('namespace'),
             '${depth}' => str_repeat('../', $this->segments()->count()),
             '${model}' => Str::camel($model->get('name')),
-            '${Model}' => $model->get('name'),
+            '${Model}' => ucfirst($model->get('name')),
         ];
 
         return [
@@ -110,7 +110,7 @@ class FormWriter
     {
         return $this->builderPath()
             .DIRECTORY_SEPARATOR
-            .$this->choices->get('model')->get('name')
+            .ucfirst($this->choices->get('model')->get('name'))
             .'Form.php';
     }
 
@@ -141,16 +141,19 @@ class FormWriter
             : '';
 
         $array = [
-            '${Model}' => $model->get('name'),
-            '${model}' => Str::lower($model->get('name')),
+            '${Model}' => ucfirst($model->get('name')),
+            '${model}' => lcfirst($model->get('name')),
+            '${title}' => Str::snake($model->get('name'), ' '),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
             '${namespace}' => $this->params->get('namespace')
                 .'Http\\Controllers\\'.$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
-            '${builderNamespace}' => $this->params->get('namespace').'Forms\\Builders'.$namespaceSuffix,
-            '${requestNamespace}' => $this->params->get('namespace').'Http\\Requests'.$namespaceSuffix,
-            '${requestStore}' => 'Validate'.$model->get('name').'Store',
-            '${requestUpdate}' => 'Validate'.$model->get('name').'Update',
+            '${builderNamespace}' => $this->params->get('namespace')
+                .'Forms\\Builders'.$namespaceSuffix,
+            '${requestNamespace}' => $this->params->get('namespace')
+                .'Http\\Requests\\'.$this->segments()->implode('\\'),
+            '${requestStore}' => 'Validate'.ucfirst($model->get('name')).'Store',
+            '${requestUpdate}' => 'Validate'.ucfirst($model->get('name')).'Update',
         ];
 
         return [

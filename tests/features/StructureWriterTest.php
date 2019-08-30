@@ -1,9 +1,12 @@
 <?php
 
+namespace LaravelEnso\Cli\tests\features;
+
 use Tests\TestCase;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\app\Helpers\TestConfig;
 use LaravelEnso\Cli\app\Services\Structure;
+use LaravelEnso\Cli\tests\Helpers\TestConfig;
 
 class StructureWriterTest extends TestCase
 {
@@ -43,11 +46,11 @@ class StructureWriterTest extends TestCase
     }
 
     private function generateFiles()
-    {   
+    {
         (new Structure($this->choices, $this->params))->handle();
-        
+
         $this->root = $this->params->get('root');
-        
+
         $this->assertTrue($this->formFilesCreated());
         $this->assertTrue($this->tableFilesCreated());
         $this->assertTrue($this->modelCreated());
@@ -65,8 +68,8 @@ class StructureWriterTest extends TestCase
 
     private function requestValidatorCreated()
     {
-        return File::exists($this->root.'app/Http/Requests/ValidateTreeUpdate.php')
-        && File::exists($this->root.'app/Http/Requests/ValidateTreeStore.php');
+        return File::exists($this->root.'app/Http/Requests/Testing/Projects/Trees/ValidateTreeUpdate.php')
+        && File::exists($this->root.'app/Http/Requests/Testing/Projects/Trees/ValidateTreeStore.php');
     }
 
     private function formFilesCreated()
@@ -124,14 +127,15 @@ class StructureWriterTest extends TestCase
     {
         return collect(File::files($this->root.'database/migrations'))
             ->filter(function ($file) use ($migration) {
-                return strpos($file->getFilename(), $migration) > 0;
+                return Str::contains($file->getFilename(), $migration);
             })->isNotEmpty();
     }
 
     private function cleanUp()
     {
-        if (!empty($this->root)) {
+        if (! empty($this->root)) {
             File::deleteDirectory($this->root);
+
             return;
         }
         File::delete($this->root.'app/Test/Tree.php');
@@ -155,7 +159,7 @@ class StructureWriterTest extends TestCase
     {
         $file = collect(File::files($this->root.'database/migrations'))
             ->filter(function ($file) use ($migration) {
-                return strpos($file->getFilename(), $migration) > 0;
+                return Str::contains($file->getFilename(), $migration);
             })->first();
 
         File::delete($file);

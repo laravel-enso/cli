@@ -3,6 +3,7 @@
 namespace LaravelEnso\Cli\app\Services;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Writers\FormWriter;
 use LaravelEnso\Cli\app\Writers\TableWriter;
@@ -24,25 +25,15 @@ class Structure
     {
         $this->choices = $choices;
         $this->params = $params;
-        $this->isPackage = (bool) optional($this->choices->get('package'))->get('name');
-        $this->prepareModel();
+        $this->preparePackage()
+            ->prepareModel();
     }
 
     public function handle()
     {
-        if ($this->isPackage) {
-            $this->params->set('root', $this->packageRoot());
-            $this->params->set('namespace', $this->packageNamespace());
-            $this->writePackage();
-        }
-
-        $this->writeStructure();
-
-        if (! $this->choices->has('files')) {
-            return;
-        }
-
-        $this->writeModelAndMigration()
+        $this->writePackage()
+            ->writeStructure()
+            ->writeModelAndMigration()
             ->writeRoutes()
             ->writeViews()
             ->writeForm()
@@ -52,29 +43,30 @@ class Structure
 
     private function writeStructure()
     {
-        (new StructureMigrationWriter(
-            $this->choices, $this->params
-        ))->run();
+        App::makeWith(StructureMigrationWriter::class,
+            ['choices' => $this->choices, 'params' => $this->params]
+        )->run();
 
         return $this;
     }
 
     public function writePackage()
     {
-        (new PackageWriter(
-            $this->choices, $this->params
-        ))->run();
+        if ($this->isPackage) {
+            App::makeWith(PackageWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
+        }
 
         return $this;
     }
 
     private function writeModelAndMigration()
     {
-        if ($this->choices->get('files')->has('model')
-            || $this->choices->get('files')->has('table migration')) {
-            (new ModelAndMigrationWriter(
-                $this->choices, $this->params
-            ))->run();
+        if ($this->hasFile('model') || $this->hasFile('table migration')) {
+            App::makeWith(ModelAndMigrationWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
         }
 
         return $this;
@@ -82,10 +74,10 @@ class Structure
 
     private function writeRoutes()
     {
-        if ($this->choices->get('files')->has('routes')) {
-            (new RoutesWriter(
-                $this->choices, $this->params
-            ))->run();
+        if ($this->hasFile('routes')) {
+            App::makeWith(RoutesWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
         }
 
         return $this;
@@ -93,10 +85,10 @@ class Structure
 
     private function writeViews()
     {
-        if ($this->choices->get('files')->has('views')) {
-            (new ViewsWriter(
-                $this->choices, $this->params
-            ))->run();
+        if ($this->hasFile('views')) {
+            App::makeWith(ViewsWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
         }
 
         return $this;
@@ -104,14 +96,14 @@ class Structure
 
     private function writeForm()
     {
-        if ($this->choices->get('files')->has('form')) {
-            (new FormWriter(
-                $this->choices, $this->params
-            ))->run();
+        if ($this->hasFile('form')) {
+            App::makeWith(FormWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
 
-            (new ValidatorWriter(
-                $this->choices, $this->params
-            ))->run();
+            App::makeWith(ValidatorWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
         }
 
         return $this;
@@ -119,10 +111,10 @@ class Structure
 
     private function writeTable()
     {
-        if ($this->choices->get('files')->has('table')) {
-            (new TableWriter(
-                $this->choices, $this->params
-            ))->run();
+        if ($this->hasFile('table')) {
+            App::makeWith(TableWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
         }
 
         return $this;
@@ -130,10 +122,22 @@ class Structure
 
     private function writeOptions()
     {
-        if ($this->choices->get('files')->has('options')) {
-            (new OptionsWriter(
-                $this->choices, $this->params
-            ))->run();
+        if ($this->hasFile('options')) {
+            App::makeWith(OptionsWriter::class,
+                ['choices' => $this->choices, 'params' => $this->params]
+            )->run();
+        }
+
+        return $this;
+    }
+
+    private function preparePackage()
+    {
+        $this->isPackage = (bool) optional($this->choices->get('package'))->get('name');
+
+        if ($this->isPackage) {
+            $this->params->set('root', $this->packageRoot());
+            $this->params->set('namespace', $this->packageNamespace());
         }
 
         return $this;
@@ -146,13 +150,15 @@ class Structure
         if (! Str::contains($model->get('name'), DIRECTORY_SEPARATOR) && ! $this->isPackage) {
             $model->set('namespace', 'App');
 
-            return;
+            return $this;
         }
 
         $segments = collect(explode(DIRECTORY_SEPARATOR, $model->get('name')));
         $model->set('name', $segments->pop());
         $model->set('namespace', $this->modelNamespace($segments));
         $model->set('path', $segments->implode(DIRECTORY_SEPARATOR));
+
+        return $this;
     }
 
     private function packageNamespace()
@@ -192,5 +198,11 @@ class Structure
         }
 
         return 'App\\'.$segments->implode('\\');
+    }
+
+    private function hasFile($file)
+    {
+        return $this->choices->has('files')
+            && $this->choices->get('files')->has($file);
     }
 }

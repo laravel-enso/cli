@@ -116,8 +116,8 @@ class StructureMigrationWriter
     private function entity()
     {
         return $this->choices->has('model')
-            ? $this->choices->get('model')->get('name')
-            : $this->choices->get('menu')->get('name');
+            ? ucfirst($this->choices->get('model')->get('name'))
+            : ucfirst($this->choices->get('menu')->get('name'));
     }
 
     private function mapping(Obj $keys)

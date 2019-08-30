@@ -57,8 +57,9 @@ class ValidatorWriter
         $this->model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => $this->params->get('namespace').'Http\\Requests',
-            '${Model}' => $this->model->get('name'),
+            '${namespace}' => $this->params->get('namespace')
+                .'Http\\Requests\\'.$this->segments()->implode('\\'),
+            '${Model}' => ucfirst($this->model->get('name')),
         ];
 
         return [
@@ -71,7 +72,7 @@ class ValidatorWriter
     {
         return $this->path()
             .DIRECTORY_SEPARATOR
-            .'Validate'.$this->model->get('name').Str::ucfirst($operation)
+            .'Validate'.ucfirst($this->model->get('name')).Str::ucfirst($operation)
             .'.php';
     }
 
@@ -90,7 +91,8 @@ class ValidatorWriter
             ?? $this->path = $this->params->get('root')
                 .'app'.DIRECTORY_SEPARATOR
                 .'Http'.DIRECTORY_SEPARATOR
-                .'Requests';
+                .'Requests'.DIRECTORY_SEPARATOR
+                .$this->segments()->implode(DIRECTORY_SEPARATOR);
     }
 
     private function segments()

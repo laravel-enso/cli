@@ -109,7 +109,7 @@ class TableWriter
                     ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
             '${modelNamespace}' => $model->get('namespace'),
-            '${Model}' => $model->get('name'),
+            '${Model}' => ucfirst($model->get('name')),
             '${models}' => Str::camel(Str::plural($model->get('name'))),
             '${table}' => Str::snake(Str::plural($model->get('name'))),
             '${depth}' => str_repeat('../', $this->segments()->count() - 1),
@@ -128,7 +128,7 @@ class TableWriter
     {
         return $this->builderPath()
             .DIRECTORY_SEPARATOR
-            .$this->choices->get('model')->get('name')
+            .ucfirst($this->choices->get('model')->get('name'))
             .'Table.php';
     }
 
@@ -160,7 +160,7 @@ class TableWriter
                 .($this->segments()->count() > 1
                     ? $this->segments()->slice(0, -1)->implode('\\').'\\'
                     : ''),
-            '${Model}' => $this->choices->get('model')->get('name'),
+            '${Model}' => ucfirst($this->choices->get('model')->get('name')),
         ];
 
         return [

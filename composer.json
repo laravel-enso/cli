@@ -23,11 +23,13 @@
         "laravel-enso/helpers": "1.11.*",
         "laravel-enso/menus": "3.1.*",
         "laravel-enso/permissions": "3.1.*",
+        "laravel-enso/enums": "1.0.*",
         "laravel-enso/roles": "3.1.*"
     },
     "autoload": {
         "psr-4": {
-            "LaravelEnso\\Cli\\": "src/"
+            "LaravelEnso\\Cli\\": "src/",
+            "LaravelEnso\\Cli\\tests\\": "tests/"
         }
     },
         "extra": {

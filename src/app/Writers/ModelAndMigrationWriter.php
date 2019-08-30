@@ -23,7 +23,7 @@ class ModelAndMigrationWriter
     {
         $this->model = $this->choices->get('model');
 
-        if (! class_exists($this->modelPath().DIRECTORY_SEPARATOR.$this->model->get('name'))) {
+        if (! class_exists($this->modelPath().DIRECTORY_SEPARATOR.ucfirst($this->model->get('name')))) {
             $this->writeModel()
                 ->writeMigration();
 
@@ -42,7 +42,7 @@ class ModelAndMigrationWriter
         }
 
         File::put(
-            $this->modelPath().DIRECTORY_SEPARATOR.$this->model->get('name').'.php',
+            $this->modelPath().DIRECTORY_SEPARATOR.ucfirst($this->model->get('name')).'.php',
             str_replace($from, $to, $this->stub())
         );
 
@@ -53,7 +53,7 @@ class ModelAndMigrationWriter
     {
         $array = [
             '${modelNamespace}' => $this->model->get('namespace'),
-            '${Model}' => $this->model->get('name'),
+            '${Model}' => ucfirst($this->model->get('name')),
         ];
 
         return [

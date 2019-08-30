@@ -14,7 +14,7 @@ class Store extends Controller
             ->save();
 
         return [
-            'message' => __('The ${model} was successfully created'),
+            'message' => __('The ${title} was successfully created'),
             'redirect' => '${permissionGroup}.edit',
             'param' => ['${model}' => $${model}->id],
         ];
