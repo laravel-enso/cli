@@ -82,7 +82,6 @@ class StructureTest extends TestCase
         (new Structure($this->choices, $this->params))->handle();
 
         $params = $this->spy->get(PackageWriter::class)['params'];
-        $choices = $this->spy->get(PackageWriter::class)['choices'];
         $this->assertEquals($params->get('root'), 'vendor/user/package/src/');
         $this->assertEquals($params->get('namespace'), 'User\Package\app\\');
     }
@@ -124,7 +123,7 @@ class StructureTest extends TestCase
 
             (new Structure($this->choices, $this->params))->handle();
 
-            $result = collect([
+            collect([
                 TableWriter::class, ViewsWriter::class, RoutesWriter::class, OptionsWriter::class,
                 ValidatorWriter::class, ModelAndMigrationWriter::class, FormWriter::class,
             ])->each(function ($writer) use ($file, $writers) {
@@ -147,7 +146,7 @@ class StructureTest extends TestCase
             TableWriter::class, ViewsWriter::class, RoutesWriter::class, OptionsWriter::class, PackageWriter::class,
             ValidatorWriter::class, ModelAndMigrationWriter::class, StructureMigrationWriter::class, FormWriter::class,
         ])->each(function ($writer) {
-            $this->app->bind($writer, function ($choices, $args) use ($writer) {
+            $this->app->bind($writer, function ($app, $args) use ($writer) {
                 $this->spy->put($writer, $args);
 
                 return new DummyWriter();
