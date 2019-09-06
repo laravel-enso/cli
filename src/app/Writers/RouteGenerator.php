@@ -4,63 +4,47 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class RouteGenerator
 {
-    private const RouteOrder = [
-        'index', 'create', 'store', 'edit', 'update', 'destroy', 'initTable',
-        'tableData', 'exportExcel', 'options', 'show',
-    ];
+    private const ShowRoute = 'show';
 
     private $choices;
-    private $params;
     private $segments;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
         $this->isPackage = (bool) optional($this->choices->get('package'))->get('name');
     }
 
-    public function run()
+    public function handle()
     {
         [$from, $to] = $this->fromTo();
 
-        $routes = collect(self::RouteOrder)
-            ->intersect($this->routes())
-            ->reduce(function ($routes, $permission) use ($from, $to) {
-                return $routes."\t\t"
-                    .str_replace($from, $to, $this->stub($permission))
-                    .PHP_EOL;
-            }, PHP_EOL);
-
         $from[] = '${routes}';
-        $to[] = $routes;
+        $to[] = $this->routes($from, $to);
 
-        if ($this->isPackage) {
-            if (! File::isDirectory($this->packageRoutesPath())) {
-                File::makeDirectory($this->packageRoutesPath(), 0755, true);
-            }
-
-            File::put(
-                $this->packageRoutesPath().'api.php',
-                str_replace($from, $to, $this->stub('routes'))
-            );
-
-            return;
+        if (! $this->isPackage) {
+            return str_replace($from, $to, $this->stub('routes'));
         }
 
-        return str_replace($from, $to, $this->stub('routes'));
+        if (! File::isDirectory($this->packageRoutesPath())) {
+            File::makeDirectory($this->packageRoutesPath(), 0755, true);
+        }
+
+        File::put(
+            $this->packageRoutesPath().'api.php',
+            str_replace($from, $to, $this->stub('routes'))
+        );
     }
 
     private function fromTo()
     {
         $model = lcfirst($this->choices->get('model')->get('name'));
-        $packagePrefix = $this->isPackage
-            ? 'api/'
-            : '';
+
+        $packagePrefix = $this->isPackage ? 'api/' : '';
 
         $groupPrefix = "->prefix('"
             .$packagePrefix
@@ -81,20 +65,33 @@ class RouteGenerator
         ];
     }
 
-    private function routes()
+    private function routes($from, $to)
     {
-        return collect(
+        $routes = collect(
             $this->choices->get('permissions')->all()
-        )->filter()
-        ->keys();
+        )->filter()->keys();
+
+        $showIndex = $routes->search(self::ShowRoute);
+
+        if ($showIndex !== false) {
+            $routes->splice($showIndex, 1)->push(self::ShowRoute);
+        }
+
+        return $routes->reduce(function ($routes, $permission) use ($from, $to) {
+            return $routes."\t\t"
+                .str_replace($from, $to, $this->stub($permission))
+                .PHP_EOL;
+        }, PHP_EOL);
     }
 
     private function namespace()
     {
         $namespace = '';
+
         if ($this->isPackage) {
-            $namespace .= $this->params->get('namespace').'Http\Controllers\\';
+            $namespace .= $this->params()->get('namespace').'Http\Controllers\\';
         }
+
         $namespace .= $this->segments()
             ->map(function ($segment) {
                 return Str::ucfirst($segment);
@@ -122,8 +119,13 @@ class RouteGenerator
 
     private function packageRoutesPath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'routes'
             .DIRECTORY_SEPARATOR;
+    }
+
+    private function params()
+    {
+        return $this->choices->params();
     }
 }

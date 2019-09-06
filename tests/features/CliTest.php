@@ -4,30 +4,23 @@ namespace LaravelEnso\Cli\tests\features;
 
 use Tests\TestCase;
 use Illuminate\Support\Arr;
-use LaravelEnso\Cli\app\Enums\Menus;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use LaravelEnso\Cli\app\Enums\Options;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Services\Structure;
-use LaravelEnso\Cli\app\Services\Validator;
 
 class CliTest extends TestCase
 {
+    private $choice;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->app->bind(Menus::class, TestMenus::class);
-        $this->app->bind(Validator::class, SpyValidator::class);
-        $this->app->bind(Structure::class, SpyStructure::class);
+        $this->choice = Options::choices()->first();
 
-        Config::set('enso.structures.depended.requires', [TestMenus::Independent]);
-        Config::set('enso.structures.independent.requires', []);
-        Config::set('enso.structures.independent.attributes', ['name' => null]);
-        Config::set('enso.structures.depended.attributes', ['name' => null]);
-
-        SpyStructure::refresh();
-        SpyValidator::refresh();
+        Config::set("enso.structures{Str::camel($this->choice)}.attributes", ['name' => null]);
     }
 
     protected function tearDown() :void
@@ -40,57 +33,64 @@ class CliTest extends TestCase
     }
 
     /** @test */
-    public function cannot_config_depended_menu_before_its_dependencies()
+    public function cannot_config_choice_without_requirements()
     {
+        $dependent = $this->dependent();
+        $requirements = $this->requirements($dependent);
+
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', TestMenus::Depended)
-            ->expectsOutput('You must configure first: '.TestMenus::Independent)
-            ->expectsQuestion('Choose element to configure', TestMenus::Close);
+            ->expectsQuestion('Choose element to configure', $dependent)
+            ->expectsOutput('You must configure first: '.$requirements)
+            ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
     /** @test */
-    public function when_there_was_a_session_then_should_ask_to_reload_session()
+    public function can_reload_session_if_available()
     {
-        Cache::put('cli_data', [new Obj(), new Obj(), collect(), true]);
+        Cache::put('cli_data', [
+            'params' => new Obj(),
+            'choices' => new Obj(),
+            'configured' => collect(),
+            'validates' => true,
+        ]);
 
         $this->artisan('enso:cli')
-            ->expectsQuestion('Do you want to continue the last session?', 'yes')
-            ->expectsQuestion('Choose element to configure', TestMenus::Close);
+            ->expectsQuestion('Do you want to restore the last session?', 'yes')
+            ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
     /** @test */
-    public function when_session_was_closed_then_should_save_config()
+    public function when_choice_was_configured_should_save_config()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', TestMenus::Independent)
-            ->expectsQuestion('Configure '.TestMenus::Independent, true)
+            ->expectsQuestion('Choose element to configure', $this->choice)
+            ->expectsQuestion('Configure '.$this->choice, true)
             ->expectsQuestion('name', 'test')
-            ->expectsQuestion('Choose element to configure', TestMenus::Close);
+            ->expectsQuestion('Choose element to configure', Options::Exit);
 
-        $this->assertEquals('test', Arr::get(Cache::get('cli_data', [])[1], 'independent.name'));
+        $this->assertEquals('test', Cache::get('cli_data')['choices'][Str::camel($this->choice)]['name']);
     }
 
     /** @test */
-    public function when_generate_called_should_remove_saved_session()
+    public function should_remove_saved_session_after_generate()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', TestMenus::Independent)
-            ->expectsQuestion('Configure '.TestMenus::Independent, true)
+            ->expectsQuestion('Choose element to configure', $this->choice)
+            ->expectsQuestion('Configure '.$this->choice, true)
             ->expectsQuestion('name', 'test')
-            ->expectsQuestion('Choose element to configure', TestMenus::Generate);
+            ->expectsQuestion('Choose element to configure', Options::Generate);
 
-        $this->assertFalse(Cache::has('cli_choices') || Cache::has('cli_params')
-            || Cache::has('cli_configured'));
+        $this->assertFalse(Cache::has('cli_data'));
     }
 
     /** @test */
-    public function when_generate_called_and_validate_is_enable_should_validate()
+    public function should_validate()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', TestMenus::Independent)
-            ->expectsQuestion('Configure '.TestMenus::Independent, true)
-            ->expectsQuestion('name', 'test')
-            ->expectsQuestion('Choose element to configure', TestMenus::Generate);
+            ->expectsQuestion('Choose element to configure', Options::Model)
+            ->expectsQuestion('Configure '.Options::Model, true)
+            ->expectsQuestion('name', 'test\\test')
+            ->expectsQuestion('Choose element to configure', Options::Generate);
 
         $this->assertEquals('test', Arr::get(SpyValidator::$choices, 'independent.name'));
     }
@@ -109,14 +109,12 @@ class CliTest extends TestCase
     }
 
     /** @test */
-    public function when_generate_called_and_no_fields_configured_then_should_not_call_structure()
+    public function cannot_generate_with_nothing_configured()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', TestMenus::Generate)
+            ->expectsQuestion('Choose element to configure', Options::Generate)
             ->expectsOutput('There is nothing configured yet!')
-            ->expectsQuestion('Choose element to configure', TestMenus::Close);
-
-        $this->assertEquals(null, SpyStructure::$choices);
+            ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
     /** @test */
@@ -129,7 +127,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Configure '.TestMenus::Independent, true)
             ->expectsQuestion('name', 'test')
             ->expectsQuestion('Choose element to configure', TestMenus::Generate)
-            ->expectsQuestion('Choose element to configure', TestMenus::Close);
+            ->expectsQuestion('Choose element to configure', TestMenus::Exit);
 
         $this->assertEquals(null, SpyStructure::$choices);
     }
@@ -145,18 +143,19 @@ class CliTest extends TestCase
 
         $this->assertEquals('test', Arr::get(SpyStructure::$choices, 'independent.name'));
     }
-}
 
-class TestMenus extends Menus
-{
-    const Independent = 'Independent';
-    const Depended = 'Depended';
-
-    public static function choices()
+    private function dependent()
     {
-        return collect([
-            self::Independent, self::Depended, self::Files,
-        ]);
+        return collect(Options::choices())->first(function ($choice) {
+            return ! empty(config('enso.structures.'.Str::camel($choice).'.requires'));
+        });
+    }
+
+    private function requirements($choice)
+    {
+        return collect(
+            config('enso.structures.'.Str::camel($choice).'.requires')
+        )->implode(', ');
     }
 }
 

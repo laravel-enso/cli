@@ -23,11 +23,8 @@ class RouteGeneratorTest extends TestCase
         $this->root = 'cli_tests_tmp/';
 
         $this->choices = new Obj([
-            'permissionGroup' => [
-            ],
-            'model' => [
-                'name' => 'testModel',
-            ],
+            'permissionGroup' => [],
+            'model' => ['name' => 'testModel'],
             'permissions' => [
                 'index' => true, 'create' => true, 'store' => true, 'edit' => true,
                 'exportExcel' => true, 'destroy' => true, 'initTable' => true,
@@ -52,7 +49,7 @@ class RouteGeneratorTest extends TestCase
     {
         $this->choices->get('permissionGroup')->put('name', 'a.b.c');
 
-        $result = (new RouteGenerator($this->choices, $this->params))->run();
+        $result = (new RouteGenerator($this->choices))->handle();
 
         $this->assertContains('Route::namespace(\'A\\B\\C\')', $result);
         $this->assertContains('->prefix(\'a/b/c\')->as(\'a.b.c.\')', $result);

@@ -5,35 +5,35 @@ namespace LaravelEnso\Cli\app\Writers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class RoutesWriter
 {
     const PathPrefix = 'js/routes';
-    const Operations = ['create', 'edit', 'index', 'show'];
+    const Routes = ['create', 'edit', 'index', 'show'];
 
     private $choices;
-    private $params;
     private $path;
     private $segments;
     private $pathPrefix;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
-        $this->pathPrefix = $this->params->get('root').'resources//'.self::PathPrefix;
+
+        $this->pathPrefix = $choices->params()->get('root').'resources//'.self::PathPrefix;
 
         $this->segments = collect(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
         );
 
-        $this->path = $this->params->get('root').
+        $this->path = $choices->params()->get('root').
             'resources//'.
             self::PathPrefix.'/'
             .$this->segments->implode('/');
     }
 
-    public function run()
+    public function handle()
     {
         $this->createFolders()
             ->writeCrudRoutes()
@@ -53,7 +53,7 @@ class RoutesWriter
     {
         $this->choices->get('permissions')
             ->filter(function ($chosen, $permission) {
-                return $chosen && collect(self::Operations)->contains($permission);
+                return $chosen && collect(self::Routes)->contains($permission);
             })->keys()
             ->each(function ($permission) {
                 $this->writeCrudRoute($permission);

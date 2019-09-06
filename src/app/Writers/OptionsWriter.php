@@ -5,6 +5,7 @@ namespace LaravelEnso\Cli\app\Writers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class OptionsWriter
 {
@@ -12,13 +13,12 @@ class OptionsWriter
     private $choices;
     private $segments;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
     }
 
-    public function run()
+    public function handle()
     {
         $this->createFolders()
             ->write();
@@ -48,7 +48,7 @@ class OptionsWriter
         $model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => $this->params->get('namespace')
+            '${namespace}' => $this->params()->get('namespace')
                 .'Http\\Controllers\\'
                 .$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
@@ -80,7 +80,7 @@ class OptionsWriter
     private function path()
     {
         return $this->path
-            ?? $this->path = $this->params->get('root')
+            ?? $this->path = $this->params()->get('root')
                 .'app'.DIRECTORY_SEPARATOR
                 .'Http'.DIRECTORY_SEPARATOR
                 .'Controllers'.DIRECTORY_SEPARATOR
@@ -95,5 +95,10 @@ class OptionsWriter
             )->map(function ($segment) {
                 return Str::ucfirst($segment);
             });
+    }
+
+    private function params()
+    {
+        return $this->choices->params();
     }
 }

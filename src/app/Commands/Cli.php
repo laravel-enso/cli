@@ -3,15 +3,15 @@
 namespace LaravelEnso\Cli\app\Commands;
 
 use Illuminate\Console\Command;
-use LaravelEnso\Cli\app\Enums\Menus;
-use LaravelEnso\Cli\app\Commands\Helpers\Config;
-use LaravelEnso\Cli\app\Commands\Helpers\Status;
-use LaravelEnso\Cli\app\Commands\Helpers\CliData;
-use LaravelEnso\Cli\app\Commands\Helpers\Generator;
+use LaravelEnso\Cli\app\Enums\Options;
+use LaravelEnso\Cli\app\Services\Config;
+use LaravelEnso\Cli\app\Services\Status;
+use LaravelEnso\Cli\app\Services\Choices;
+use LaravelEnso\Cli\app\Services\Generator;
 
 class Cli extends Command
 {
-    private $cliData;
+    private $choices;
 
     protected $signature = 'enso:cli';
 
@@ -21,35 +21,37 @@ class Cli extends Command
     {
         parent::__construct();
 
-        $this->cliData = new CliData($this);
+        $this->choices = new Choices($this);
     }
 
     public function handle()
     {
         $this->info('Create a new Laravel Enso Structure');
+
         $this->line('');
 
-        $this->cliData->handleSavedSession();
+        $this->choices->restore();
 
-        return $this->index();
+        $this->index();
     }
 
     private function index()
     {
-        $command = (new Status($this, $this->cliData))
-            ->print()
-            ->getNewCommand();
+        $choice = (new Status($this->choices))
+            ->display()
+            ->choice();
 
-        if ($command === Menus::Close) {
-            return 0;
-        } elseif ($command === Menus::Generate) {
-            if ((new Generator($this, $this->cliData))->generate()) {
-                return 0;
-            }
-        } else {
-            (new Config($this, $this->cliData))->fill($command);
+        switch ($choice) {
+            case Options::Exit:
+                return;
+            case Options::Generate:
+                return (new Generator($this->choices))->handle()
+                    ? null
+                    : $this->index();
+            default:
+                (new Config($this->choices))->fill($choice);
+
+                return $this->index();
         }
-
-        return $this->index();
     }
 }

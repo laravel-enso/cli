@@ -5,6 +5,7 @@ namespace LaravelEnso\Cli\app\Writers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class ViewsWriter
 {
@@ -12,16 +13,15 @@ class ViewsWriter
     const Operations = ['create', 'edit', 'index', 'show'];
 
     private $choices;
-    private $params;
     private $path;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
+        $this->path = $this->path();
     }
 
-    public function run()
+    public function handle()
     {
         $this->createFolders()
             ->writeViews();
@@ -29,8 +29,8 @@ class ViewsWriter
 
     private function createFolders()
     {
-        if (! File::isDirectory($this->path())) {
-            File::makeDirectory($this->path(), 0755, true);
+        if (! File::isDirectory($this->path)) {
+            File::makeDirectory($this->path, 0755, true);
         }
 
         return $this;
@@ -73,7 +73,7 @@ class ViewsWriter
 
     private function filename($operation)
     {
-        return $this->path()
+        return $this->path
             .DIRECTORY_SEPARATOR
             .Str::ucfirst($operation).'.vue';
     }
@@ -89,15 +89,12 @@ class ViewsWriter
 
     private function path()
     {
-        $this->path =
-            $this->params->get('root')
-                .'resources'
-                .DIRECTORY_SEPARATOR
-                .self::PathPrefix.DIRECTORY_SEPARATOR
-                .collect(
-                    explode('.', $this->choices->get('permissionGroup')->get('name'))
-                )->implode(DIRECTORY_SEPARATOR);
-
-        return $this->path;
+        return $this->choices->params()->get('root')
+            .'resources'
+            .DIRECTORY_SEPARATOR
+            .self::PathPrefix.DIRECTORY_SEPARATOR
+            .collect(
+                explode('.', $this->choices->get('permissionGroup')->get('name'))
+            )->implode(DIRECTORY_SEPARATOR);
     }
 }
