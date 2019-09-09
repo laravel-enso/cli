@@ -4,7 +4,6 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Services\Choices;
 
 class TableWriter

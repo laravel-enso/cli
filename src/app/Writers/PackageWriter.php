@@ -4,7 +4,6 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Services\Choices;
 
 class PackageWriter
@@ -127,7 +126,6 @@ class PackageWriter
 
     private function params()
     {
-
         return $this->choices->params();
     }
 }

@@ -16,7 +16,7 @@ abstract class Validator
         $this->errors = collect();
     }
 
-    abstract public function run(): Validator;
+    abstract public function run(): self;
 
     public function fails()
     {
