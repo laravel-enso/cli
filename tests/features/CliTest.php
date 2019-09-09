@@ -32,7 +32,7 @@ class CliTest extends TestCase
     {
         Cache::forget('cli_data');
 
-        $this->deleteMigration('create_structure_for_tests');
+        $this->deleteMigration('create_structure_for_test');
 
         parent::tearDown();
     }
@@ -65,7 +65,7 @@ class CliTest extends TestCase
     }
 
     /** @test */
-    public function when_choice_was_configured_should_save_config()
+    public function can_save_after_choice_was_configured()
     {
         $this->artisan('enso:cli')
             ->expectsQuestion('Choose element to configure', $this->choice)
@@ -77,7 +77,7 @@ class CliTest extends TestCase
     }
 
     /** @test */
-    public function should_remove_saved_session_after_generate()
+    public function can_remove_saved_session_after_generate()
     {
         $this->artisan('enso:cli')
             ->expectsQuestion('Choose element to configure', $this->choice)
@@ -110,7 +110,7 @@ class CliTest extends TestCase
     }
 
     /** @test */
-    public function can_generate_with_failed_validation_and_disabled_validation()
+    public function can_generate_with_disabled_validation()
     {
         $this->artisan('enso:cli')
             ->expectsQuestion('Choose element to configure', Options::Model)

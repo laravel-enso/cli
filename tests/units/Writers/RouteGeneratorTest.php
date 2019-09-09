@@ -3,11 +3,9 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\RouteGenerator;
 
 class RouteGeneratorTest extends TestCase
@@ -15,7 +13,6 @@ class RouteGeneratorTest extends TestCase
     use Cli;
 
     private $root;
-    private $params;
     private $choices;
 
     protected function setUp(): void
@@ -24,11 +21,7 @@ class RouteGeneratorTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = (new Choices(new Command))
-            ->setParams($this->params())
-            ->setChoices($this->choices());
-
-        $this->params = $this->params();
+        $this->initChoices();
     }
 
     protected function tearDown() :void
@@ -67,10 +60,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertRoutes(File::get($this->root.'routes/api.php'));
     }
 
-    /**
-     * @param $result
-     */
-    private function assertRoutes($result): void
+    private function assertRoutes($result)
     {
         $this->assertContains("Route::get('', 'Index')->name('index');", $result);
         $this->assertContains("Route::get('create', 'Create')->name('create');", $result);

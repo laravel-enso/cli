@@ -4,10 +4,19 @@ namespace LaravelEnso\Cli\tests\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\app\Services\Choices;
 
 trait Cli
 {
+    private function initChoices()
+    {
+        $this->choices = (new Choices(new Command))
+            ->setChoices($this->choices())
+            ->setParams($this->params());
+    }
+
     private function assertControllerContains($needle, $controller)
     {
         $this->assertFileContains($needle, $this->controllerPath($controller));

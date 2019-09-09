@@ -26,7 +26,7 @@ class ValidatorTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_two_slashed_namespace_model()
+    public function cannot_validate_model_with_two_slashed()
     {
         $choices = $this->modelChoices('namespace//testModel');
 
@@ -36,7 +36,7 @@ class ValidatorTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_back_slashed_namespace_model()
+    public function cannot_validate_model_with_back_slashed()
     {
         $choices = $this->modelChoices('namespace\\testModel');
 
@@ -56,7 +56,7 @@ class ValidatorTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_parent_menu_route()
+    public function cannot_validate_parent_menu_with_route()
     {
         $choices = $this->menuChoices('route', null, true);
 
@@ -97,7 +97,7 @@ class ValidatorTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_menu_when_no_parent_exist()
+    public function cannot_validate_with_wrong_parent()
     {
         $choices = $this->menuChoices('route.create', 'not_menu');
 
@@ -107,7 +107,7 @@ class ValidatorTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_menu_when_more_than_one_parent_exist()
+    public function cannot_validate_menu_with_multiple_parent()
     {
         $choices = $this->menuChoices('route.create', 'parent');
         $this->createParentMenu('parent')->createParentMenu('parent');

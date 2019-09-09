@@ -3,11 +3,9 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\ViewsWriter;
 
 class ViewsWriterTest extends TestCase
@@ -24,9 +22,7 @@ class ViewsWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = (new Choices(new Command))
-            ->setChoices($this->choices())
-            ->setParams($this->params());
+        $this->initChoices();
     }
 
     protected function tearDown() :void

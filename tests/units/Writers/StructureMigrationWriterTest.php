@@ -4,11 +4,9 @@ namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Carbon\Carbon;
 use Tests\TestCase;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
 
 class StructureMigrationWriterTest extends TestCase
@@ -17,7 +15,6 @@ class StructureMigrationWriterTest extends TestCase
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
@@ -25,11 +22,7 @@ class StructureMigrationWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = (new Choices(new Command))
-            ->setChoices($this->choices())
-            ->setParams($this->params());
-
-        $this->params = $this->params();
+        $this->initChoices();
 
         Carbon::setTestNow(Carbon::create(2000, 01, 01, 00));
     }

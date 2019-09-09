@@ -3,11 +3,9 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\RoutesWriter;
 
 class RouteWriterTest extends TestCase
@@ -23,9 +21,7 @@ class RouteWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = (new Choices(new Command))
-            ->setChoices($this->choices())
-            ->setParams($this->params());
+        $this->initChoices();
     }
 
     protected function tearDown() :void
@@ -83,6 +79,54 @@ class RouteWriterTest extends TestCase
             'component: TestModelEdit',
             "title: 'Edit Tests Models'"
         ], 'perm/group/edit.js');
+    }
+
+    /** @test */
+    public function can_create_segment_route()
+    {
+        $this->setPermission('edit');
+
+        (new RoutesWriter($this->choices))->handle();
+
+        $this->assertViewRouteContains([
+            "const routes = routeImporter(require.context('./perm', false, /.*\.js$/))",
+            "path: '/perm'",
+        ], 'perm.js');
+    }
+
+    /** @test */
+    public function can_create_parent_segment_route()
+    {
+        $this->setPermission('edit');
+
+        (new RoutesWriter($this->choices))->handle();
+
+        $this->assertViewRouteContains([
+            "const routes = routeImporter(require.context('./group', false, /.*\.js$/));",
+            "path: 'group'",
+            "breadcrumb: 'group'",
+            "route: 'perm.group.index'",
+        ], 'perm/group.js');
+    }
+
+    /** @test */
+    public function cannot_create_non_route()
+    {
+        $this->setPermission('destroy');
+
+        (new RoutesWriter($this->choices))->handle();
+
+        $this->assertFileNotExists($this->viewRoutePath('perm/group/destroy.js'));
+    }
+
+    /** @test */
+    public function cannot_create_route_for_false_permission()
+    {
+        $this->choices->put('permissions', collect(['show' => false]));
+
+        (new RoutesWriter($this->choices))->handle();
+
+        $this->assertFileNotExists($this->viewRoutePath('perm/group/show.js'));
     }
 
     /** @test */
