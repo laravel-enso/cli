@@ -3,17 +3,18 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\PackageWriter;
 
 class PackageWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
-    private $params;
     private $choices;
 
     protected function setUp(): void
@@ -22,17 +23,9 @@ class PackageWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'package' => [
-                'vendor' => 'enso',
-                'name' => 'cli',
-            ],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-            'namespace' => 'Enso\Cli\app\\',
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setParams($this->params())
+            ->setChoices($this->choices());
     }
 
     protected function tearDown() :void
@@ -43,38 +36,32 @@ class PackageWriterTest extends TestCase
     }
 
     /** @test */
-    public function can_create_directory()
-    {
-        (new PackageWriter($this->choices, $this->params))->run();
-
-        $this->assertDirectoryExists($this->root);
-    }
-
-    /** @test */
     public function can_create_composer()
     {
-        (new PackageWriter($this->choices, $this->params))->run();
+        (new PackageWriter($this->choices))->handle();
 
-        $this->assertFileContains('"name": "enso/cli"', 'composer.json');
-        $this->assertFileContains('"Enso\\\\Cli\\\\": "src/"', 'composer.json');
-        $this->assertFileContains('"Enso\\\\Cli\\\\AppServiceProvider"', 'composer.json');
-        $this->assertFileContains('"Enso\\\\Cli\\\\AuthServiceProvider"', 'composer.json');
+        $this->assertCliFileContains([
+            '"name": "enso/cli"',
+            '"Enso\\\\Cli\\\\": "src/"',
+            '"Enso\\\\Cli\\\\AppServiceProvider"',
+            '"Enso\\\\Cli\\\\AuthServiceProvider"',
+        ], 'composer.json');
     }
 
     /** @test */
     public function can_create_readme()
     {
-        (new PackageWriter($this->choices, $this->params))->run();
+        (new PackageWriter($this->choices))->handle();
 
-        $this->assertFileContains('###  enso - cli', 'README.md');
+        $this->assertCliFileContains('###  enso - cli', 'README.md');
     }
 
     /** @test */
     public function can_create_licence()
     {
-        (new PackageWriter($this->choices, $this->params))->run();
+        (new PackageWriter($this->choices))->handle();
 
-        $this->assertFileContains('Copyright (c) '.now()->format('Y').' enso', 'LICENSE');
+        $this->assertCliFileContains('Copyright (c) '.now()->format('Y').' enso', 'LICENSE');
     }
 
     /** @test */
@@ -82,7 +69,7 @@ class PackageWriterTest extends TestCase
     {
         $this->choices->get('package')->put('config', true);
 
-        (new PackageWriter($this->choices, $this->params))->run();
+        (new PackageWriter($this->choices))->handle();
 
         $this->assertFileExists($this->root.'config/cli.php');
     }
@@ -92,12 +79,33 @@ class PackageWriterTest extends TestCase
     {
         $this->choices->get('package')->put('providers', true);
 
-        (new PackageWriter($this->choices, $this->params))->run();
+        (new PackageWriter($this->choices))->handle();
 
-        $namespace = 'namespace Enso\Cli';
-        $this->assertFileContains($namespace, 'AppServiceProvider.php');
-        $this->assertFileContains('class AppServiceProvider extends ServiceProvider', 'AppServiceProvider.php');
-        $this->assertFileContains($namespace, 'AuthServiceProvider.php');
-        $this->assertFileContains('class AuthServiceProvider extends ServiceProvider', 'AuthServiceProvider.php');
+        $this->assertCliFileContains([
+            'namespace Enso\Cli',
+            'class AppServiceProvider extends ServiceProvider',
+        ], 'AppServiceProvider.php');
+        $this->assertCliFileContains([
+            'namespace Enso\Cli',
+            'class AuthServiceProvider extends ServiceProvider',
+        ], 'AuthServiceProvider.php');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'package' => [
+                'vendor' => 'enso',
+                'name' => 'cli',
+            ],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root,
+            'namespace' => 'Enso\Cli\app\\',
+        ]);
     }
 }

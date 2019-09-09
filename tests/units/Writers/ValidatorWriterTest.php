@@ -3,18 +3,19 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\ValidatorWriter;
 
 class ValidatorWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
@@ -22,19 +23,9 @@ class ValidatorWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [
-                'name' => 'group.testModels',
-            ],
-            'model' => [
-                'name' => 'testModel',
-            ],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\\App\\',
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setChoices($this->choices())
+            ->setParams($this->params());
     }
 
     protected function tearDown() :void
@@ -47,20 +38,41 @@ class ValidatorWriterTest extends TestCase
     /** @test */
     public function can_create_store()
     {
-        $this->choices->put('permissions', new Obj(['store' => 'store']));
-        (new ValidatorWriter($this->choices, $this->params))->run();
+        $this->setPermission('store');
 
-        $this->assertValidatorContains('namespace Namespace\\App\\Http\\Requests\\Group\\TestModels;', 'ValidateTestModelStore');
-        $this->assertValidatorContains('class ValidateTestModelStore extends FormRequest', 'ValidateTestModelStore');
+        (new ValidatorWriter($this->choices))->handle();
+
+        $this->assertValidatorContains([
+            'namespace Namespace\\App\\Http\\Requests\\Perm\\Group;',
+            'class ValidateTestModelStore extends FormRequest',
+        ], 'ValidateTestModelStore');
     }
 
     /** @test */
     public function can_create_update()
     {
-        $this->choices->put('permissions', new Obj(['update' => 'update']));
-        (new ValidatorWriter($this->choices, $this->params))->run();
+        $this->setPermission('update');
 
-        $this->assertValidatorContains('namespace Namespace\\App\\Http\\Requests\\Group\\TestModels;', 'ValidateTestModelUpdate');
-        $this->assertValidatorContains('class ValidateTestModelUpdate extends ValidateTestModelStore', 'ValidateTestModelUpdate');
+        (new ValidatorWriter($this->choices))->handle();
+
+        $this->assertValidatorContains([
+            'namespace Namespace\\App\\Http\\Requests\\Perm\\Group;',
+            'class ValidateTestModelUpdate extends ValidateTestModelStore',
+        ], 'ValidateTestModelUpdate');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'perm.group'],
+            'model' => ['name' => 'testModel'],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root, 'namespace' => 'Namespace\\App\\',
+        ]);
     }
 }

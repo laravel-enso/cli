@@ -3,19 +3,19 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Artisan;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\ModelAndMigrationWriter;
 
 class ModelAndMigrationWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
@@ -23,16 +23,9 @@ class ModelAndMigrationWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'model' => [
-                'name' => 'testModel',
-            ],
-            'files' => [],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setParams($this->params())
+            ->setChoices($this->choices());
     }
 
     protected function tearDown() :void
@@ -47,7 +40,7 @@ class ModelAndMigrationWriterTest extends TestCase
     {
         $this->choices->get('model')->put('path', 'path');
 
-        (new ModelAndMigrationWriter($this->choices, $this->params))->run();
+        (new ModelAndMigrationWriter($this->choices))->handle();
 
         $this->assertFileExists($this->root.'app/path/TestModel.php');
     }
@@ -55,10 +48,9 @@ class ModelAndMigrationWriterTest extends TestCase
     /** @test */
     public function can_create_model()
     {
-        (new ModelAndMigrationWriter($this->choices, $this->params))->run();
+        (new ModelAndMigrationWriter($this->choices))->handle();
 
-        $this->assertFileExists($this->root.'app/TestModel.php');
-        $this->assertFileContains('class TestModel extends Model', 'app/TestModel.php');
+        $this->assertCliFileContains('class TestModel extends Model', 'app/TestModel.php');
     }
 
     /** @test */
@@ -66,11 +58,23 @@ class ModelAndMigrationWriterTest extends TestCase
     {
         $this->choices->get('files')->put('migration', true);
 
-        Artisan::shouldReceive('call')->with('make:migration', [
-            'name' => 'create_test_models_table',
-            '--path' => $this->root.'database/migrations',
-        ])->once();
+        (new ModelAndMigrationWriter($this->choices))->handle();
 
-        (new ModelAndMigrationWriter($this->choices, $this->params))->run();
+        $this->assertMigrationCreated('create_test_models_table');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'model' => ['name' => 'testModel'],
+            'files' => [],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root,
+        ]);
     }
 }

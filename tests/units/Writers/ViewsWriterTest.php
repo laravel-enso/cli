@@ -3,14 +3,16 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\ViewsWriter;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
 
 class ViewsWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $params;
@@ -22,23 +24,9 @@ class ViewsWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [
-                'name' => 'group.testModels',
-            ],
-            'model' => [
-                'name' => 'testModel',
-            ],
-            'permissions' => [
-                'edit' => 'edit', 'create' => 'create', 'index' => 'index',
-                'show' => 'show',
-            ],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\\App\\',
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setChoices($this->choices())
+            ->setParams($this->params());
     }
 
     protected function tearDown() :void
@@ -51,11 +39,27 @@ class ViewsWriterTest extends TestCase
     /** @test */
     public function can_create_views()
     {
-        (new ViewsWriter($this->choices, $this->params))->run();
+        (new ViewsWriter($this->choices))->handle();
 
-        $this->assertDirectoryExists($this->root.'resources/js/pages/group/testModels');
         $this->choices->get('permissions')->each(function ($perm) {
-            $this->assertViewPageFileContains("name: '".ucfirst($perm)."',", ucfirst($perm));
+            $this->assertViewPageContains("name: '".ucfirst($perm)."',", $perm);
         });
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'group.testModels'],
+            'model' => ['name' => 'testModel'],
+            'permissions' => $this->permissions()
+                ->only(['index', 'create', 'show', 'edit']),
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root,
+        ]);
     }
 }

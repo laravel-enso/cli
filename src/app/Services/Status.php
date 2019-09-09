@@ -16,29 +16,8 @@ class Status
 
     public function display()
     {
-        $this->console()->info('Current configuration status:');
-
-        Options::choices()->each(function ($choice) {
-            $this->console()->line($choice.' '.(
-                $this->choices->hasError($choice)
-                    ? Symbol::exclamation()
-                    : Symbol::bool($this->choices->configured()->contains($choice))
-                ));
-        });
-
-        if ($this->choices->configured()->isNotEmpty()) {
-            $this->console()->line('');
-            $this->console()->info('Will generate:');
-            $this->console()->line('structure migration');
-
-            if ($this->choices->hasFiles()) {
-                $this->choices->files()->each(function ($chosen, $file) {
-                    if ($chosen) {
-                        $this->console()->line($file);
-                    }
-                });
-            }
-        }
+        $this->currentConfiguration();
+        $this->willGenerate();
 
         return $this;
     }
@@ -53,5 +32,31 @@ class Status
     private function console()
     {
         return $this->choices->console();
+    }
+
+    private function currentConfiguration()
+    {
+        $this->console()->info('Current configuration status:');
+
+        Options::choices()->each(function ($choice) {
+            $this->console()->line($choice.' '.(
+                $this->choices->hasError($choice)
+                    ? Symbol::exclamation()
+                    : Symbol::bool($this->choices->configured()->contains($choice))
+                ));
+        });
+    }
+
+    private function willGenerate()
+    {
+        if ($this->choices->configured()->isNotEmpty()) {
+            $this->console()->line('');
+            $this->console()->info('Will generate:');
+            $this->console()->line('structure migration');
+
+            $this->choices->files()->filter()->each(function ($chosen, $file) {
+                $this->console()->line($file);
+            });
+        }
     }
 }

@@ -74,7 +74,7 @@ class RouteGenerator
         $showIndex = $routes->search(self::ShowRoute);
 
         if ($showIndex !== false) {
-            $routes->splice($showIndex, 1)->push(self::ShowRoute);
+            tap($routes)->splice($showIndex, 1)->push(self::ShowRoute);
         }
 
         return $routes->reduce(function ($routes, $permission) use ($from, $to) {

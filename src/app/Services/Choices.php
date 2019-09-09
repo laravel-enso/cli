@@ -10,7 +10,7 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Choices
 {
-    private const ProxiedMethods = ['all', 'get', 'has', 'keys', 'forget'];
+    private const ProxiedMethods = ['all', 'get', 'put', 'has', 'keys', 'forget'];
 
     private $console;
     private $choices;
@@ -93,6 +93,7 @@ class Choices
     public function toggleValidation()
     {
         $this->validates = ! $this->validates;
+        $this->save();
 
         return $this;
     }
@@ -111,19 +112,21 @@ class Choices
 
     public function restore()
     {
-        if ($this->exists()) {
-            if (! $this->console->confirm('Do you want to restore the last session?')) {
-                $this->clear();
-
-                return;
-            }
-
-            $this->load();
-            $this->console->info('Last session restored');
-            $this->console->line('');
-
-            sleep(1);
+        if ($this->doesntExist()) {
+            return;
         }
+
+        if (! $this->console->confirm('Do you want to restore the last session?')) {
+            $this->clear();
+
+            return;
+        }
+
+        $this->load();
+        $this->console->info('Last session restored');
+        $this->console->line('');
+
+        sleep(1);
     }
 
     public function clear()
@@ -179,8 +182,8 @@ class Choices
         ] = Cache::get('cli_data');
     }
 
-    private function exists()
+    private function doesntExist()
     {
-        return Cache::has('cli_data');
+        return ! Cache::has('cli_data');
     }
 }

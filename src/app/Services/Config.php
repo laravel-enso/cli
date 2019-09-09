@@ -24,7 +24,6 @@ class Config
 
         if ($choice === Options::ToggleValidation) {
             $this->toggleValidation();
-            $this->choices->save();
 
             return;
         }
@@ -115,7 +114,7 @@ class Config
             || (gettype($value) === $type);
     }
 
-    private function toggleValidation(): void
+    private function toggleValidation()
     {
         $this->choices->toggleValidation();
         $this->console()->error('Validation '.($this->choices->needsValidation() ? 'enabled' : 'disabled'));

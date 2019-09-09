@@ -3,8 +3,6 @@
 namespace LaravelEnso\Cli\app\Services;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
-use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\FormWriter;
 use LaravelEnso\Cli\app\Writers\TableWriter;
 use LaravelEnso\Cli\app\Writers\ViewsWriter;

@@ -3,15 +3,17 @@
 namespace LaravelEnso\Cli\tests\features;
 
 use Tests\TestCase;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Services\Structure;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 
 class StructureWriterTest extends TestCase
 {
+    use Cli;
+
     private $choices;
     private $params;
     private $root;
@@ -58,84 +60,68 @@ class StructureWriterTest extends TestCase
 
     private function makeAssertions()
     {
-        $this->assertTrue($this->formFilesCreated());
-        $this->assertTrue($this->tableFilesCreated());
-        $this->assertTrue($this->modelCreated());
-        $this->assertTrue($this->controllersCreated());
-        $this->assertTrue($this->requestValidatorCreated());
-        $this->assertTrue($this->pagesCreated());
-        $this->assertTrue($this->routesCreated());
-        $this->assertTrue($this->migrationsCreated());
+        $this->formFilesCreated();
+        $this->tableFilesCreated();
+        $this->modelCreated();
+        $this->controllersCreated();
+        $this->requestValidatorCreated();
+        $this->pagesCreated();
+        $this->routesCreated();
+        $this->migrationsCreated();
     }
 
     private function modelCreated()
     {
-        return File::exists($this->root.'app/Testing/Test.php');
+        $this->assertFileExists($this->root.'app/Testing/Test.php');
     }
 
     private function requestValidatorCreated()
     {
-        return File::exists($this->root.'app/Http/Requests/Testing/Tests/ValidateTestUpdate.php')
-        && File::exists($this->root.'app/Http/Requests/Testing/Tests/ValidateTestStore.php');
+        $this->assertValidatorExists('ValidateTestUpdate');
+        $this->assertValidatorExists('ValidateTestStore');
     }
 
     private function formFilesCreated()
     {
-        return File::exists($this->root.'app/Forms/Builders/Testing/TestForm.php')
-            && File::exists($this->root.'app/Forms/Templates/Testing/test.json');
+        $this->assertFormBuilderExists();
+        $this->assertFormTemplateExists();
     }
 
     private function tableFilesCreated()
     {
-        return File::exists($this->root.'app/Tables/Builders/Testing/TestTable.php')
-            && File::exists($this->root.'app/Tables/Templates/Testing/tests.json');
+        $this->assertTableTemplateExists();
+        $this->assertTableBuilderExists();
     }
 
     private function controllersCreated()
     {
-        return File::exists($this->root.'app/Http/Controllers/Testing/Tests/Index.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Create.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Edit.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Update.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Store.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Show.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Destroy.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/Options.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/InitTable.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/TableData.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Tests/ExportExcel.php');
+        $this->controllers()->each(function ($controller) {
+            $this->assertControllerExists($controller);
+        });
     }
 
     private function pagesCreated()
     {
-        return File::exists($this->root.'resources/js/pages/testing/tests/Create.vue')
-            && File::exists($this->root.'resources/js/pages/testing/tests/Edit.vue')
-            && File::exists($this->root.'resources/js/pages/testing/tests/Index.vue')
-            && File::exists($this->root.'resources/js/pages/testing/tests/Show.vue');
+        collect(['Create', 'Edit', 'Index', 'Show'])->each(function ($view) {
+            $this->assertViewPageExists($view);
+        });
     }
 
     private function routesCreated()
     {
-        return File::exists($this->root.'resources/js/routes/testing.js')
-            && File::exists($this->root.'resources/js/routes/testing/tests.js')
-            && File::exists($this->root.'resources/js/routes/testing/tests/create.js')
-            && File::exists($this->root.'resources/js/routes/testing/tests/edit.js')
-            && File::exists($this->root.'resources/js/routes/testing/tests/index.js')
-            && File::exists($this->root.'resources/js/routes/testing/tests/show.js');
+        collect(['testing.js', 'testing/tests.js', 'testing/tests/create.js',
+            'testing/tests/edit.js', 'testing/tests/index.js', 'testing/tests/show.js',])
+            ->each(function ($route) {
+                $this->assertViewRouteExists($route);
+            });
+
+        return true;
     }
 
     private function migrationsCreated()
     {
-        return $this->migrationCreated('create_tests_table')
-            && $this->migrationCreated('create_structure_for_tests');
-    }
-
-    private function migrationCreated($migration)
-    {
-        return collect(File::files($this->root.'database/migrations'))
-            ->filter(function ($file) use ($migration) {
-                return Str::contains($file->getFilename(), $migration);
-            })->isNotEmpty();
+        $this->assertMigrationCreated('create_tests_table');
+        $this->assertMigrationCreated('create_structure_for_tests');
     }
 
     private function cleanUp()
@@ -157,16 +143,6 @@ class StructureWriterTest extends TestCase
         File::delete($this->root.'resources/js/routes/testing.js');
         $this->deleteMigration('create_tests_table');
         $this->deleteMigration('create_structure_for_tests');
-    }
-
-    private function deleteMigration($migration)
-    {
-        $file = collect(File::files($this->root.'database/migrations'))
-            ->filter(function ($file) use ($migration) {
-                return Str::contains($file->getFilename(), $migration);
-            })->first();
-
-        File::delete($file);
     }
 
     private function handle()

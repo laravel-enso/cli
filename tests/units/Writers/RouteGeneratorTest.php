@@ -3,14 +3,16 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\RouteGenerator;
 
 class RouteGeneratorTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $params;
@@ -22,19 +24,11 @@ class RouteGeneratorTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [],
-            'model' => ['name' => 'testModel'],
-            'permissions' => [
-                'index' => true, 'create' => true, 'store' => true, 'edit' => true,
-                'exportExcel' => true, 'destroy' => true, 'initTable' => true,
-                'tableData' => true, 'update' => true, 'options' => 'options', 'show' => true,
-            ],
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setParams($this->params())
+            ->setChoices($this->choices());
 
-        $this->params = new Obj([
-            'root' => $this->root,
-        ]);
+        $this->params = $this->params();
     }
 
     protected function tearDown() :void
@@ -47,18 +41,16 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function can_create_route_group()
     {
-        $this->choices->get('permissionGroup')->put('name', 'a.b.c');
-
         $result = (new RouteGenerator($this->choices))->handle();
 
-        $this->assertContains('Route::namespace(\'A\\B\\C\')', $result);
-        $this->assertContains('->prefix(\'a/b/c\')->as(\'a.b.c.\')', $result);
+        $this->assertContains("Route::namespace('Perm\Group')", $result);
+        $this->assertContains("->prefix('perm/group')->as('perm.group.')", $result);
     }
 
     /** @test */
     public function can_create_routes()
     {
-        $result = (new RouteGenerator($this->choices, $this->params))->run();
+        $result = (new RouteGenerator($this->choices))->handle();
 
         $this->assertRoutes($result);
     }
@@ -66,14 +58,13 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function can_create_routes_for_package()
     {
-        $this->choices->get('permissionGroup')->put('name', 'a.b.c');
-        $this->choices->put('package', new Obj())->get('package')->put('name', 'testPackage');
-        $this->params->put('namespace', 'Namespace\app\\');
+        $this->choices->put('package', new Obj(['name' => 'testPackage']));
+        $this->choices->params()->put('namespace', 'Namespace\app\\');
 
-        (new RouteGenerator($this->choices, $this->params))->run();
+        (new RouteGenerator($this->choices))->handle();
 
+        $this->assertCliFileContains("Route::namespace('Namespace\app\Http\Controllers\Perm\Group')", 'routes/api.php');
         $this->assertRoutes(File::get($this->root.'routes/api.php'));
-        $this->assertFileContains("Route::namespace('Namespace\app\Http\Controllers\A\B\C')", 'routes/api.php');
     }
 
     /**
@@ -92,5 +83,21 @@ class RouteGeneratorTest extends TestCase
         $this->assertContains("Route::get('tableData', 'TableData')->name('tableData');", $result);
         $this->assertContains("Route::get('exportExcel', 'ExportExcel')->name('exportExcel');", $result);
         $this->assertContains("Route::get('{testModel}', 'Show')->name('show');", $result);
+    }
+
+    protected function choices(): \LaravelEnso\Helpers\app\Classes\Obj
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'perm.group'],
+            'model' => ['name' => 'testModel'],
+            'permissions' => $this->permissions(),
+        ]);
+    }
+
+    protected function params(): \LaravelEnso\Helpers\app\Classes\Obj
+    {
+        return new Obj([
+            'root' => $this->root,
+        ]);
     }
 }

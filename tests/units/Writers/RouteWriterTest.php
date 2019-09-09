@@ -3,18 +3,19 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\RoutesWriter;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
 
 class RouteWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
@@ -22,19 +23,9 @@ class RouteWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [
-                'name' => 'perm.group',
-            ],
-            'model' => [
-                'name' => 'testModel',
-            ],
-            'permissions' => [],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setChoices($this->choices())
+            ->setParams($this->params());
     }
 
     protected function tearDown() :void
@@ -47,7 +38,7 @@ class RouteWriterTest extends TestCase
     /** @test */
     public function can_create_route_directory()
     {
-        (new RoutesWriter($this->choices, $this->params))->run();
+        (new RoutesWriter($this->choices))->handle();
 
         $this->assertDirectoryExists($this->root.'resources/js/routes/perm/group');
     }
@@ -55,36 +46,70 @@ class RouteWriterTest extends TestCase
     /** @test */
     public function can_create_index_route()
     {
-        $this->choices->get('permissions')->put('index', 'index');
+        $this->setPermission('index');
 
-        (new RoutesWriter($this->choices, $this->params))->run();
+        (new RoutesWriter($this->choices))->handle();
 
-        $this->assertViewRouteFileContains("name: 'perm.group.index'", 'perm/group/index.js');
-        $this->assertViewRouteFileContains('component: TestModelIndex', 'perm/group/index.js');
-        $this->assertViewRouteFileContains("title: 'Tests Models'", 'perm/group/index.js');
+        $this->assertViewRouteContains([
+            "name: 'perm.group.index'",
+            'component: TestModelIndex',
+            "title: 'Tests Models'",
+        ], 'perm/group/index.js');
     }
 
     /** @test */
     public function can_create_show_route()
     {
-        $this->choices->get('permissions')->put('edit', 'edit');
+        $this->setPermission('show');
 
-        (new RoutesWriter($this->choices, $this->params))->run();
+        (new RoutesWriter($this->choices))->handle();
 
-        $this->assertViewRouteFileContains("name: 'perm.group.edit'", 'perm/group/edit.js');
-        $this->assertViewRouteFileContains('component: TestModelEdit', 'perm/group/edit.js');
-        $this->assertViewRouteFileContains("title: 'Edit Tests Models'", 'perm/group/edit.js');
+        $this->assertViewRouteContains([
+            "name: 'perm.group.show'",
+            'component: TestModelShow',
+            "title: 'Tests Models Profile'"
+        ], 'perm/group/show.js');
+    }
+
+    /** @test */
+    public function can_create_edit_route()
+    {
+        $this->setPermission('edit');
+
+        (new RoutesWriter($this->choices))->handle();
+
+        $this->assertViewRouteContains([
+            "name: 'perm.group.edit'",
+            'component: TestModelEdit',
+            "title: 'Edit Tests Models'"
+        ], 'perm/group/edit.js');
     }
 
     /** @test */
     public function can_create_create_route()
     {
-        $this->choices->get('permissions')->put('create', 'create');
+        $this->setPermission('create');
 
-        (new RoutesWriter($this->choices, $this->params))->run();
+        (new RoutesWriter($this->choices))->handle();
 
-        $this->assertViewRouteFileContains("name: 'perm.group.create'", 'perm/group/create.js');
-        $this->assertViewRouteFileContains('component: TestModelCreate', 'perm/group/create.js');
-        $this->assertViewRouteFileContains("title: 'Create Tests Models'", 'perm/group/create.js');
+        $this->assertViewRouteContains([
+            "name: 'perm.group.create'",
+            'component: TestModelCreate',
+            "title: 'Create Tests Models'",
+        ], 'perm/group/create.js');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'perm.group'],
+            'model' => ['name' => 'testModel'],
+            'permissions' => [],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj(['root' => $this->root]);
     }
 }

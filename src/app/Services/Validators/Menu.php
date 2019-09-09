@@ -46,7 +46,7 @@ class Menu extends Validator
     {
         if ($this->choices->has('permissionGroup')
             && $this->choices->get('permissionGroup')
-                ->get('name') !== collect(explode('.', $this->menu->get('route')))
+                ->get('name') !== $this->routeSegments()
                     ->slice(0, -1)->implode('.')) {
             $this->error('The menu\'s route does not match the configured permission group');
         }
@@ -57,7 +57,7 @@ class Menu extends Validator
         if (! collect($this->choices->get('permissions')->all())
             ->filter()
             ->keys()
-            ->contains(collect(explode('.', $this->menu->get('route')))->last())) {
+            ->contains($this->routeSegments()->last())) {
             $this->error('The menu\'s route does not match the configured permissions');
         }
     }
@@ -118,5 +118,10 @@ class Menu extends Validator
         }
 
         return $found;
+    }
+
+    private function routeSegments()
+    {
+        return collect(explode('.', $this->menu->get('route')));
     }
 }

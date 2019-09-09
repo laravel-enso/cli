@@ -3,14 +3,16 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\OptionsWriter;
 
 class OptionsWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $choices;
@@ -22,19 +24,9 @@ class OptionsWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [
-                'name' => 'group.testModels',
-            ],
-            'model' => [
-                'name' => 'testModel',
-            ],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App\\',
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setChoices($this->choices())
+            ->setParams($this->params());
     }
 
     protected function tearDown() :void
@@ -47,10 +39,28 @@ class OptionsWriterTest extends TestCase
     /** @test */
     public function can_create_controller()
     {
-        (new OptionsWriter($this->choices, $this->params))->run();
+        (new OptionsWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Options');
-        $this->assertControllerContains('class Options extends Controller', 'Options');
-        $this->assertControllerContains('protected $model = TestModel::class;', 'Options');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'class Options extends Controller',
+            'protected $model = TestModel::class;',
+        ], 'Options');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'group.testModels'],
+            'model' => ['name' => 'testModel'],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root,
+            'namespace' => 'Namespace\App\\',
+        ]);
     }
 }

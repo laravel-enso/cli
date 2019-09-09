@@ -3,18 +3,19 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\TableWriter;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
 
 class TableWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
@@ -22,20 +23,9 @@ class TableWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [
-                'name' => 'group.testModels',
-            ],
-            'model' => [
-                'name' => 'testModel',
-            ],
-            'permissions' => [],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App\\',
-        ]);
+        $this->choices = (new Choices(new Command()))
+            ->setParams($this->params())
+            ->setChoices($this->choices());
     }
 
     protected function tearDown() :void
@@ -48,35 +38,56 @@ class TableWriterTest extends TestCase
     /** @test */
     public function can_create_template()
     {
-        (new TableWriter($this->choices, $this->params))->run();
+        (new TableWriter($this->choices))->handle();
 
-        $this->assertTableTemplateContains('"routePrefix": "group.testModels"');
-        $this->assertTableTemplateContains('"name": "Test Model"');
-        $this->assertTableTemplateContains('"data": "test_models.id"');
+        $this->assertTableTemplateContains([
+            '"routePrefix": "group.testModels"',
+            '"name": "Test Model"',
+            '"data": "test_models.id"',
+        ]);
     }
 
     /** @test */
     public function can_create_builder()
     {
-        (new TableWriter($this->choices, $this->params))->run();
+        (new TableWriter($this->choices))->handle();
 
-        $this->assertTableBuilderContains('namespace Namespace\App\Tables\Builders\Group;');
-        $this->assertTableBuilderContains('class TestModelTable extends Table');
-        $this->assertTableBuilderContains('test_models.id as "dtRowId", test_models.id');
+        $this->assertTableBuilderContains([
+            'namespace Namespace\App\Tables\Builders\Group;',
+            'class TestModelTable extends Table',
+            'test_models.id as "dtRowId", test_models.id',
+        ]);
     }
 
     /** @test */
     public function can_create_controller()
     {
-        $this->choices->put('permissions', new Obj([
-            'initTable' => 'initTable', 'tableData' => 'tableData',
-        ]));
+        $this->setPermission('initTable');
 
-        (new TableWriter($this->choices, $this->params))->run();
+        (new TableWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'InitTable');
-        $this->assertControllerContains('class InitTable extends Controller', 'InitTable');
-        $this->assertControllerContains('use Init;', 'InitTable');
-        $this->assertControllerContains('protected $tableClass = TestModelTable::class;', 'InitTable');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'class InitTable extends Controller',
+            'use Init;',
+            'protected $tableClass = TestModelTable::class;',
+        ], 'InitTable');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'group.testModels',],
+            'model' => ['name' => 'testModel',],
+            'permissions' => [],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root,
+            'namespace' => 'Namespace\App\\',
+        ]);
     }
 }

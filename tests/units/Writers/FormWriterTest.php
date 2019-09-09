@@ -3,18 +3,19 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Writers\FormWriter;
-use LaravelEnso\Cli\tests\Helpers\CliAsserts;
 
 class FormWriterTest extends TestCase
 {
-    use CliAsserts;
+    use Cli;
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
@@ -22,21 +23,9 @@ class FormWriterTest extends TestCase
 
         $this->root = 'cli_tests_tmp/';
 
-        $this->choices = new Obj([
-            'permissionGroup' => [
-                'name' => 'group.testModels',
-            ],
-            'model' => [
-                'name' => 'testModel',
-                'namespace' => 'Classes',
-            ],
-            'permissions' => [],
-        ]);
-
-        $this->params = new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App\\',
-        ]);
+        $this->choices = (new Choices(new Command))
+            ->setParams($this->params())
+            ->setChoices($this->choices());
     }
 
     protected function tearDown() :void
@@ -49,111 +38,140 @@ class FormWriterTest extends TestCase
     /** @test */
     public function can_create_builder()
     {
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertFormBuilderContains('class TestModelForm');
-        $this->assertFormBuilderContains('public function edit(TestModel $testModel)');
-        $this->assertFormBuilderContains('return $this->form->edit($testModel);');
+        $this->assertFormBuilderContains([
+            'class TestModelForm',
+            'public function edit(TestModel $testModel)',
+            'return $this->form->edit($testModel);'
+        ]);
     }
 
     /** @test */
     public function can_create_controller()
     {
-        $this->choices->put('permissions', new Obj(['edit' => 'p1', 'nonStandard' => 'p2']));
+        $this->setPermission('edit');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('class Edit extends Controller', 'Edit');
-        $this->assertControllerContains('public function __invoke(TestModel $testModel, TestModelForm $form)',
-            'Edit');
+        $this->assertControllerContains([
+            'class Edit extends Controller',
+            'public function __invoke(TestModel $testModel, TestModelForm $form)',
+        ], 'Edit');
     }
 
     /** @test */
     public function can_create_index()
     {
-        $this->choices->put('permissions', new Obj(['index' => 'index']));
+        $this->setPermission('index');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Index');
-        $this->assertControllerContains('class Index extends Controller', 'Index');
-        $this->assertControllerContains('public function __invoke(Request $request)', 'Index');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'class Index extends Controller',
+            'public function __invoke(Request $request)',
+        ], 'Index');
     }
 
     /** @test */
     public function can_create_show()
     {
-        $this->choices->put('permissions', new Obj(['show' => 'show']));
+        $this->setPermission('show');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Show');
-        $this->assertControllerContains('use Classes\\TestModel;', 'Show');
-        $this->assertControllerContains('class Show extends Controller', 'Show');
-        $this->assertControllerContains('public function __invoke(TestModel $testModel)', 'Show');
-        $this->assertControllerContains('return [\'testModel\' => $testModel]', 'Show');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'use Classes\TestModel;',
+            'class Show extends Controller',
+            'public function __invoke(TestModel $testModel)',
+            'return [\'testModel\' => $testModel]',
+        ], 'Show');
     }
 
     /** @test */
     public function can_create_create()
     {
-        $this->choices->put('permissions', new Obj(['create' => 'create']));
+        $this->setPermission('create');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Create');
-        $this->assertControllerContains('class Create extends Controller', 'Create');
-        $this->assertControllerContains('public function __invoke(TestModelForm $form)', 'Create');
-        $this->assertControllerContains('return [\'form\' => $form->create()]', 'Create');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'class Create extends Controller',
+            'public function __invoke(TestModelForm $form)',
+            'return [\'form\' => $form->create()]'
+        ], 'Create');
     }
 
     /** @test */
     public function can_create_destroy()
     {
-        $this->choices->put('permissions', new Obj(['destroy' => 'destroy']));
+        $this->setPermission('destroy');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Destroy');
-        $this->assertControllerContains('use Classes\\TestModel;', 'Destroy');
-        $this->assertControllerContains('class Destroy extends Controller', 'Destroy');
-        $this->assertControllerContains('public function __invoke(TestModel $testModel)',
-            'Destroy');
-        $this->assertControllerContains("'message' => __('The test model was successfully deleted')",
-            'Destroy');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'use Classes\TestModel;',
+            'class Destroy extends Controller',
+            'public function __invoke(TestModel $testModel)',
+            "'message' => __('The test model was successfully deleted')",
+        ], 'Destroy');
     }
 
     /** @test */
     public function can_create_update()
     {
-        $this->choices->put('permissions', new Obj(['update' => 'update']));
+        $this->setPermission('update');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Update');
-        $this->assertControllerContains('use Classes\TestModel;', 'Update');
-        $this->assertControllerContains('use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelUpdate', 'Update');
-        $this->assertControllerContains('class Update extends Controller', 'Update');
-        $this->assertControllerContains('public function __invoke(ValidateTestModelUpdate $request, TestModel $testModel)',
-            'Update');
-        $this->assertControllerContains("return ['message' => __('The test model was successfully updated')]",
-            'Update');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'use Classes\TestModel;',
+            'use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelUpdate',
+            'class Update extends Controller',
+            'public function __invoke(ValidateTestModelUpdate $request, TestModel $testModel)',
+            "return ['message' => __('The test model was successfully updated')]"
+        ], 'Update');
     }
 
     /** @test */
     public function can_create_store()
     {
-        $this->choices->put('permissions', new Obj(['store' => 'store']));
+        $this->setPermission('store');
 
-        (new FormWriter($this->choices, $this->params))->run();
+        (new FormWriter($this->choices))->handle();
 
-        $this->assertControllerContains('namespace Namespace\App\Http\Controllers\Group\TestModels;', 'Store');
-        $this->assertControllerContains('use Classes\TestModel;', 'Store');
-        $this->assertControllerContains('use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelStore', 'Store');
-        $this->assertControllerContains('class Store extends Controller', 'Store');
-        $this->assertControllerContains('tap($testModel)->fill($request->validated())', 'Store');
-        $this->assertControllerContains('public function __invoke(ValidateTestModelStore $request, TestModel $testModel)',
-            'Store');
-        $this->assertControllerContains("'message' => __('The test model was successfully created')", 'Store');
+        $this->assertControllerContains([
+            'namespace Namespace\App\Http\Controllers\Group\TestModels;',
+            'use Classes\TestModel;',
+            'use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelStore',
+            'class Store extends Controller',
+            'tap($testModel)->fill($request->validated())',
+            'public function __invoke(ValidateTestModelStore $request, TestModel $testModel)',
+        ], 'Store');
+    }
+
+    protected function choices()
+    {
+        return new Obj([
+            'permissionGroup' => ['name' => 'group.testModels'],
+            'model' => [
+                'name' => 'testModel',
+                'namespace' => 'Classes',
+            ],
+            'permissions' => [],
+        ]);
+    }
+
+    protected function params()
+    {
+        return new Obj([
+            'root' => $this->root,
+            'namespace' => 'Namespace\App\\',
+        ]);
     }
 }

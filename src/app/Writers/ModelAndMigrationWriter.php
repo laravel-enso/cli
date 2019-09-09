@@ -72,6 +72,10 @@ class ModelAndMigrationWriter
 
     private function writeMigration()
     {
+        if (! File::isDirectory($this->migrationPath())) {
+            File::makeDirectory($this->migrationPath(), 0755, true);
+        }
+
         if ($this->choices->get('files')->has('migration')) {
             Artisan::call('make:migration', [
                 'name' => 'create_'.Str::plural(Str::snake($this->model->get('name'))).'_table',

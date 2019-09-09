@@ -4,15 +4,17 @@ namespace LaravelEnso\Cli\tests\units\Services;
 
 use Faker\Factory;
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Menus\app\Models\Menu;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Services\Validator;
 
 class ValidatorTest extends TestCase
 {
     private $faker;
-    private $choices;
+    private $validator;
 
     protected function setUp(): void
     {
@@ -20,130 +22,99 @@ class ValidatorTest extends TestCase
 
         $this->faker = Factory::create();
 
-        $this->choices = new Obj([
-            'permissions' => ['create' => 'create'],
-        ]);
-
         $this->createMenuTable();
     }
 
     /** @test */
     public function cannot_validate_two_slashed_namespace_model()
     {
-        $this->choices->put('model', new Obj(['name' => 'namespace//testModel']));
+        $choices = $this->modelChoices('namespace//testModel');
 
-        $validator = (new Validator($this->choices, collect(['model'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('Namespaced models must only use one slash for each segment',
-            $validator->errors()->get('Model')->first());
+        $this->assertErrors('Model', 'Namespaced models must only use one slash for each segment');
     }
 
     /** @test */
     public function cannot_validate_back_slashed_namespace_model()
     {
-        $this->choices->put('model', new Obj(['name' => 'namespace\\testModel']));
+        $choices = $this->modelChoices('namespace\\testModel');
 
-        $validator = (new Validator($this->choices, collect(['model'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('Namespaced models must only use slashes ("/")',
-            $validator->errors()->get('Model')->first());
+        $this->assertErrors('Model', 'Namespaced models must only use slashes ("/")');
     }
 
     /** @test */
     public function can_validate_model()
     {
-        $this->choices->put('model', new Obj(['name' => 'namespace/testModel']));
+        $choices = $this->modelChoices('namespace/testModel');
 
-        $validator = (new Validator($this->choices, collect(['model'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertFalse($validator->fails());
+        $this->assertFalse($this->validator->fails());
     }
 
     /** @test */
     public function cannot_validate_parent_menu_route()
     {
-        $this->choices->put('menu', new Obj([
-            'route' => 'route',
-            'has_children' => true,
-        ]));
+        $choices = $this->menuChoices('route', null, true);
 
-        $validator = (new Validator($this->choices, collect(['menu'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('A parent menu must have the route attribute empty',
-            $validator->errors()->get('Menu')->first());
+        $this->assertErrors('Menu', 'A parent menu must have the route attribute empty');
     }
 
     /** @test */
     public function cannot_validate_menu_with_wrong_permission_group()
     {
-        $this->choices->put('menu', new Obj(['route' => 'wrong_group.route']));
+        $choices = $this->menuChoices('wrong_group.route');
+        $choices->put('permissionGroup', new Obj(['name' => 'group']));
 
-        $this->choices->put('permissionGroup', new Obj(['name' => 'group']));
+        $this->validator = (new Validator($choices))->run();
 
-        $validator = (new Validator($this->choices, collect(['menu'])))->run();
-
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('The menu\'s route does not match the configured permission group',
-            $validator->errors()->get('Menu')->first());
+        $this->assertErrors('Menu', 'The menu\'s route does not match the configured permission group');
     }
 
     /** @test */
     public function cannot_validate_menu_with_wrong_permission()
     {
-        $this->choices->put('menu', new Obj(['route' => 'route.wrong_perm']));
+        $choices = $this->menuChoices('route.wrong_perm');
 
-        $validator = (new Validator($this->choices, collect(['menu'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('The menu\'s route does not match the configured permissions',
-            $validator->errors()->get('Menu')->first());
+        $this->assertErrors('Menu', 'The menu\'s route does not match the configured permissions');
     }
 
     /** @test */
     public function cannot_validate_regular_menu_without_route()
     {
-        $this->choices->put('menu', new Obj([]));
+        $choices = $this->menuChoices(null);
 
-        $validator = (new Validator($this->choices, collect(['menu'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('A regular menu must have the route attribute filled',
-            $validator->errors()->get('Menu')->first());
+        $this->assertErrors('Menu', 'A regular menu must have the route attribute filled');
     }
 
     /** @test */
     public function cannot_validate_menu_when_no_parent_exist()
     {
-        $this->choices->put('menu', new Obj([
-            'route' => 'route.create',
-            'parentMenu' => 'not_menu',
-        ]));
+        $choices = $this->menuChoices('route.create', 'not_menu');
 
-        $validator = (new Validator($this->choices, collect(['menu'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('The parent menu not_menu does not exist in the system',
-            $validator->errors()->get('Menu')->first());
+        $this->assertErrors('Menu', 'The parent menu not_menu does not exist in the system');
     }
 
     /** @test */
     public function cannot_validate_menu_when_more_than_one_parent_exist()
     {
-        $this->choices->put('menu', new Obj([
-            'route' => 'route.create',
-            'parentMenu' => 'parent',
-        ]));
-
+        $choices = $this->menuChoices('route.create', 'parent');
         $this->createParentMenu('parent')->createParentMenu('parent');
 
-        $validator = (new Validator($this->choices, collect(['menu'])))->run();
+        $this->validator = (new Validator($choices))->run();
 
-        $this->assertTrue($validator->fails());
-        $this->assertEquals('The parent menu parent is ambiguous. Please use dotted notation to specify its parent too.',
-            $validator->errors()->get('Menu')->first());
+        $this->assertErrors('Menu', 'The parent menu parent is ambiguous. Please use dotted notation to specify its parent too.');
     }
 
     private function createMenuTable()
@@ -161,5 +132,41 @@ class ValidatorTest extends TestCase
         Menu::create(['name' => $name, 'has_children' => true]);
 
         return $this;
+    }
+
+    private function modelChoices($name)
+    {
+        return (new Choices(new Command))
+            ->setChoices(new Obj(['model' => ['name' => $name]]))
+            ->setConfigured(collect(['Model']));
+    }
+
+    private function menuChoices($route, $parentMenu = null, $hasChildren = false)
+    {
+        return (new Choices(new Command))
+            ->setChoices(new Obj([
+                'menu' => $this->menu($route, $parentMenu, $hasChildren),
+                'permissions' => $this->permission('create')]))
+            ->setConfigured(collect(['Menu']));
+    }
+
+    private function assertErrors($config, $desc)
+    {
+        $this->assertTrue($this->validator->fails());
+        $this->assertEquals($desc, $this->validator->errors()->get($config)->first());
+    }
+
+    private function menu($route, $parentMenu, $hasChildren)
+    {
+        return new Obj([
+            'route' => $route,
+            'parentMenu' => $parentMenu,
+            'has_children' => $hasChildren,
+        ]);
+    }
+
+    private function permission($permission)
+    {
+        return new Obj([$permission => $permission]);
     }
 }
