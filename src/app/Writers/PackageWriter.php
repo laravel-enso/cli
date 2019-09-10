@@ -4,23 +4,21 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class PackageWriter
 {
     protected $choices;
-    private $params;
     private $root;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
-        $this->params = $params;
         $this->choices = $choices;
     }
 
-    public function run()
+    public function handle()
     {
-        $this->root = $this->params->get('root');
+        $this->root = $this->params()->get('root');
 
         if (! File::isDirectory($this->root)) {
             File::makeDirectory($this->root, 0755, true);
@@ -121,8 +119,13 @@ class PackageWriter
 
     private function namespace()
     {
-        return collect(explode('\\', $this->params->get('namespace')))
+        return collect(explode('\\', $this->params()->get('namespace')))
             ->slice(0, -2)
             ->implode('\\');
+    }
+
+    private function params()
+    {
+        return $this->choices->params();
     }
 }

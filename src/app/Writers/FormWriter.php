@@ -4,25 +4,23 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class FormWriter
 {
-    private const CrudOperations = [
+    private const Routes = [
         'index', 'create', 'store', 'show', 'edit', 'update', 'destroy',
     ];
 
     private $choices;
     private $segments;
-    private $params;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
     }
 
-    public function run()
+    public function handle()
     {
         $this->createFolders()
             ->writeTemplate()
@@ -89,7 +87,7 @@ class FormWriter
             '${relativePath}' => $this->segments()->count() > 1
                 ? $this->segments()->slice(0, -1)->implode('/').'/'
                 : '',
-            '${namespace}' => $this->params->get('namespace').
+            '${namespace}' => $this->params()->get('namespace').
                 'Forms\\Builders'
                 .($this->segments()->count() > 1
                     ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
@@ -97,7 +95,7 @@ class FormWriter
             '${modelNamespace}' => $model->get('namespace'),
             '${depth}' => str_repeat('../', $this->segments()->count()),
             '${model}' => Str::camel($model->get('name')),
-            '${Model}' => $model->get('name'),
+            '${Model}' => ucfirst($model->get('name')),
         ];
 
         return [
@@ -110,7 +108,7 @@ class FormWriter
     {
         return $this->builderPath()
             .DIRECTORY_SEPARATOR
-            .$this->choices->get('model')->get('name')
+            .ucfirst($this->choices->get('model')->get('name'))
             .'Form.php';
     }
 
@@ -121,7 +119,7 @@ class FormWriter
         $this->choices->get('permissions')
             ->filter()
             ->keys()
-            ->intersect(self::CrudOperations)
+            ->intersect(self::Routes)
             ->each(function ($permission) use ($from, $to) {
                 File::put(
                     $this->controllerName($permission),
@@ -141,16 +139,19 @@ class FormWriter
             : '';
 
         $array = [
-            '${Model}' => $model->get('name'),
-            '${model}' => Str::lower($model->get('name')),
+            '${Model}' => ucfirst($model->get('name')),
+            '${model}' => lcfirst($model->get('name')),
+            '${title}' => Str::snake($model->get('name'), ' '),
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${namespace}' => $this->params->get('namespace')
+            '${namespace}' => $this->params()->get('namespace')
                 .'Http\\Controllers\\'.$this->segments()->implode('\\'),
             '${modelNamespace}' => $model->get('namespace'),
-            '${builderNamespace}' => $this->params->get('namespace').'Forms\\Builders'.$namespaceSuffix,
-            '${requestNamespace}' => $this->params->get('namespace').'Http\\Requests'.$namespaceSuffix,
-            '${requestStore}' => 'Validate'.$model->get('name').'Store',
-            '${requestUpdate}' => 'Validate'.$model->get('name').'Update',
+            '${builderNamespace}' => $this->params()->get('namespace')
+                .'Forms\\Builders'.$namespaceSuffix,
+            '${requestNamespace}' => $this->params()->get('namespace')
+                .'Http\\Requests\\'.$this->segments()->implode('\\'),
+            '${requestStore}' => 'Validate'.ucfirst($model->get('name')).'Store',
+            '${requestUpdate}' => 'Validate'.ucfirst($model->get('name')).'Update',
         ];
 
         return [
@@ -169,7 +170,7 @@ class FormWriter
 
     private function builderPath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'app'.DIRECTORY_SEPARATOR
             .'Forms'.DIRECTORY_SEPARATOR
             .'Builders'.DIRECTORY_SEPARATOR
@@ -179,7 +180,7 @@ class FormWriter
 
     private function templatePath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'app'.DIRECTORY_SEPARATOR
             .'Forms'.DIRECTORY_SEPARATOR
             .'Templates'.DIRECTORY_SEPARATOR
@@ -189,7 +190,7 @@ class FormWriter
 
     private function controllerPath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'app'.DIRECTORY_SEPARATOR
             .'Http'.DIRECTORY_SEPARATOR
             .'Controllers'.DIRECTORY_SEPARATOR
@@ -214,5 +215,10 @@ class FormWriter
             )->map(function ($segment) {
                 return Str::ucfirst($segment);
             });
+    }
+
+    private function params()
+    {
+        return $this->choices->params();
     }
 }

@@ -1,9 +1,9 @@
 {
     "model": {
-        "name": "Test/Tree"
+        "name": "Testing/Test"
     },
     "permissionGroup": {
-        "name": "testing.projects.trees"
+        "name": "testing.tests"
     },
     "permissions": {
         "index": true,
@@ -19,10 +19,10 @@
         "options": true
     },
     "menu": {
-        "name": "Tree",
-        "icon": "tree",
+        "name": "Test",
+        "icon": "test",
         "parentMenu": "Testing",
-        "route": "testing.projects.trees.index",
+        "route": "testing.tests.index",
         "order_index": 0,
         "has_children": false
     },
@@ -36,8 +36,8 @@
         "options": true
     },
     "package": {
-        "name": "",
-        "vendor": "laravel-enso",
+        "name": null,
+        "vendor": null,
         "providers": false,
         "config": false
     }

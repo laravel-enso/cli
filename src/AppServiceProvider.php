@@ -11,11 +11,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->commands(Cli::class);
 
-        $this->loadDependencies()
-            ->publishDependencies();
+        $this->load()
+            ->publish();
     }
 
-    private function loadDependencies()
+    private function load()
     {
         $this->mergeConfigFrom(__DIR__.'/config/model.php', 'enso.structures.model');
 
@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function publishDependencies()
+    private function publish()
     {
         $this->publishes([
             __DIR__.'/config' => config_path('enso/structures'),

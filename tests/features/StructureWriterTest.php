@@ -1,163 +1,170 @@
 <?php
 
+namespace LaravelEnso\Cli\tests\features;
+
 use Tests\TestCase;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\app\Helpers\TestConfig;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Services\Structure;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 
 class StructureWriterTest extends TestCase
 {
+    use Cli;
+
     private $choices;
     private $params;
     private $root;
+    private $config;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
-        // $this->withoutExceptionHandling();
-
         parent::setUp();
+
+        $this->params = $this->params();
+        $this->root = $this->params->get('root');
+        $this->choices = $this->choices();
     }
 
     public function tearDown(): void
     {
         $this->cleanUp();
+
         parent::tearDown();
     }
 
     /** @test */
     public function can_generate_local_structure()
     {
-        $this->params = TestConfig::loadParams();
-        $this->choices = TestConfig::loadStructure();
+        $this->handle();
 
-        $this->generateFiles();
+        $this->makeAssertions();
     }
 
     /** @test */
     public function can_generate_package()
     {
-        $this->params = TestConfig::loadParams();
-        $this->choices = TestConfig::loadPackageStructure();
+        $this->choices->set('package', new Obj([
+            'name' => 'testing',
+            'vendor' => 'laravel-enso',
+            'providers' => true,
+            'config' => true
+        ]));
 
-        $this->generateFiles();
+        $this->handle();
+
+        $this->makeAssertions();
     }
 
-    private function generateFiles()
-    {   
-        (new Structure($this->choices, $this->params))->handle();
-        
-        $this->root = $this->params->get('root');
-        
-        $this->assertTrue($this->formFilesCreated());
-        $this->assertTrue($this->tableFilesCreated());
-        $this->assertTrue($this->modelCreated());
-        $this->assertTrue($this->controllersCreated());
-        $this->assertTrue($this->requestValidatorCreated());
-        $this->assertTrue($this->pagesCreated());
-        $this->assertTrue($this->routesCreated());
-        $this->assertTrue($this->migrationsCreated());
+    private function makeAssertions()
+    {
+        $this->formFilesCreated();
+        $this->tableFilesCreated();
+        $this->modelCreated();
+        $this->controllersCreated();
+        $this->requestValidatorCreated();
+        $this->pagesCreated();
+        $this->routesCreated();
+        $this->migrationsCreated();
     }
 
     private function modelCreated()
     {
-        return File::exists($this->params->get('root').'app/Test/Tree.php');
+        $this->assertFileExists($this->root.'app/Testing/Test.php');
     }
 
     private function requestValidatorCreated()
     {
-        return File::exists($this->root.'app/Http/Requests/ValidateTreeUpdate.php')
-        && File::exists($this->root.'app/Http/Requests/ValidateTreeStore.php');
+        $this->assertValidatorExists('ValidateTestUpdate');
+        $this->assertValidatorExists('ValidateTestStore');
     }
 
     private function formFilesCreated()
     {
-        return File::exists($this->root.'app/Forms/Builders/Testing/Projects/TreeForm.php')
-            && File::exists($this->root.'app/Forms/Templates/Testing/Projects/tree.json');
+        $this->assertFormBuilderExists();
+        $this->assertFormTemplateExists();
     }
 
     private function tableFilesCreated()
     {
-        return File::exists($this->root.'app/Tables/Builders/Testing/Projects/TreeTable.php')
-            && File::exists($this->root.'app/Tables/Templates/Testing/Projects/trees.json');
+        $this->assertTableTemplateExists();
+        $this->assertTableBuilderExists();
     }
 
     private function controllersCreated()
     {
-        return File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Index.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Create.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Edit.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Update.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Store.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Show.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Destroy.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/Options.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/InitTable.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/TableData.php')
-            && File::exists($this->root.'app/Http/Controllers/Testing/Projects/Trees/ExportExcel.php');
+        $this->controllers()->each(function ($controller) {
+            $this->assertControllerExists($controller);
+        });
     }
 
     private function pagesCreated()
     {
-        return File::exists($this->root.'resources/js/pages/testing/projects/trees/Create.vue')
-            && File::exists($this->root.'resources/js/pages/testing/projects/trees/Edit.vue')
-            && File::exists($this->root.'resources/js/pages/testing/projects/trees/Index.vue')
-            && File::exists($this->root.'resources/js/pages/testing/projects/trees/Show.vue');
+        collect(['Create', 'Edit', 'Index', 'Show'])->each(function ($view) {
+            $this->assertViewPageExists($view);
+        });
     }
 
     private function routesCreated()
     {
-        return File::exists($this->root.'resources/js/routes/testing/projects.js')
-            && File::exists($this->root.'resources/js/routes/testing/projects/trees.js')
-            && File::exists($this->root.'resources/js/routes/testing/projects/trees/create.js')
-            && File::exists($this->root.'resources/js/routes/testing/projects/trees/edit.js')
-            && File::exists($this->root.'resources/js/routes/testing/projects/trees/index.js')
-            && File::exists($this->root.'resources/js/routes/testing/projects/trees/show.js');
+        collect(['testing.js', 'testing/tests.js', 'testing/tests/create.js',
+            'testing/tests/edit.js', 'testing/tests/index.js', 'testing/tests/show.js',])
+            ->each(function ($route) {
+                $this->assertViewRouteExists($route);
+            });
+
+        return true;
     }
 
     private function migrationsCreated()
     {
-        return $this->migrationCreated('create_trees_table')
-            && $this->migrationCreated('create_structure_for_trees');
-    }
-
-    private function migrationCreated($migration)
-    {
-        return collect(File::files($this->root.'database/migrations'))
-            ->filter(function ($file) use ($migration) {
-                return strpos($file->getFilename(), $migration) > 0;
-            })->isNotEmpty();
+        $this->assertMigrationCreated('create_tests_table');
+        $this->assertMigrationCreated('create_structure_for_tests');
     }
 
     private function cleanUp()
     {
-        if (!empty($this->root)) {
+        if (! empty($this->root)) {
             File::deleteDirectory($this->root);
+
             return;
         }
-        File::delete($this->root.'app/Test/Tree.php');
+        File::delete($this->root.'app/Testing/Test.php');
         File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
         File::deleteDirectory($this->root.'app/Forms/Templates/Testing');
         File::deleteDirectory($this->root.'app/Tables/Builders/Testing');
         File::deleteDirectory($this->root.'app/Tables/Templates/Testing');
         File::deleteDirectory($this->root.'app/Http/Controllers/Testing');
+        File::deleteDirectory($this->root.'app/Http/Requests/Testing');
         File::deleteDirectory($this->root.'resources/js/pages/testing');
         File::deleteDirectory($this->root.'resources/js/routes/testing');
-        File::delete($this->root.'app/Http/Requests/ValidateTreeStore.php');
-        File::delete($this->root.'app/Http/Requests/ValidateTreeUpdate.php');
         File::delete($this->root.'resources/js/routes/testing.js');
-        $this->deleteMigration('create_trees_table');
-        $this->deleteMigration('create_structure_for_trees');
-
-        shell_exec('composer dump-autoload');
+        $this->deleteMigration('create_tests_table');
+        $this->deleteMigration('create_structure_for_tests');
     }
 
-    private function deleteMigration($migration)
+    private function handle()
     {
-        $file = collect(File::files($this->root.'database/migrations'))
-            ->filter(function ($file) use ($migration) {
-                return strpos($file->getFilename(), $migration) > 0;
-            })->first();
+        $this->config = (new Choices(new Command))
+            ->setChoices($this->choices())
+            ->setParams($this->params);
 
-        File::delete($file);
+        (new Structure($this->config))->handle();
+    }
+
+    private function choices()
+    {
+        return new Obj(json_decode(
+            File::get(__DIR__.'/stubs/testConfiguration.stub')
+        ));
+    }
+
+    private function params()
+    {
+        return new Obj(json_decode(
+            File::get(__DIR__.'/stubs/testParams.stub')
+        ));
     }
 }

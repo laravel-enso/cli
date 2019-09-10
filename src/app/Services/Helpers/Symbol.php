@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Commands\Helpers;
+namespace LaravelEnso\Cli\app\Services\Helpers;
 
 class Symbol
 {
@@ -8,7 +8,7 @@ class Symbol
     const Cross = '&#x2717;';
     const Exclamation = '&#x00021;';
 
-    public static function bool($bool)
+    public static function bool(bool $bool)
     {
         return $bool
             ? self::check()

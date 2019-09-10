@@ -4,7 +4,7 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class ValidatorWriter
 {
@@ -15,13 +15,12 @@ class ValidatorWriter
     private $path;
     private $model;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
     }
 
-    public function run()
+    public function handle()
     {
         $this->createFolders()
             ->write();
@@ -57,8 +56,9 @@ class ValidatorWriter
         $this->model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => $this->params->get('namespace').'Http\\Requests',
-            '${Model}' => $this->model->get('name'),
+            '${namespace}' => $this->params()->get('namespace')
+                .'Http\\Requests\\'.$this->segments()->implode('\\'),
+            '${Model}' => ucfirst($this->model->get('name')),
         ];
 
         return [
@@ -71,7 +71,7 @@ class ValidatorWriter
     {
         return $this->path()
             .DIRECTORY_SEPARATOR
-            .'Validate'.$this->model->get('name').Str::ucfirst($operation)
+            .'Validate'.ucfirst($this->model->get('name')).Str::ucfirst($operation)
             .'.php';
     }
 
@@ -87,10 +87,11 @@ class ValidatorWriter
     private function path()
     {
         return $this->path
-            ?? $this->path = $this->params->get('root')
+            ?? $this->path = $this->params()->get('root')
                 .'app'.DIRECTORY_SEPARATOR
                 .'Http'.DIRECTORY_SEPARATOR
-                .'Requests';
+                .'Requests'.DIRECTORY_SEPARATOR
+                .$this->segments()->implode(DIRECTORY_SEPARATOR);
     }
 
     private function segments()
@@ -101,5 +102,10 @@ class ValidatorWriter
             )->map(function ($segment) {
                 return Str::ucfirst($segment);
             });
+    }
+
+    private function params()
+    {
+        return $this->choices->params();
     }
 }

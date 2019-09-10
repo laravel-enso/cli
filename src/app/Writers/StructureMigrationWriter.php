@@ -5,19 +5,18 @@ namespace LaravelEnso\Cli\app\Writers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class StructureMigrationWriter
 {
     private $choices;
-    private $params;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
     }
 
-    public function run()
+    public function handle()
     {
         [$from, $to] = $this->replaceFromTo();
 
@@ -63,15 +62,12 @@ class StructureMigrationWriter
 
     private function parentMenu()
     {
-        if ($this->choices->has('menu')) {
-            $stub = str_replace(
+        return $this->choices->has('menu')
+            ? str_replace(
                 '${parentMenu}',
                 $this->choices->get('menu')->get('parentMenu'),
                 $this->stub('parentMenu')
-            );
-        }
-
-        return isset($stub) && $stub ? $stub : null;
+            ) : null;
     }
 
     private function permissions()
@@ -116,8 +112,8 @@ class StructureMigrationWriter
     private function entity()
     {
         return $this->choices->has('model')
-            ? $this->choices->get('model')->get('name')
-            : $this->choices->get('menu')->get('name');
+            ? ucfirst($this->choices->get('model')->get('name'))
+            : ucfirst($this->choices->get('menu')->get('name'));
     }
 
     private function mapping(Obj $keys)
@@ -152,7 +148,7 @@ class StructureMigrationWriter
 
     public function path()
     {
-        return $this->params->get('root')
+        return $this->choices->params()->get('root')
             .'database'
             .DIRECTORY_SEPARATOR
             .'migrations'

@@ -4,23 +4,21 @@ namespace LaravelEnso\Cli\app\Writers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class TableWriter
 {
-    private const TableOperations = ['initTable', 'tableData', 'exportExcel'];
+    private const Routes = ['initTable', 'tableData', 'exportExcel'];
 
     private $choices;
     private $segments;
-    private $params;
 
-    public function __construct(Obj $choices, Obj $params)
+    public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-        $this->params = $params;
     }
 
-    public function run()
+    public function handle()
     {
         $this->createFolders()
             ->writeTemplate()
@@ -103,13 +101,13 @@ class TableWriter
         $model = $this->choices->get('model');
 
         $array = [
-            '${namespace}' => $this->params->get('namespace')
+            '${namespace}' => $this->params()->get('namespace')
                 .'Tables\\Builders'
                 .($this->segments()->count() > 1
                     ? '\\'.$this->segments()->slice(0, -1)->implode('\\')
                     : ''),
             '${modelNamespace}' => $model->get('namespace'),
-            '${Model}' => $model->get('name'),
+            '${Model}' => ucfirst($model->get('name')),
             '${models}' => Str::camel(Str::plural($model->get('name'))),
             '${table}' => Str::snake(Str::plural($model->get('name'))),
             '${depth}' => str_repeat('../', $this->segments()->count() - 1),
@@ -128,7 +126,7 @@ class TableWriter
     {
         return $this->builderPath()
             .DIRECTORY_SEPARATOR
-            .$this->choices->get('model')->get('name')
+            .ucfirst($this->choices->get('model')->get('name'))
             .'Table.php';
     }
 
@@ -139,7 +137,7 @@ class TableWriter
         $this->choices->get('permissions')
             ->filter()
             ->keys()
-            ->intersect(self::TableOperations)
+            ->intersect(self::Routes)
             ->each(function ($permission) use ($from, $to) {
                 File::put(
                     $this->controllerName($permission),
@@ -153,14 +151,14 @@ class TableWriter
     private function controllerFromTo()
     {
         $array = [
-            '${namespace}' => $this->params->get('namespace')
+            '${namespace}' => $this->params()->get('namespace')
                 .'Http\\Controllers\\'
                 .$this->segments()->implode('\\'),
-            '${builderNamespace}' => $this->params->get('namespace').'Tables\\Builders\\'
+            '${builderNamespace}' => $this->params()->get('namespace').'Tables\\Builders\\'
                 .($this->segments()->count() > 1
                     ? $this->segments()->slice(0, -1)->implode('\\').'\\'
                     : ''),
-            '${Model}' => $this->choices->get('model')->get('name'),
+            '${Model}' => ucfirst($this->choices->get('model')->get('name')),
         ];
 
         return [
@@ -179,7 +177,7 @@ class TableWriter
 
     private function builderPath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'app'.DIRECTORY_SEPARATOR
             .'Tables'.DIRECTORY_SEPARATOR
             .'Builders'.DIRECTORY_SEPARATOR
@@ -189,7 +187,7 @@ class TableWriter
 
     private function templatePath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'app'.DIRECTORY_SEPARATOR
             .'Tables'.DIRECTORY_SEPARATOR
             .'Templates'.DIRECTORY_SEPARATOR
@@ -199,7 +197,7 @@ class TableWriter
 
     private function controllerPath()
     {
-        return $this->params->get('root')
+        return $this->params()->get('root')
             .'app'.DIRECTORY_SEPARATOR
             .'Http'.DIRECTORY_SEPARATOR
             .'Controllers'.DIRECTORY_SEPARATOR
@@ -228,5 +226,10 @@ class TableWriter
             )->map(function ($segment) {
                 return Str::ucfirst($segment);
             });
+    }
+
+    private function params()
+    {
+        return $this->choices->params();
     }
 }
