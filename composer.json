@@ -19,12 +19,12 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel-enso/core": "4.3.*",
-        "laravel-enso/helpers": "1.11.*",
-        "laravel-enso/menus": "3.1.*",
-        "laravel-enso/permissions": "3.1.*",
+        "laravel-enso/core": "4.4.*",
+        "laravel-enso/helpers": "1.12.*",
+        "laravel-enso/menus": "3.2.*",
+        "laravel-enso/permissions": "3.2.*",
         "laravel-enso/enums": "1.0.*",
-        "laravel-enso/roles": "3.1.*"
+        "laravel-enso/roles": "3.2.*"
     },
     "autoload": {
         "psr-4": {

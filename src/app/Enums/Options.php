@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Cli\app\Enums;
 
-use LaravelEnso\Enums\app\Classes\Enum;
+use LaravelEnso\Enums\app\Services\Enum;
 
 class Options extends Enum
 {

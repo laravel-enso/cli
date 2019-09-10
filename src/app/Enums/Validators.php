@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Cli\app\Enums;
 
-use LaravelEnso\Enums\app\Classes\Enum;
+use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Cli\app\Services\Validators\Menu;
 use LaravelEnso\Cli\app\Services\Validators\Model;
 

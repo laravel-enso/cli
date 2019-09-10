@@ -51,7 +51,7 @@ class TableWriterTest extends TestCase
         $this->assertTableBuilderContains([
             'namespace Namespace\App\Tables\Builders\Group;',
             'class TestModelTable extends Table',
-            'test_models.id as "dtRowId", test_models.id',
+            'test_models.id',
         ]);
     }
 
