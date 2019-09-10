@@ -58,8 +58,8 @@ class Status
                 ->filter()
                 ->keys()
                 ->each(function ($file) {
-                $this->console()->line($file);
-            });
+                    $this->console()->line($file);
+                });
         }
     }
 }
