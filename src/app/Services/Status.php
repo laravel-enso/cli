@@ -54,7 +54,10 @@ class Status
             $this->console()->info('Will generate:');
             $this->console()->line('structure migration');
 
-            $this->choices->files()->filter()->each(function ($chosen, $file) {
+            $this->choices->files()
+                ->filter()
+                ->keys()
+                ->each(function ($file) {
                 $this->console()->line($file);
             });
         }
