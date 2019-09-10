@@ -13,7 +13,6 @@ class ViewsWriterTest extends TestCase
     use Cli;
 
     private $root;
-    private $params;
     private $choices;
 
     protected function setUp(): void
