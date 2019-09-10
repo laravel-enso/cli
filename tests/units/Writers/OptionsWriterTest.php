@@ -14,7 +14,6 @@ class OptionsWriterTest extends TestCase
 
     private $root;
     private $choices;
-    private $params;
 
     protected function setUp(): void
     {
