@@ -23,7 +23,7 @@
         "laravel-enso/helpers": "1.12.*",
         "laravel-enso/menus": "3.2.*",
         "laravel-enso/permissions": "3.2.*",
-        "laravel-enso/enums": "1.0.*",
+        "laravel-enso/enums": "1.1.*",
         "laravel-enso/roles": "3.2.*"
     },
     "autoload": {
