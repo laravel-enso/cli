@@ -36,8 +36,8 @@ class RouteGeneratorTest extends TestCase
     {
         $result = (new RouteGenerator($this->choices))->handle();
 
-        $this->assertContains("Route::namespace('Perm\Group')", $result);
-        $this->assertContains("->prefix('perm/group')->as('perm.group.')", $result);
+        $this->assertStringContainsString("Route::namespace('Perm\Group')", $result);
+        $this->assertStringContainsString("->prefix('perm/group')->as('perm.group.')", $result);
     }
 
     /** @test */
@@ -62,17 +62,17 @@ class RouteGeneratorTest extends TestCase
 
     private function assertRoutes($result)
     {
-        $this->assertContains("Route::get('', 'Index')->name('index');", $result);
-        $this->assertContains("Route::get('create', 'Create')->name('create');", $result);
-        $this->assertContains("Route::get('{testModel}/edit', 'Edit')->name('edit');", $result);
-        $this->assertContains("Route::get('options', 'Options')->name('options');", $result);
-        $this->assertContains("Route::patch('{testModel}', 'Update')->name('update');", $result);
-        $this->assertContains("Route::post('', 'Store')->name('store');", $result);
-        $this->assertContains("Route::delete('{testModel}', 'Destroy')->name('destroy');", $result);
-        $this->assertContains("Route::get('initTable', 'InitTable')->name('initTable');", $result);
-        $this->assertContains("Route::get('tableData', 'TableData')->name('tableData');", $result);
-        $this->assertContains("Route::get('exportExcel', 'ExportExcel')->name('exportExcel');", $result);
-        $this->assertContains("Route::get('{testModel}', 'Show')->name('show');", $result);
+        $this->assertStringContainsString("Route::get('', 'Index')->name('index');", $result);
+        $this->assertStringContainsString("Route::get('create', 'Create')->name('create');", $result);
+        $this->assertStringContainsString("Route::get('{testModel}/edit', 'Edit')->name('edit');", $result);
+        $this->assertStringContainsString("Route::get('options', 'Options')->name('options');", $result);
+        $this->assertStringContainsString("Route::patch('{testModel}', 'Update')->name('update');", $result);
+        $this->assertStringContainsString("Route::post('', 'Store')->name('store');", $result);
+        $this->assertStringContainsString("Route::delete('{testModel}', 'Destroy')->name('destroy');", $result);
+        $this->assertStringContainsString("Route::get('initTable', 'InitTable')->name('initTable');", $result);
+        $this->assertStringContainsString("Route::get('tableData', 'TableData')->name('tableData');", $result);
+        $this->assertStringContainsString("Route::get('exportExcel', 'ExportExcel')->name('exportExcel');", $result);
+        $this->assertStringContainsString("Route::get('{testModel}', 'Show')->name('show');", $result);
     }
 
     protected function choices(): \LaravelEnso\Helpers\app\Classes\Obj

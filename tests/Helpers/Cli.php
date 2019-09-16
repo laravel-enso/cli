@@ -112,7 +112,7 @@ trait Cli
         $content = File::get($filePath);
 
         collect($needle)->each(function ($needle) use ($content) {
-            $this->assertContains($needle, $content);
+            $this->assertStringContainsString($needle, $content);
         });
     }
 
@@ -123,7 +123,7 @@ trait Cli
                 return Str::contains($file->getFilename(), $migration);
             });
 
-        $this->assertTrue($files->isNotEmpty(), $migration. ' not exists!');
+        $this->assertTrue($files->isNotEmpty(), $migration.' not exists!');
     }
 
     private function permissions()
