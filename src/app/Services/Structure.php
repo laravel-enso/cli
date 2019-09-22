@@ -124,6 +124,10 @@ class Structure
 
     private function prepareModel()
     {
+        if (! $this->choices->has('model')) {
+            return $this;
+        }
+
         $model = $this->choices->get('model');
 
         if (! Str::contains($model->get('name'), DIRECTORY_SEPARATOR)

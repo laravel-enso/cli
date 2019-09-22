@@ -7,9 +7,6 @@
         "label": "Id",
         "name": "id",
         "data": "${models}.id",
-        "meta": [
-            "searchable",
-            "sortable"
-        ]
+        "meta": ["searchable", "sortable"]
     }]
 }
