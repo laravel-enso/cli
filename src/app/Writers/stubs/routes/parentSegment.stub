@@ -1,7 +1,7 @@
-import routeImporter from '@core-modules/importers/routeImporter';
+import routeImporter from '@core/modules/importers/routeImporter';
 
 const routes = routeImporter(require.context('./${segment}', false, /.*\.js$/));
-const RouterView = () => import('@core-pages/Router.vue');
+const RouterView = () => import('@core/bulma/pages/Router.vue');
 
 export default {
     path: '${relativePath}',
