@@ -146,7 +146,7 @@ class FormWriterTest extends TestCase
             'use Classes\TestModel;',
             'use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelStore',
             'class Store extends Controller',
-            'tap($testModel)->fill($request->validated())',
+            '$testModel->fill($request->validated())->save()',
             'public function __invoke(ValidateTestModelStore $request, TestModel $testModel)',
         ], 'Store');
     }
