@@ -10,8 +10,6 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Choices
 {
-    private const ProxiedMethods = ['all', 'get', 'put', 'has', 'keys', 'forget'];
-
     private $console;
     private $choices;
     private $params;
@@ -30,11 +28,7 @@ class Choices
 
     public function __call($method, $args)
     {
-        if (collect(self::ProxiedMethods)->contains($method)) {
-            return $this->choices->{$method}(...$args);
-        }
-
-        throw new BadMethodCallException('Method '.static::class.'::'.$method.'() not found');
+        return $this->choices->{$method}(...$args);
     }
 
     public function console()
