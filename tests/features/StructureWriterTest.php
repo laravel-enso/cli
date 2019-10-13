@@ -3,12 +3,13 @@
 namespace LaravelEnso\Cli\tests\features;
 
 use Tests\TestCase;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Services\Structure;
-use LaravelEnso\Cli\tests\Helpers\Cli;
 
 class StructureWriterTest extends TestCase
 {
@@ -24,7 +25,6 @@ class StructureWriterTest extends TestCase
         parent::setUp();
 
         $this->params = $this->params();
-        $this->root = $this->params->get('root');
         $this->choices = $this->choices();
     }
 
@@ -38,6 +38,8 @@ class StructureWriterTest extends TestCase
     /** @test */
     public function can_generate_local_structure()
     {
+        $this->root = '';
+
         $this->handle();
 
         $this->makeAssertions();
@@ -46,12 +48,18 @@ class StructureWriterTest extends TestCase
     /** @test */
     public function can_generate_package()
     {
+        $this->root = 'vendor/laravel-enso/testing/src/';
+
         $this->choices->set('package', new Obj([
             'name' => 'testing',
             'vendor' => 'laravel-enso',
             'providers' => true,
             'config' => true
         ]));
+
+        $this->choices->get('model')->set('name', 'Testing/PackageTest');
+        $this->choices->get('permissionGroup')->set('name', 'testing.packageTests');
+        $this->choices->get('menu')->set('route', 'testing.packageTests.index');
 
         $this->handle();
 
@@ -72,13 +80,13 @@ class StructureWriterTest extends TestCase
 
     private function modelCreated()
     {
-        $this->assertFileExists($this->root.'app/Testing/Test.php');
+        $this->assertFileExists($this->root."app/Testing/{$this->modelName()}.php");
     }
 
     private function requestValidatorCreated()
     {
-        $this->assertValidatorExists('ValidateTestUpdate');
-        $this->assertValidatorExists('ValidateTestStore');
+        $this->assertValidatorExists("Validate{$this->modelName()}Update");
+        $this->assertValidatorExists("Validate{$this->modelName()}Store");
     }
 
     private function formFilesCreated()
@@ -109,8 +117,10 @@ class StructureWriterTest extends TestCase
 
     private function routesCreated()
     {
-        collect(['testing.js', 'testing/tests.js', 'testing/tests/create.js',
-            'testing/tests/edit.js', 'testing/tests/index.js', 'testing/tests/show.js',])
+        $permission = Str::camel($this->tableName());
+
+        collect(['testing.js', "testing/{$permission}.js", "testing/{$permission}/create.js",
+            "testing/{$permission}/edit.js", "testing/{$permission}/index.js", "testing/{$permission}/show.js",])
             ->each(function ($route) {
                 $this->assertViewRouteExists($route);
             });
@@ -120,18 +130,18 @@ class StructureWriterTest extends TestCase
 
     private function migrationsCreated()
     {
-        $this->assertMigrationCreated('create_tests_table');
-        $this->assertMigrationCreated('create_structure_for_tests');
+        $this->assertMigrationCreated("create_{$this->tableName()}_table");
+        $this->assertMigrationCreated("create_structure_for_{$this->tableName()}");
     }
 
     private function cleanUp()
     {
         if (! empty($this->root)) {
-            File::deleteDirectory($this->root);
+            File::deleteDirectory(str_replace('src/', '', $this->root));
 
             return;
         }
-        File::delete($this->root.'app/Testing/Test.php');
+        File::deleteDirectory($this->root.'app/Testing');
         File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
         File::deleteDirectory($this->root.'app/Forms/Templates/Testing');
         File::deleteDirectory($this->root.'app/Tables/Builders/Testing');
@@ -141,14 +151,14 @@ class StructureWriterTest extends TestCase
         File::deleteDirectory($this->root.'resources/js/pages/testing');
         File::deleteDirectory($this->root.'resources/js/routes/testing');
         File::delete($this->root.'resources/js/routes/testing.js');
-        $this->deleteMigration('create_tests_table');
-        $this->deleteMigration('create_structure_for_tests');
+        $this->deleteMigration("create_{$this->tableName()}_table");
+        $this->deleteMigration("create_structure_for_{$this->tableName()}");
     }
 
     private function handle()
     {
         $this->config = (new Choices(new Command))
-            ->setChoices($this->choices())
+            ->setChoices($this->choices)
             ->setParams($this->params);
 
         (new Structure($this->config))->handle();

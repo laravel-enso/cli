@@ -242,6 +242,11 @@ trait Cli
         return collect(explode('/', $this->choices->get('model')->get('name')))->last();
     }
 
+    private function tableName()
+    {
+        return Str::snake(Str::plural($this->modelName()));
+    }
+
     private function permissionGroupPath(bool $isFull = true)
     {
         $segments = $isFull
