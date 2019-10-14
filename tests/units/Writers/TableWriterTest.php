@@ -50,7 +50,7 @@ class TableWriterTest extends TestCase
 
         $this->assertTableBuilderContains([
             'namespace Namespace\App\Tables\Builders\Group;',
-            'class TestModelTable extends Table',
+            'class TestModelTable implements Table',
             'test_models.id',
         ]);
     }
@@ -73,8 +73,8 @@ class TableWriterTest extends TestCase
     protected function choices()
     {
         return new Obj([
-            'permissionGroup' => ['name' => 'group.testModels',],
-            'model' => ['name' => 'testModel',],
+            'permissionGroup' => ['name' => 'group.testModels', ],
+            'model' => ['name' => 'testModel', ],
             'permissions' => [],
         ]);
     }

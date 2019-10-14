@@ -28,16 +28,15 @@
     },
     "autoload": {
         "psr-4": {
-            "LaravelEnso\\Cli\\": "src/",
-            "LaravelEnso\\Cli\\tests\\": "tests/"
+            "LaravelEnso\\Cli\\": "src/"
         }
     },
-        "extra": {
-            "laravel": {
-                "providers": [
-                    "LaravelEnso\\Cli\\AppServiceProvider"
-                ],
-                "aliases": {}
-            }
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelEnso\\Cli\\AppServiceProvider"
+            ],
+            "aliases": {}
         }
+    }
 }
