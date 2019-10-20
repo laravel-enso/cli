@@ -85,8 +85,7 @@ class StructureWriterTest extends TestCase
 
     private function requestValidatorCreated()
     {
-        $this->assertValidatorExists("Validate{$this->modelName()}Update");
-        $this->assertValidatorExists("Validate{$this->modelName()}Store");
+        $this->assertValidatorExists("Validate{$this->modelName()}Request");
     }
 
     private function formFilesCreated()

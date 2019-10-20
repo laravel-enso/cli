@@ -8,8 +8,6 @@ use LaravelEnso\Cli\app\Services\Choices;
 
 class ValidatorWriter
 {
-    private const Actions = ['store', 'update'];
-
     private $choices;
     private $segments;
     private $path;
@@ -39,16 +37,9 @@ class ValidatorWriter
     {
         [$from, $to] = $this->fromTo();
 
-        $this->choices->get('permissions')
-            ->filter()
-            ->keys()
-            ->intersect(self::Actions)
-            ->each(function ($operation) use ($from, $to) {
-                File::put(
-                    $this->filename($operation),
-                    str_replace($from, $to, $this->stub($operation))
-                );
-            });
+        File::put(
+            $this->filename(), str_replace($from, $to, $this->stub())
+        );
     }
 
     private function fromTo()
@@ -67,20 +58,20 @@ class ValidatorWriter
         ];
     }
 
-    private function filename($operation)
+    private function filename()
     {
         return $this->path()
             .DIRECTORY_SEPARATOR
-            .'Validate'.ucfirst($this->model->get('name')).Str::ucfirst($operation)
+            .'Validate'.ucfirst($this->model->get('name')).'Request'
             .'.php';
     }
 
-    private function stub($file)
+    private function stub()
     {
         return File::get(
             __DIR__.DIRECTORY_SEPARATOR.'stubs'
             .DIRECTORY_SEPARATOR.'validator'
-            .DIRECTORY_SEPARATOR.$file.'.stub'
+            .DIRECTORY_SEPARATOR.'request.stub'
         );
     }
 

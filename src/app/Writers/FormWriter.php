@@ -150,8 +150,7 @@ class FormWriter
                 .'Forms\\Builders'.$namespaceSuffix,
             '${requestNamespace}' => $this->params()->get('namespace')
                 .'Http\\Requests\\'.$this->segments()->implode('\\'),
-            '${requestStore}' => 'Validate'.ucfirst($model->get('name')).'Store',
-            '${requestUpdate}' => 'Validate'.ucfirst($model->get('name')).'Update',
+            '${request}' => 'Validate'.ucfirst($model->get('name')).'Request',
         ];
 
         return [

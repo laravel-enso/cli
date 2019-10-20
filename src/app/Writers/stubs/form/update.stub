@@ -4,11 +4,11 @@ namespace ${namespace};
 
 use ${modelNamespace}\${Model};
 use Illuminate\Routing\Controller;
-use ${requestNamespace}\${requestUpdate};
+use ${requestNamespace}\${request};
 
 class Update extends Controller
 {
-    public function __invoke(${requestUpdate} $request, ${Model} $${model})
+    public function __invoke(${request} $request, ${Model} $${model})
     {
         $${model}->update($request->validated());
 
