@@ -87,12 +87,19 @@ class ValidatorWriter
 
     private function segments()
     {
-        return $this->segments
-            ?? $this->segments = collect(
+        if (! $this->segments) {
+            $this->segments = collect(
                 explode('.', $this->choices->get('permissionGroup')->get('name'))
-            )->map(function ($segment) {
+            );
+            
+            $this->segments->pop();
+            
+            $this->segments = $this->segments->map(function ($segment) {
                 return Str::ucfirst($segment);
             });
+        }
+
+        return $this->segments;
     }
 
     private function params()

@@ -172,7 +172,7 @@ trait Cli
     private function validatorPath($validator): string
     {
         return $this->root.'app/Http/Requests/'
-            .$this->permissionGroupPath()
+            .$this->permissionGroupPath(false)
             .$validator.'.php';
     }
 
