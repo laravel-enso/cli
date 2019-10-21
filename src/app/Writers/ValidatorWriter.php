@@ -91,9 +91,9 @@ class ValidatorWriter
             $this->segments = collect(
                 explode('.', $this->choices->get('permissionGroup')->get('name'))
             );
-            
+
             $this->segments->pop();
-            
+
             $this->segments = $this->segments->map(function ($segment) {
                 return Str::ucfirst($segment);
             });
