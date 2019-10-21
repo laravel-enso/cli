@@ -149,7 +149,7 @@ class FormWriter
             '${builderNamespace}' => $this->params()->get('namespace')
                 .'Forms\\Builders'.$namespaceSuffix,
             '${requestNamespace}' => $this->params()->get('namespace')
-                .'Http\\Requests\\'.$this->segments()->implode('\\'),
+                .'Http\\Requests\\'.$this->segments()->slice(0, -1)->implode('\\'),
             '${request}' => 'Validate'.ucfirst($model->get('name')).'Request',
         ];
 

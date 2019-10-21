@@ -32,29 +32,16 @@ class ValidatorWriterTest extends TestCase
     }
 
     /** @test */
-    public function can_create_store()
+    public function can_create_request()
     {
         $this->setPermission('store');
 
         (new ValidatorWriter($this->choices))->handle();
 
         $this->assertValidatorContains([
-            'namespace Namespace\\App\\Http\\Requests\\Perm\\Group;',
-            'class ValidateTestModelStore extends FormRequest',
-        ], 'ValidateTestModelStore');
-    }
-
-    /** @test */
-    public function can_create_update()
-    {
-        $this->setPermission('update');
-
-        (new ValidatorWriter($this->choices))->handle();
-
-        $this->assertValidatorContains([
-            'namespace Namespace\\App\\Http\\Requests\\Perm\\Group;',
-            'class ValidateTestModelUpdate extends ValidateTestModelStore',
-        ], 'ValidateTestModelUpdate');
+            'namespace Namespace\\App\\Http\\Requests\\Perm;',
+            'class ValidateTestModelRequest extends FormRequest',
+        ], 'ValidateTestModelRequest');
     }
 
     protected function choices()

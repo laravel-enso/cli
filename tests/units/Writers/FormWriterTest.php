@@ -127,9 +127,9 @@ class FormWriterTest extends TestCase
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'use Classes\TestModel;',
-            'use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelUpdate',
+            'use Namespace\App\Http\Requests\Group\ValidateTestModelRequest',
             'class Update extends Controller',
-            'public function __invoke(ValidateTestModelUpdate $request, TestModel $testModel)',
+            'public function __invoke(ValidateTestModelRequest $request, TestModel $testModel)',
             "return ['message' => __('The test model was successfully updated')]"
         ], 'Update');
     }
@@ -144,10 +144,10 @@ class FormWriterTest extends TestCase
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'use Classes\TestModel;',
-            'use Namespace\App\Http\Requests\Group\TestModels\ValidateTestModelStore',
+            'use Namespace\App\Http\Requests\Group\ValidateTestModelRequest',
             'class Store extends Controller',
             '$testModel->fill($request->validated())->save()',
-            'public function __invoke(ValidateTestModelStore $request, TestModel $testModel)',
+            'public function __invoke(ValidateTestModelRequest $request, TestModel $testModel)',
         ], 'Store');
     }
 

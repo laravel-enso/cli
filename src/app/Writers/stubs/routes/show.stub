@@ -6,6 +6,6 @@ export default {
     component: ${Model}Show,
     meta: {
         breadcrumb: 'show',
-        title: '${title} Profile',
+        title: 'Show ${title}',
     },
 };
