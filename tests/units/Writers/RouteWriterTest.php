@@ -63,7 +63,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.show'",
             'component: TestModelShow',
-            "title: 'Tests Models Profile'"
+            "title: 'Show Tests Models'"
         ], 'perm/group/show.js');
     }
 
