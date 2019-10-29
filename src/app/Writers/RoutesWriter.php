@@ -76,12 +76,13 @@ class RoutesWriter
         $group = $this->choices->get('permissionGroup')->get('name');
         $model = $this->choices->get('model')->get('name');
         $title = collect(explode('_', Str::snake($model)))->map(function ($word) {
-            return Str::ucfirst(Str::plural($word));
+            return Str::ucfirst($word);
         })->implode(' ');
 
         $array = [
             '${Model}' => ucfirst($model),
-            '${title}' => $title,
+            '${modelTitle}' => $title,
+            '${modelsTitle}' => Str::plural($title),
             '${model}' => Str::camel($model),
             '${relativePath}' => $this->segments->implode('/'),
             '${prefix}' => $group,

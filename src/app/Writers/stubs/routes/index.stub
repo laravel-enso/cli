@@ -6,6 +6,6 @@ export default {
     component: ${Model}Index,
     meta: {
         breadcrumb: 'index',
-        title: '${title}',
+        title: '${modelsTitle}',
     },
 };

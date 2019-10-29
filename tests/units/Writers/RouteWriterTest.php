@@ -49,7 +49,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.index'",
             'component: TestModelIndex',
-            "title: 'Tests Models'",
+            "title: 'Test Models'",
         ], 'perm/group/index.js');
     }
 
@@ -63,7 +63,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.show'",
             'component: TestModelShow',
-            "title: 'Show Tests Models'"
+            "title: 'Show Test Model'"
         ], 'perm/group/show.js');
     }
 
@@ -77,7 +77,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.edit'",
             'component: TestModelEdit',
-            "title: 'Edit Tests Models'"
+            "title: 'Edit Test Model'"
         ], 'perm/group/edit.js');
     }
 
@@ -139,7 +139,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.create'",
             'component: TestModelCreate',
-            "title: 'Create Tests Models'",
+            "title: 'Create Test Model'",
         ], 'perm/group/create.js');
     }
 
