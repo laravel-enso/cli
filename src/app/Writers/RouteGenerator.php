@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Cli\app\Writers;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use LaravelEnso\Cli\app\Services\Choices;
 
 class RouteGenerator
