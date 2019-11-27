@@ -55,6 +55,17 @@ class StructureMigrationWriterTest extends TestCase
         $this->choices->get('permissions')->each(function ($perm) {
             $this->assertStructureMigrationContains("'name' => 'group.testModels.{$perm}'");
         });
+
+        $descriptions = [
+            'Show index for test models',
+            'Export excel for test models',
+            'Init table for test models',
+            'Get table data for test models'
+        ];
+
+        collect($descriptions)->each(function ($description) {
+            $this->assertStructureMigrationContains("'description' => '$description'");
+        });
     }
 
     /** @test */

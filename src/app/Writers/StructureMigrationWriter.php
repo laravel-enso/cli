@@ -91,9 +91,12 @@ class StructureMigrationWriter
 
     private function permissionReplaceFromTo()
     {
+        $model = strtolower(str_replace('_', ' ', Str::snake($this->model())));
+
         $array = [
             '${permissionGroup}' => $this->choices->get('permissionGroup')->get('name'),
-            '${model}' => strtolower(str_replace('_', ' ', Str::snake($this->model()))),
+            '${model}' => $model,
+            '${models}' => Str::plural($model),
         ];
 
         return [

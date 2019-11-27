@@ -1,1 +1,1 @@
-        ['name' => '${permissionGroup}.initTable', 'description' => 'Init table for ${model}', 'type' => 0, 'is_default' => false],
+        ['name' => '${permissionGroup}.initTable', 'description' => 'Init table for ${models}', 'type' => 0, 'is_default' => false],
