@@ -4,14 +4,14 @@ namespace LaravelEnso\Cli\app\Services;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\app\Writers\FormWriter;
-use LaravelEnso\Cli\app\Writers\ModelAndMigrationWriter;
+use LaravelEnso\Cli\app\Writers\TableWriter;
+use LaravelEnso\Cli\app\Writers\ViewsWriter;
+use LaravelEnso\Cli\app\Writers\RoutesWriter;
 use LaravelEnso\Cli\app\Writers\OptionsWriter;
 use LaravelEnso\Cli\app\Writers\PackageWriter;
-use LaravelEnso\Cli\app\Writers\RoutesWriter;
-use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
-use LaravelEnso\Cli\app\Writers\TableWriter;
 use LaravelEnso\Cli\app\Writers\ValidatorWriter;
-use LaravelEnso\Cli\app\Writers\ViewsWriter;
+use LaravelEnso\Cli\app\Writers\ModelAndMigrationWriter;
+use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
 
 class Structure
 {

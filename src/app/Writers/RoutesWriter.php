@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Cli\app\Writers;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\app\Services\Choices;
 
 class RoutesWriter
@@ -20,14 +20,14 @@ class RoutesWriter
     {
         $this->choices = $choices;
 
-        $this->pathPrefix = $choices->params()->get('root').'resources//'.self::PathPrefix;
+        $this->pathPrefix = $choices->params()->get('root').'client/src/'.self::PathPrefix;
 
         $this->segments = collect(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
         );
 
         $this->path = $choices->params()->get('root').
-            'resources//'.
+            'client/src/'.
             self::PathPrefix.'/'
             .$this->segments->implode('/');
     }

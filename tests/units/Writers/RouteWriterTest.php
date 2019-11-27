@@ -36,7 +36,7 @@ class RouteWriterTest extends TestCase
     {
         (new RoutesWriter($this->choices))->handle();
 
-        $this->assertDirectoryExists($this->root.'resources/js/routes/perm/group');
+        $this->assertDirectoryExists($this->root.'client/src/js/routes/perm/group');
     }
 
     /** @test */

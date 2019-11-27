@@ -192,12 +192,12 @@ trait Cli
 
     private function viewRoutePath($filePath): string
     {
-        return $this->root.'resources/js/routes/'.$filePath;
+        return $this->root.'client/src/js/routes/'.$filePath;
     }
 
     private function viewPagePath($method): string
     {
-        return $this->root.'resources/js/pages/'.
+        return $this->root.'client/src/js/pages/'.
             $this->segments()->implode('/').'/'
             .ucfirst($method).'.vue';
     }

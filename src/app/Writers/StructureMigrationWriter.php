@@ -2,10 +2,10 @@
 
 namespace LaravelEnso\Cli\app\Writers;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Services\Choices;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\app\Services\Choices;
 
 class StructureMigrationWriter
 {

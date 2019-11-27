@@ -2,9 +2,9 @@
 
 namespace LaravelEnso\Cli\app\Enums;
 
+use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Cli\app\Services\Validators\Menu;
 use LaravelEnso\Cli\app\Services\Validators\Model;
-use LaravelEnso\Enums\app\Services\Enum;
 
 class Validators extends Enum
 {

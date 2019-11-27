@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Cli\app\Writers;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\app\Services\Choices;
 
 class ViewsWriter
@@ -89,7 +89,9 @@ class ViewsWriter
     private function path()
     {
         return $this->choices->params()->get('root')
-            .'resources'
+            .'client'
+            .DIRECTORY_SEPARATOR
+            .'src'
             .DIRECTORY_SEPARATOR
             .self::PathPrefix.DIRECTORY_SEPARATOR
             .collect(

@@ -147,9 +147,9 @@ class StructureWriterTest extends TestCase
         File::deleteDirectory($this->root.'app/Tables/Templates/Testing');
         File::deleteDirectory($this->root.'app/Http/Controllers/Testing');
         File::deleteDirectory($this->root.'app/Http/Requests/Testing');
-        File::deleteDirectory($this->root.'resources/js/pages/testing');
-        File::deleteDirectory($this->root.'resources/js/routes/testing');
-        File::delete($this->root.'resources/js/routes/testing.js');
+        File::deleteDirectory($this->root.'client/src/js/pages/testing');
+        File::deleteDirectory($this->root.'client/src/js/routes/testing');
+        File::delete($this->root.'client/src/js/routes/testing.js');
         $this->deleteMigration("create_{$this->tableName()}_table");
         $this->deleteMigration("create_structure_for_{$this->tableName()}");
     }

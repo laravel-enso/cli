@@ -3,8 +3,8 @@
 namespace LaravelEnso\Cli\app\Services;
 
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Services\Helpers\Symbol;
 use LaravelEnso\Cli\app\Writers\RouteGenerator;
+use LaravelEnso\Cli\app\Services\Helpers\Symbol;
 
 class Generator
 {
