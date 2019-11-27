@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         ], '${package}-config');
 
         $this->publishes([
-            __DIR__.'/resources/js' => resource_path('js'),
+            __DIR__.'/client/src/js' => base_path('client/src/js'),
         ], '${package}-assets');
     }
 

@@ -1,4 +1,4 @@
-const ${Model}Index = () => import('@pages/${relativePath}/Index.vue');
+const ${Model}Index = () => import('../../pages/${relativePath}/Index.vue');
 
 export default {
     name: '${prefix}.index',

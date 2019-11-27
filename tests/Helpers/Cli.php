@@ -3,9 +3,9 @@
 namespace LaravelEnso\Cli\tests\Helpers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use LaravelEnso\Cli\app\Services\Choices;
 
 trait Cli
@@ -192,12 +192,12 @@ trait Cli
 
     private function viewRoutePath($filePath): string
     {
-        return $this->root.'resources/js/routes/'.$filePath;
+        return $this->root.'client/src/js/routes/'.$filePath;
     }
 
     private function viewPagePath($method): string
     {
-        return $this->root.'resources/js/pages/'.
+        return $this->root.'client/src/js/pages/'.
             $this->segments()->implode('/').'/'
             .ucfirst($method).'.vue';
     }

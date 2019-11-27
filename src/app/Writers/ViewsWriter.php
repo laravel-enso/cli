@@ -89,7 +89,9 @@ class ViewsWriter
     private function path()
     {
         return $this->choices->params()->get('root')
-            .'resources'
+            .'client'
+            .DIRECTORY_SEPARATOR
+            .'src'
             .DIRECTORY_SEPARATOR
             .self::PathPrefix.DIRECTORY_SEPARATOR
             .collect(

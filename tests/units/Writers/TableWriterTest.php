@@ -2,11 +2,11 @@
 
 namespace LaravelEnso\Cli\tests\units\Writers;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\app\Writers\TableWriter;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Writers\TableWriter;
+use Tests\TestCase;
 
 class TableWriterTest extends TestCase
 {

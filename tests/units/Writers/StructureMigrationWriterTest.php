@@ -3,11 +3,11 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
+use Tests\TestCase;
 
 class StructureMigrationWriterTest extends TestCase
 {
@@ -54,6 +54,17 @@ class StructureMigrationWriterTest extends TestCase
 
         $this->choices->get('permissions')->each(function ($perm) {
             $this->assertStructureMigrationContains("'name' => 'group.testModels.{$perm}'");
+        });
+
+        $descriptions = [
+            'Show index for test models',
+            'Export excel for test models',
+            'Init table for test models',
+            'Get table data for test models'
+        ];
+
+        collect($descriptions)->each(function ($description) {
+            $this->assertStructureMigrationContains("'description' => '$description'");
         });
     }
 

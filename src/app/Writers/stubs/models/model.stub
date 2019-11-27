@@ -3,8 +3,11 @@
 namespace ${modelNamespace};
 
 use Illuminate\Database\Eloquent\Model;
+use LaravelEnso\Tables\app\Traits\TableCache;
 
 class ${Model} extends Model
 {
+	use TableCache;
+
     //
 }

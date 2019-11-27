@@ -2,11 +2,11 @@
 
 namespace LaravelEnso\Cli\tests\units\Writers;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\app\Writers\RouteGenerator;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Writers\RouteGenerator;
+use Tests\TestCase;
 
 class RouteGeneratorTest extends TestCase
 {

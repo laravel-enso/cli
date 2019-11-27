@@ -20,14 +20,14 @@ class RoutesWriter
     {
         $this->choices = $choices;
 
-        $this->pathPrefix = $choices->params()->get('root').'resources//'.self::PathPrefix;
+        $this->pathPrefix = $choices->params()->get('root').'client/src/'.self::PathPrefix;
 
         $this->segments = collect(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
         );
 
         $this->path = $choices->params()->get('root').
-            'resources//'.
+            'client/src/'.
             self::PathPrefix.'/'
             .$this->segments->implode('/');
     }

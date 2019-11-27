@@ -2,13 +2,13 @@
 
 namespace LaravelEnso\Cli\tests\features;
 
-use Tests\TestCase;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use LaravelEnso\Cli\app\Enums\Options;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use Tests\TestCase;
 
 class CliTest extends TestCase
 {
@@ -119,7 +119,6 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', Options::ToggleValidation)
             ->expectsQuestion('Choose element to configure', Options::Generate)
             ->assertExitCode(0);
-
     }
 
     private function dependent()

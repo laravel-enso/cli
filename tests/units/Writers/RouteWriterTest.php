@@ -2,11 +2,11 @@
 
 namespace LaravelEnso\Cli\tests\units\Writers;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\app\Writers\RoutesWriter;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Writers\RoutesWriter;
+use Tests\TestCase;
 
 class RouteWriterTest extends TestCase
 {
@@ -36,7 +36,7 @@ class RouteWriterTest extends TestCase
     {
         (new RoutesWriter($this->choices))->handle();
 
-        $this->assertDirectoryExists($this->root.'resources/js/routes/perm/group');
+        $this->assertDirectoryExists($this->root.'client/src/js/routes/perm/group');
     }
 
     /** @test */

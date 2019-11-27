@@ -3,13 +3,13 @@
 namespace LaravelEnso\Cli\tests\units\Services;
 
 use Faker\Factory;
-use Tests\TestCase;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
-use LaravelEnso\Menus\app\Models\Menu;
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Services\Validator;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Menus\app\Models\Menu;
+use Tests\TestCase;
 
 class ValidatorTest extends TestCase
 {
