@@ -3,9 +3,9 @@
 namespace LaravelEnso\Cli\tests\Helpers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use LaravelEnso\Cli\app\Services\Choices;
 
 trait Cli

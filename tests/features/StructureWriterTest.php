@@ -2,14 +2,14 @@
 
 namespace LaravelEnso\Cli\tests\features;
 
-use Tests\TestCase;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\tests\Helpers\Cli;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use Illuminate\Support\Str;
 use LaravelEnso\Cli\app\Services\Choices;
 use LaravelEnso\Cli\app\Services\Structure;
+use LaravelEnso\Cli\tests\Helpers\Cli;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use Tests\TestCase;
 
 class StructureWriterTest extends TestCase
 {
@@ -119,7 +119,7 @@ class StructureWriterTest extends TestCase
         $permission = Str::camel($this->tableName());
 
         collect(['testing.js', "testing/{$permission}.js", "testing/{$permission}/create.js",
-            "testing/{$permission}/edit.js", "testing/{$permission}/index.js", "testing/{$permission}/show.js",])
+            "testing/{$permission}/edit.js", "testing/{$permission}/index.js", "testing/{$permission}/show.js", ])
             ->each(function ($route) {
                 $this->assertViewRouteExists($route);
             });

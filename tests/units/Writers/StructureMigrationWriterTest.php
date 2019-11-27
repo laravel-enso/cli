@@ -3,11 +3,11 @@
 namespace LaravelEnso\Cli\tests\units\Writers;
 
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
 use LaravelEnso\Cli\tests\Helpers\Cli;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
+use Tests\TestCase;
 
 class StructureMigrationWriterTest extends TestCase
 {
