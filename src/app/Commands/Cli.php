@@ -4,10 +4,10 @@ namespace LaravelEnso\Cli\app\Commands;
 
 use Illuminate\Console\Command;
 use LaravelEnso\Cli\app\Enums\Options;
-use LaravelEnso\Cli\app\Services\Config;
-use LaravelEnso\Cli\app\Services\Status;
 use LaravelEnso\Cli\app\Services\Choices;
+use LaravelEnso\Cli\app\Services\Config;
 use LaravelEnso\Cli\app\Services\Generator;
+use LaravelEnso\Cli\app\Services\Status;
 
 class Cli extends Command
 {
