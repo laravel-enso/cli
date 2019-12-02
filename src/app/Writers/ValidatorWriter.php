@@ -45,10 +45,10 @@ class ValidatorWriter
     private function fromTo()
     {
         $this->model = $this->choices->get('model');
+        $baseNamespace = $this->params()->get('namespace').'Http\\Requests';
 
         $array = [
-            '${namespace}' => $this->params()->get('namespace')
-                .'Http\\Requests\\'.$this->segments()->implode('\\'),
+            '${namespace}' => $this->segments()->prepend($baseNamespace)->implode('\\'),
             '${Model}' => ucfirst($this->model->get('name')),
         ];
 
