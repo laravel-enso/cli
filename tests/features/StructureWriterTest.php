@@ -54,7 +54,7 @@ class StructureWriterTest extends TestCase
             'name' => 'testing',
             'vendor' => 'laravel-enso',
             'providers' => true,
-            'config' => true
+            'config' => true,
         ]));
 
         $this->choices->get('model')->set('name', 'Testing/PackageTest');
@@ -140,6 +140,7 @@ class StructureWriterTest extends TestCase
 
             return;
         }
+
         File::deleteDirectory($this->root.'app/Testing');
         File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
         File::deleteDirectory($this->root.'app/Forms/Templates/Testing');
@@ -156,7 +157,7 @@ class StructureWriterTest extends TestCase
 
     private function handle()
     {
-        $this->config = (new Choices(new Command))
+        $this->config = (new Choices(new Command()))
             ->setChoices($this->choices)
             ->setParams($this->params);
 

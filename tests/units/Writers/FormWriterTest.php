@@ -24,7 +24,7 @@ class FormWriterTest extends TestCase
         $this->initChoices();
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -39,7 +39,7 @@ class FormWriterTest extends TestCase
         $this->assertFormBuilderContains([
             'class TestModelForm',
             'public function edit(TestModel $testModel)',
-            'return $this->form->edit($testModel);'
+            'return $this->form->edit($testModel);',
         ]);
     }
 
@@ -97,7 +97,7 @@ class FormWriterTest extends TestCase
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'class Create extends Controller',
             'public function __invoke(TestModelForm $form)',
-            'return [\'form\' => $form->create()]'
+            'return [\'form\' => $form->create()]',
         ], 'Create');
     }
 
@@ -130,7 +130,7 @@ class FormWriterTest extends TestCase
             'use Namespace\App\Http\Requests\Group\ValidateTestModelRequest',
             'class Update extends Controller',
             'public function __invoke(ValidateTestModelRequest $request, TestModel $testModel)',
-            "return ['message' => __('The test model was successfully updated')]"
+            "return ['message' => __('The test model was successfully updated')]",
         ], 'Update');
     }
 

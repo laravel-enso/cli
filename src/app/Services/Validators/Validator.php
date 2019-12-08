@@ -6,9 +6,9 @@ use LaravelEnso\Cli\app\Services\Choices;
 
 abstract class Validator
 {
-    private $errors;
-
     protected $choices;
+
+    private $errors;
 
     public function __construct(Choices $choices)
     {

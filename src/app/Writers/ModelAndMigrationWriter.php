@@ -21,7 +21,9 @@ class ModelAndMigrationWriter
     {
         $this->model = $this->choices->get('model');
 
-        if (! class_exists($this->modelPath().DIRECTORY_SEPARATOR.ucfirst($this->model->get('name')))) {
+        $class = $this->modelPath().DIRECTORY_SEPARATOR.ucfirst($this->model->get('name'));
+
+        if (! class_exists($class)) {
             $this->writeModel()
                 ->writeMigration();
 

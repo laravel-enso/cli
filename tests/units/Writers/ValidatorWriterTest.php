@@ -24,7 +24,7 @@ class ValidatorWriterTest extends TestCase
         $this->initChoices();
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

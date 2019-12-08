@@ -25,10 +25,10 @@ class CliTest extends TestCase
 
         $this->root = '';
 
-        Config::set("enso.structures{Str::camel($this->choice)}.attributes", ['name' => null]);
+        Config::set("enso.structures{Str::camel({$this->choice})}.attributes", ['name' => null]);
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         Cache::forget('cli_data');
 

@@ -24,7 +24,7 @@ class RouteWriterTest extends TestCase
         $this->initChoices();
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -63,7 +63,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.show'",
             'component: TestModelShow',
-            "title: 'Show Test Model'"
+            "title: 'Show Test Model'",
         ], 'perm/group/show.js');
     }
 
@@ -77,7 +77,7 @@ class RouteWriterTest extends TestCase
         $this->assertViewRouteContains([
             "name: 'perm.group.edit'",
             'component: TestModelEdit',
-            "title: 'Edit Test Model'"
+            "title: 'Edit Test Model'",
         ], 'perm/group/edit.js');
     }
 

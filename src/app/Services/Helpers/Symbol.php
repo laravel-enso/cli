@@ -4,9 +4,9 @@ namespace LaravelEnso\Cli\app\Services\Helpers;
 
 class Symbol
 {
-    const Check = '&#x2713;';
-    const Cross = '&#x2717;';
-    const Exclamation = '&#x00021;';
+    private const Check = '&#x2713;';
+    private const Cross = '&#x2717;';
+    private const Exclamation = '&#x00021;';
 
     public static function bool(bool $bool)
     {

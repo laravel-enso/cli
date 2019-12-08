@@ -6,15 +6,15 @@ use LaravelEnso\Enums\app\Services\Enum;
 
 class Options extends Enum
 {
-    const Model = 'Model';
-    const PermissionGroup = 'Permission Group';
-    const Permissions = 'Permissions';
-    const Menu = 'Menu';
-    const Files = 'Files';
-    const Package = 'Package';
-    const Generate = 'Generate';
-    const ToggleValidation = 'Toggle Validation';
-    const Exit = 'Exit';
+    public const Model = 'Model';
+    public const PermissionGroup = 'Permission Group';
+    public const Permissions = 'Permissions';
+    public const Menu = 'Menu';
+    public const Files = 'Files';
+    public const Package = 'Package';
+    public const Generate = 'Generate';
+    public const ToggleValidation = 'Toggle Validation';
+    public const Exit = 'Exit';
 
     public static function choices()
     {

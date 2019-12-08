@@ -12,7 +12,7 @@ trait Cli
 {
     private function initChoices()
     {
-        $this->choices = (new Choices(new Command))
+        $this->choices = (new Choices(new Command()))
             ->setChoices($this->choices())
             ->setParams($this->params());
     }
@@ -135,7 +135,7 @@ trait Cli
         ]);
     }
 
-    protected function setPermission($permissions)
+    private function setPermission($permissions)
     {
         $this->choices->put('permissions', $this->permissions()->only($permissions));
     }

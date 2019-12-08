@@ -24,7 +24,7 @@ class RouteGeneratorTest extends TestCase
         $this->initChoices();
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -75,7 +75,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertStringContainsString("Route::get('{testModel}', 'Show')->name('show');", $result);
     }
 
-    protected function choices(): \LaravelEnso\Helpers\app\Classes\Obj
+    private function choices(): Obj
     {
         return new Obj([
             'permissionGroup' => ['name' => 'perm.group'],
@@ -84,10 +84,8 @@ class RouteGeneratorTest extends TestCase
         ]);
     }
 
-    protected function params(): \LaravelEnso\Helpers\app\Classes\Obj
+    private function params(): Obj
     {
-        return new Obj([
-            'root' => $this->root,
-        ]);
+        return new Obj(['root' => $this->root]);
     }
 }

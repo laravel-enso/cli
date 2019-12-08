@@ -24,7 +24,7 @@ class TableWriterTest extends TestCase
         $this->initChoices();
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -73,8 +73,8 @@ class TableWriterTest extends TestCase
     protected function choices()
     {
         return new Obj([
-            'permissionGroup' => ['name' => 'group.testModels', ],
-            'model' => ['name' => 'testModel', ],
+            'permissionGroup' => ['name' => 'group.testModels'],
+            'model' => ['name' => 'testModel'],
             'permissions' => [],
         ]);
     }

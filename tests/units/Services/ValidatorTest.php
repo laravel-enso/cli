@@ -2,7 +2,6 @@
 
 namespace LaravelEnso\Cli\tests\units\Services;
 
-use Faker\Factory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Cli\app\Services\Choices;
@@ -13,14 +12,11 @@ use Tests\TestCase;
 
 class ValidatorTest extends TestCase
 {
-    private $faker;
     private $validator;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->faker = Factory::create();
 
         $this->createMenuTable();
     }
@@ -136,14 +132,14 @@ class ValidatorTest extends TestCase
 
     private function modelChoices($name)
     {
-        return (new Choices(new Command))
+        return (new Choices(new Command()))
             ->setChoices(new Obj(['model' => ['name' => $name]]))
             ->setConfigured(collect(['Model']));
     }
 
     private function menuChoices($route, $parentMenu = null, $hasChildren = false)
     {
-        return (new Choices(new Command))
+        return (new Choices(new Command()))
             ->setChoices(new Obj([
                 'menu' => $this->menu($route, $parentMenu, $hasChildren),
                 'permissions' => $this->permission('create')]))

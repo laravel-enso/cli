@@ -27,7 +27,7 @@ class StructureMigrationWriterTest extends TestCase
         Carbon::setTestNow(Carbon::create(2000, 01, 01, 00));
     }
 
-    protected function tearDown() :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -60,11 +60,11 @@ class StructureMigrationWriterTest extends TestCase
             'Show index for test models',
             'Export excel for test models',
             'Init table for test models',
-            'Get table data for test models'
+            'Get table data for test models',
         ];
 
         collect($descriptions)->each(function ($description) {
-            $this->assertStructureMigrationContains("'description' => '$description'");
+            $this->assertStructureMigrationContains("'description' => '{$description}'");
         });
     }
 

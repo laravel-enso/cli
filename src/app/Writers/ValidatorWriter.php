@@ -62,8 +62,7 @@ class ValidatorWriter
     {
         return $this->path()
             .DIRECTORY_SEPARATOR
-            .'Validate'.ucfirst($this->model->get('name')).'Request'
-            .'.php';
+            .'Validate'.ucfirst($this->model->get('name')).'Request.php';
     }
 
     private function stub()

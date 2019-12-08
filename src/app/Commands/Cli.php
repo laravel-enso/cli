@@ -11,11 +11,11 @@ use LaravelEnso\Cli\app\Services\Status;
 
 class Cli extends Command
 {
-    private $choices;
-
     protected $signature = 'enso:cli';
 
     protected $description = 'Create a new Laravel Enso Structure';
+
+    private $choices;
 
     public function __construct()
     {

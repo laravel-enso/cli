@@ -158,7 +158,7 @@ class Choices
                 return $choices->set(
                     Str::camel($choice), $this->attributes($choice)
                 );
-            }, new Obj);
+            }, new Obj());
     }
 
     private function attributes($choice)

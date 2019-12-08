@@ -117,7 +117,8 @@ class Config
     private function toggleValidation()
     {
         $this->choices->toggleValidation();
-        $this->console()->error('Validation '.($this->choices->needsValidation() ? 'enabled' : 'disabled'));
+        $status = $this->choices->needsValidation() ? 'enabled' : 'disabled';
+        $this->console()->error("Validation {$status}");
         $this->console()->line('');
 
         sleep(1);

@@ -149,7 +149,7 @@ class StructureMigrationWriter
             .'.php';
     }
 
-    public function path()
+    private function path()
     {
         return $this->choices->params()->get('root')
             .'database'

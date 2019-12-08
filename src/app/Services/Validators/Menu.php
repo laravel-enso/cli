@@ -74,7 +74,8 @@ class Menu extends Validator
 
         if ($matches > 1) {
             $this->error(
-                'The parent menu '.$this->menu->get('parentMenu').' is ambiguous. Please use dotted notation to specify its parent too.'
+                "The parent menu {$this->menu->get('parentMenu')} is ambiguous."
+                .' Please use dotted notation to specify its parent too.'
             );
         }
     }

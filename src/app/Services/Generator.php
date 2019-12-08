@@ -105,23 +105,39 @@ class Generator
             $routes = (new RouteGenerator($this->choices))->handle();
 
             if ($routes) {
-                $this->console()->info('Copy and paste the following code into your api.php routes file:');
-                $this->console()->line('');
-                $this->console()->warn($routes);
-                $this->console()->line('');
+                $this->outputRoutes($routes);
             }
         }
 
         if ((bool) optional($this->choices->get('package'))->get('config')) {
-            $this->console()->info("Your package is created, you can start playing. Don't forget to run `git init` in the package root folder!");
-            $this->console()->warn('Add your package namespace and path inside your `composer.json` file under the `psr-4` key while developing.');
-        }
-
-        if ((bool) optional($this->choices->get('package'))->get('providers')) {
-            $this->console()->warn('Remember to add the package`s service provider to the `config/app.php` list of providers.');
+            $this->outputPackageInfo();
         }
 
         $this->console()->line('');
+    }
+
+    private function outputRoutes($routes)
+    {
+        $this->console()->info('Copy and paste the following code into your api.php routes file:');
+        $this->console()->line('');
+        $this->console()->warn($routes);
+        $this->console()->line('');
+    }
+
+    private function outputPackageInfo()
+    {
+        $this->console()->info(
+            'Your package is created, you can start playing.'
+            ." Don't forget to run `git init` in the package root folder!");
+        $this->console()->warn(
+            'Add your package namespace and path inside your `composer.json`'
+            .' file under the `psr-4` key while developing.');
+
+        if ((bool) optional($this->choices->get('package'))->get('providers')) {
+            $this->console()->warn(
+                'Remember to add the package`s service provider'
+                .' to the `config/app.php` list of providers.');
+        }
     }
 
     private function console()

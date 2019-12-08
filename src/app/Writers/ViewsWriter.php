@@ -8,8 +8,8 @@ use LaravelEnso\Cli\app\Services\Choices;
 
 class ViewsWriter
 {
-    const PathPrefix = 'js/pages';
-    const Operations = ['create', 'edit', 'index', 'show'];
+    private const PathPrefix = 'js/pages';
+    private const Operations = ['create', 'edit', 'index', 'show'];
 
     private $choices;
     private $path;

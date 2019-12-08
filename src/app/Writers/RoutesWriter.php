@@ -8,8 +8,8 @@ use LaravelEnso\Cli\app\Services\Choices;
 
 class RoutesWriter
 {
-    const PathPrefix = 'js/routes';
-    const Routes = ['create', 'edit', 'index', 'show'];
+    private const PathPrefix = 'js/routes';
+    private const Routes = ['create', 'edit', 'index', 'show'];
 
     private $choices;
     private $path;
