@@ -123,9 +123,9 @@ class CliTest extends TestCase
 
     private function dependent()
     {
-        return collect(Options::choices())->first(function ($choice) {
-            return ! empty(config('enso.structures.'.Str::camel($choice).'.requires'));
-        });
+        return collect(Options::choices())->first(fn($choice) => (
+            ! empty(config('enso.structures.'.Str::camel($choice).'.requires'))
+        ));
     }
 
     private function requirements($choice)

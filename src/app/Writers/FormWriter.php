@@ -120,12 +120,12 @@ class FormWriter
             ->filter()
             ->keys()
             ->intersect(self::Routes)
-            ->each(function ($permission) use ($from, $to) {
+            ->each(fn($permission) => (
                 File::put(
                     $this->controllerName($permission),
                     str_replace($from, $to, $this->stub($permission))
-                );
-            });
+                )
+            ));
 
         return $this;
     }
@@ -208,12 +208,9 @@ class FormWriter
 
     private function segments()
     {
-        return $this->segments
-            ?? $this->segments = collect(
-                explode('.', $this->choices->get('permissionGroup')->get('name'))
-            )->map(function ($segment) {
-                return Str::ucfirst($segment);
-            });
+        return $this->segments ??= collect(
+            explode('.', $this->choices->get('permissionGroup')->get('name'))
+        )->map(fn($segment) => Str::ucfirst($segment));
     }
 
     private function params()

@@ -78,22 +78,18 @@ class OptionsWriter
 
     private function path()
     {
-        return $this->path
-            ?? $this->path = $this->params()->get('root')
-                .'app'.DIRECTORY_SEPARATOR
-                .'Http'.DIRECTORY_SEPARATOR
-                .'Controllers'.DIRECTORY_SEPARATOR
-                .$this->segments()->implode(DIRECTORY_SEPARATOR);
+        return $this->path ??= $this->params()->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Http'.DIRECTORY_SEPARATOR
+            .'Controllers'.DIRECTORY_SEPARATOR
+            .$this->segments()->implode(DIRECTORY_SEPARATOR);
     }
 
     private function segments()
     {
-        return $this->segments
-            ?? $this->segments = collect(
+        return $this->segments ??= collect(
                 explode('.', $this->choices->get('permissionGroup')->get('name'))
-            )->map(function ($segment) {
-                return Str::ucfirst($segment);
-            });
+            )->map(fn($segment) => Str::ucfirst($segment));
     }
 
     private function params()

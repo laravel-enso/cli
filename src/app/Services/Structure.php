@@ -148,17 +148,10 @@ class Structure
     private function packageNamespace()
     {
         return collect(explode(DIRECTORY_SEPARATOR, $this->packageRoot().'app'.DIRECTORY_SEPARATOR))
-            ->reduce(function ($namespace, $word) {
-                if (collect(['src', 'vendor'])->contains($word)) {
-                    return $namespace;
-                }
-
-                if ($word === 'app') {
-                    return $namespace->push($word);
-                }
-
-                return $namespace->push(ucfirst(Str::camel($word)));
-            }, collect())->implode('\\');
+            ->reject(fn($word) => collect(['src', 'vendor'])->contains($word))
+            ->map(fn($namespace, $word) => (
+                $word === 'app' ? $word : ucfirst(Str::camel($word))
+            ))->implode('\\');
     }
 
     private function packageRoot()

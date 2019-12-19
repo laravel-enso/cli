@@ -77,11 +77,9 @@ class RouteGenerator
             tap($routes)->splice($showIndex, 1)->push(self::ShowRoute);
         }
 
-        return $routes->reduce(function ($routes, $permission) use ($from, $to) {
-            return $routes."\t\t"
-                .str_replace($from, $to, $this->stub($permission))
-                .PHP_EOL;
-        }, PHP_EOL);
+        return $routes->reduce(fn($routes, $permission) => (
+            $routes."\t\t".str_replace($from, $to, $this->stub($permission)).PHP_EOL
+        ), PHP_EOL);
     }
 
     private function namespace()
@@ -93,9 +91,7 @@ class RouteGenerator
         }
 
         $namespace .= $this->segments()
-            ->map(function ($segment) {
-                return Str::ucfirst($segment);
-            })->implode('\\');
+            ->map(fn($segment) => Str::ucfirst($segment))->implode('\\');
 
         return $namespace;
     }
@@ -111,10 +107,9 @@ class RouteGenerator
 
     private function segments()
     {
-        return $this->segments
-            ?? $this->segments = collect(
-                explode('.', $this->choices->get('permissionGroup')->get('name'))
-            );
+        return $this->segments ??= collect(
+            explode('.', $this->choices->get('permissionGroup')->get('name'))
+        );
     }
 
     private function packageRoutesPath()

@@ -52,9 +52,9 @@ class StructureMigrationWriterTest extends TestCase
 
         (new StructureMigrationWriter($this->choices))->handle();
 
-        $this->choices->get('permissions')->each(function ($perm) {
-            $this->assertStructureMigrationContains("'name' => 'group.testModels.{$perm}'");
-        });
+        $this->choices->get('permissions')->each(fn($perm) =>
+            $this->assertStructureMigrationContains("'name' => 'group.testModels.{$perm}'")
+        );
 
         $descriptions = [
             'Show index for test models',
@@ -63,9 +63,9 @@ class StructureMigrationWriterTest extends TestCase
             'Get table data for test models',
         ];
 
-        collect($descriptions)->each(function ($description) {
-            $this->assertStructureMigrationContains("'description' => '{$description}'");
-        });
+        collect($descriptions)->each(fn($description) => (
+            $this->assertStructureMigrationContains("'description' => '{$description}'")
+        ));
     }
 
     /** @test */

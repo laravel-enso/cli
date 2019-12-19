@@ -62,9 +62,9 @@ class Config
     {
         $config = $this->choices->get(Str::camel($choice));
 
-        $config->keys()->each(function ($key) use ($config) {
-            $this->console()->line($key.' => '.$this->key($key, $config));
-        });
+        $config->keys()->each(fn($key) => (
+            $this->console()->line($key.' => '.$this->key($key, $config))
+        ));
     }
 
     private function key($key, $config)
@@ -78,10 +78,9 @@ class Config
     {
         $config = $this->choices->get(Str::camel($choice));
 
-        $config->keys()->each(function ($key) use ($config) {
-            $input = $this->input($config, $key);
-            $config->set($key, $input);
-        });
+        $config->keys()->each(fn($key) => (
+            $config->set($key, $this->input($config, $key))
+        ));
 
         if (! $this->choices->configured()->contains($choice)) {
             $this->choices->configured()->push($choice);

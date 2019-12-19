@@ -102,16 +102,15 @@ class StructureWriterTest extends TestCase
 
     private function controllersCreated()
     {
-        $this->controllers()->each(function ($controller) {
-            $this->assertControllerExists($controller);
-        });
+        $this->controllers()->each(fn($controller) => (
+            $this->assertControllerExists($controller)
+        ));
     }
 
     private function pagesCreated()
     {
-        collect(['Create', 'Edit', 'Index', 'Show'])->each(function ($view) {
-            $this->assertViewPageExists($view);
-        });
+        collect(['Create', 'Edit', 'Index', 'Show'])
+            ->each(fn($view) => $this->assertViewPageExists($view));
     }
 
     private function routesCreated()
@@ -120,9 +119,7 @@ class StructureWriterTest extends TestCase
 
         collect(['testing.js', "testing/{$permission}.js", "testing/{$permission}/create.js",
             "testing/{$permission}/edit.js", "testing/{$permission}/index.js", "testing/{$permission}/show.js", ])
-            ->each(function ($route) {
-                $this->assertViewRouteExists($route);
-            });
+            ->each(fn($route) => $this->assertViewRouteExists($route));
 
         return true;
     }
