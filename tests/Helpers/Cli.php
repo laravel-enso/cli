@@ -111,17 +111,15 @@ trait Cli
     {
         $content = File::get($filePath);
 
-        collect($needle)->each(function ($needle) use ($content) {
-            $this->assertStringContainsString($needle, $content);
-        });
+        collect($needle)->each(fn($needle) => (
+            $this->assertStringContainsString($needle, $content)
+        ));
     }
 
     private function assertMigrationCreated($migration)
     {
         $files = collect(File::files($this->root.'database/migrations'))
-            ->filter(function ($file) use ($migration) {
-                return Str::contains($file->getFilename(), $migration);
-            });
+            ->filter(fn($file) => Str::contains($file->getFilename(), $migration));
 
         $this->assertTrue($files->isNotEmpty(), $migration.' not exists!');
     }
@@ -155,9 +153,8 @@ trait Cli
         }
 
         $file = collect(File::files($this->root.'database/migrations'))
-            ->filter(function ($file) use ($migration) {
-                return Str::contains($file->getFilename(), $migration);
-            })->last();
+            ->filter(fn($file) => Str::contains($file->getFilename(), $migration))
+            ->last();
 
         File::delete($file);
     }
@@ -232,9 +229,7 @@ trait Cli
 
     private function ucfirstSegments()
     {
-        return $this->segments()->map(function ($perm) {
-            return ucfirst($perm);
-        });
+        return $this->segments()->map(fn($perm) => ucfirst($perm));
     }
 
     private function modelName()

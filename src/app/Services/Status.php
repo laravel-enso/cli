@@ -38,13 +38,13 @@ class Status
     {
         $this->console()->info('Current configuration status:');
 
-        Options::choices()->each(function ($choice) {
+        Options::choices()->each(fn($choice) => (
             $this->console()->line(
                 $choice.' '.($this->choices->hasError($choice)
                     ? Symbol::exclamation()
                     : Symbol::bool($this->choices->configured()->contains($choice)))
-            );
-        });
+            )
+        ));
     }
 
     private function willGenerate()
@@ -57,9 +57,7 @@ class Status
             $this->choices->files()
                 ->filter()
                 ->keys()
-                ->each(function ($file) {
-                    $this->console()->line($file);
-                });
+                ->each(fn($file) => $this->console()->line($file));
         }
     }
 }

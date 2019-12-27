@@ -36,9 +36,9 @@ class ViewsWriterTest extends TestCase
     {
         (new ViewsWriter($this->choices))->handle();
 
-        $this->choices->get('permissions')->each(function ($perm) {
-            $this->assertViewPageContains("name: '".ucfirst($perm)."',", $perm);
-        });
+        $this->choices->get('permissions')->each(fn($perm) => (
+            $this->assertViewPageContains("name: '".ucfirst($perm)."',", $perm)
+        ));
     }
 
     protected function choices()

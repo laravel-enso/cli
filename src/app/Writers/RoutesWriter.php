@@ -54,9 +54,7 @@ class RoutesWriter
             ->filter()
             ->keys()
             ->intersect(self::Routes)
-            ->each(function ($permission) {
-                $this->writeCrudRoute($permission);
-            });
+            ->each(fn($permission) => $this->writeCrudRoute($permission));
 
         return $this;
     }
@@ -75,9 +73,9 @@ class RoutesWriter
     {
         $group = $this->choices->get('permissionGroup')->get('name');
         $model = $this->choices->get('model')->get('name');
-        $title = collect(explode('_', Str::snake($model)))->map(function ($word) {
-            return Str::ucfirst($word);
-        })->implode(' ');
+        $title = collect(explode('_', Str::snake($model)))
+            ->map(fn($word) => Str::ucfirst($word))
+            ->implode(' ');
 
         $array = [
             '${Model}' => ucfirst($model),
@@ -96,9 +94,9 @@ class RoutesWriter
 
     private function writeSegmentRoutes()
     {
-        $this->segments->each(function ($segment, $depth) {
-            $this->writeSegmentRoute($segment, $depth);
-        });
+        $this->segments->each(fn($segment, $depth) => (
+            $this->writeSegmentRoute($segment, $depth)
+        ));
     }
 
     private function writeSegmentRoute($segment, $depth)

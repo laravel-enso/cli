@@ -76,12 +76,11 @@ class ValidatorWriter
 
     private function path()
     {
-        return $this->path
-            ?? $this->path = $this->params()->get('root')
-                .'app'.DIRECTORY_SEPARATOR
-                .'Http'.DIRECTORY_SEPARATOR
-                .'Requests'.DIRECTORY_SEPARATOR
-                .$this->segments()->implode(DIRECTORY_SEPARATOR);
+        return $this->path ??= $this->params()->get('root')
+            .'app'.DIRECTORY_SEPARATOR
+            .'Http'.DIRECTORY_SEPARATOR
+            .'Requests'.DIRECTORY_SEPARATOR
+            .$this->segments()->implode(DIRECTORY_SEPARATOR);
     }
 
     private function segments()
@@ -93,9 +92,7 @@ class ValidatorWriter
 
             $this->segments->pop();
 
-            $this->segments = $this->segments->map(function ($segment) {
-                return Str::ucfirst($segment);
-            });
+            $this->segments = $this->segments->map(fn($segment) => Str::ucfirst($segment));
         }
 
         return $this->segments;
