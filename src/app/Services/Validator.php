@@ -18,7 +18,7 @@ class Validator
     public function run()
     {
         $this->choices->configured()
-            ->each(fn($choice) => $this->validate($choice));
+            ->each(fn ($choice) => $this->validate($choice));
 
         return $this;
     }

@@ -62,7 +62,7 @@ class Config
     {
         $config = $this->choices->get(Str::camel($choice));
 
-        $config->keys()->each(fn($key) => (
+        $config->keys()->each(fn ($key) => (
             $this->console()->line($key.' => '.$this->key($key, $config))
         ));
     }
@@ -78,7 +78,7 @@ class Config
     {
         $config = $this->choices->get(Str::camel($choice));
 
-        $config->keys()->each(fn($key) => (
+        $config->keys()->each(fn ($key) => (
             $config->set($key, $this->input($config, $key))
         ));
 

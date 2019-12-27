@@ -92,7 +92,7 @@ class ValidatorWriter
 
             $this->segments->pop();
 
-            $this->segments = $this->segments->map(fn($segment) => Str::ucfirst($segment));
+            $this->segments = $this->segments->map(fn ($segment) => Str::ucfirst($segment));
         }
 
         return $this->segments;

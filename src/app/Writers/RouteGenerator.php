@@ -77,7 +77,7 @@ class RouteGenerator
             tap($routes)->splice($showIndex, 1)->push(self::ShowRoute);
         }
 
-        return $routes->reduce(fn($routes, $permission) => (
+        return $routes->reduce(fn ($routes, $permission) => (
             $routes."\t\t".str_replace($from, $to, $this->stub($permission)).PHP_EOL
         ), PHP_EOL);
     }
@@ -91,7 +91,7 @@ class RouteGenerator
         }
 
         $namespace .= $this->segments()
-            ->map(fn($segment) => Str::ucfirst($segment))->implode('\\');
+            ->map(fn ($segment) => Str::ucfirst($segment))->implode('\\');
 
         return $namespace;
     }

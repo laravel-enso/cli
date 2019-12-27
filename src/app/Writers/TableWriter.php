@@ -138,7 +138,7 @@ class TableWriter
             ->filter()
             ->keys()
             ->intersect(self::Routes)
-            ->each(fn($permission) => (
+            ->each(fn ($permission) => (
                 File::put(
                     $this->controllerName($permission),
                     str_replace($from, $to, $this->stub($permission))
@@ -219,7 +219,7 @@ class TableWriter
     {
         return $this->segments ??= collect(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
-        )->map(fn($segment) => Str::ucfirst($segment));
+        )->map(fn ($segment) => Str::ucfirst($segment));
     }
 
     private function params()

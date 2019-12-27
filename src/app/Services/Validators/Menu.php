@@ -88,7 +88,7 @@ class Menu extends Validator
             ->whereHasChildren(true)
             ->get();
 
-        return $parents->filter(fn($menu) => (
+        return $parents->filter(fn ($menu) => (
                 $menu->name === $this->menu->get('parentMenu')
                 || $this->nestedParentMatches($menu)
             ))->count();

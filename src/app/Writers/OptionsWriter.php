@@ -89,7 +89,7 @@ class OptionsWriter
     {
         return $this->segments ??= collect(
                 explode('.', $this->choices->get('permissionGroup')->get('name'))
-            )->map(fn($segment) => Str::ucfirst($segment));
+            )->map(fn ($segment) => Str::ucfirst($segment));
     }
 
     private function params()

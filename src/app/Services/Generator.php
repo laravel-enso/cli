@@ -61,7 +61,7 @@ class Generator
                 ->each(function ($errors, $type) {
                     $this->console()->info($type.' '.Symbol::exclamation());
 
-                    $errors->each(fn($error) => $this->console()->warn('    '.$error));
+                    $errors->each(fn ($error) => $this->console()->warn('    '.$error));
                 });
 
         $this->console()->line('');
@@ -72,15 +72,15 @@ class Generator
     private function filterUnconfigured()
     {
         $this->choices->keys()
-            ->reject(fn($key) => (
+            ->reject(fn ($key) => (
                 $this->choices->configured()
-                    ->first(fn($attribute) => Str::camel($attribute) === $key)
-            ))->each(fn($key) => $this->choices->forget($key));
+                    ->first(fn ($attribute) => Str::camel($attribute) === $key)
+            ))->each(fn ($key) => $this->choices->forget($key));
 
         if ($this->choices->hasFiles()) {
             $this->choices->files()
                 ->reject()
-                ->each(fn($chosen, $type) => $this->choices->files()->forget($type));
+                ->each(fn ($chosen, $type) => $this->choices->files()->forget($type));
         }
 
         return $this;

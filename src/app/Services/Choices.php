@@ -154,7 +154,7 @@ class Choices
     private function defaults()
     {
         return Options::choices()
-            ->reduce(fn($choices, $choice) => (
+            ->reduce(fn ($choices, $choice) => (
                 $choices->set(Str::camel($choice), $this->attributes($choice))
             ), new Obj());
     }

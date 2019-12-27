@@ -121,7 +121,7 @@ class StructureMigrationWriter
 
     private function mapping(Obj $keys)
     {
-        return $keys->map(fn($key) => '${'.$key.'}')->toArray();
+        return $keys->map(fn ($key) => '${'.$key.'}')->toArray();
     }
 
     private function writableValues(Obj $values)
