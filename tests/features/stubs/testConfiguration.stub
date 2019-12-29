@@ -22,13 +22,13 @@
         "name": "Test",
         "icon": "test",
         "parentMenu": "Testing",
-        "route": "testing.tests.index",
+        "route": "index",
         "order_index": 0,
         "has_children": false
     },
     "files": {
         "model": true,
-        "migration": true,
+        "structure": true,
         "routes": true,
         "views": true,
         "form": true,

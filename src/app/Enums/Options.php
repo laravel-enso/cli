@@ -1,8 +1,9 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Enums;
+namespace LaravelEnso\Cli\App\Enums;
 
-use LaravelEnso\Enums\app\Services\Enum;
+use Illuminate\Support\Collection;
+use LaravelEnso\Enums\App\Services\Enum;
 
 class Options extends Enum
 {
@@ -18,7 +19,7 @@ class Options extends Enum
 
     public static function choices()
     {
-        return collect([
+        return new Collection([
             self::Model, self::PermissionGroup, self::Permissions,
             self::Menu, self::Files, self::Package,
         ]);

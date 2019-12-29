@@ -1,1 +1,0 @@
-        ['name' => '${permissionGroup}.update', 'description' => 'Update ${model}', 'type' => 1, 'is_default' => false],

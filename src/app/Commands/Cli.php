@@ -1,21 +1,20 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Commands;
+namespace LaravelEnso\Cli\App\Commands;
 
 use Illuminate\Console\Command;
-use LaravelEnso\Cli\app\Enums\Options;
-use LaravelEnso\Cli\app\Services\Choices;
-use LaravelEnso\Cli\app\Services\Config;
-use LaravelEnso\Cli\app\Services\Generator;
-use LaravelEnso\Cli\app\Services\Status;
+use LaravelEnso\Cli\App\Enums\Options;
+use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Config;
+use LaravelEnso\Cli\App\Services\Generator;
+use LaravelEnso\Cli\App\Services\Status;
 
 class Cli extends Command
 {
     protected $signature = 'enso:cli';
-
     protected $description = 'Create a new Laravel Enso Structure';
 
-    private $choices;
+    private Choices $choices;
 
     public function __construct()
     {
@@ -27,7 +26,6 @@ class Cli extends Command
     public function handle()
     {
         $this->info('Create a new Laravel Enso Structure');
-
         $this->line('');
 
         $this->choices->restore();
@@ -37,21 +35,27 @@ class Cli extends Command
 
     private function index()
     {
-        $choice = (new Status($this->choices))
-            ->display()
-            ->choice();
+        $choice = $this->input();
 
         switch ($choice) {
             case Options::Exit:
-                return;
+                break;
             case Options::Generate:
-                return (new Generator($this->choices))->handle()
-                    ? null
-                    : $this->index();
+                if (! (new Generator($this->choices))->handle()) {
+                    $this->index();
+                }
+                break;
             default:
                 (new Config($this->choices))->fill($choice);
-
-                return $this->index();
+                $this->index();
+                break;
         }
+    }
+
+    private function input()
+    {
+        return (new Status($this->choices))
+            ->display()
+            ->choice();
     }
 }

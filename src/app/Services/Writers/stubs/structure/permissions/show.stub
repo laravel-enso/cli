@@ -1,0 +1,1 @@
+        ['name' => '${permissionGroup}.show', 'description' => 'Show ${model}', 'type' => Types::Read, 'is_default' => false],

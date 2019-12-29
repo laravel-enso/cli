@@ -1,28 +1,30 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services;
+namespace LaravelEnso\Cli\App\Services;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Enums\Options;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\App\Enums\Options;
+use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Choices
 {
-    private $console;
-    private $choices;
-    private $params;
-    private $configured;
-    private $validates;
-    private $validator;
+    private Command $console;
+    private Obj $choices;
+    private Obj $params;
+    private Collection $configured;
+    private Collection $errors;
+    private bool $validates;
 
     public function __construct(Command $console)
     {
         $this->console = $console;
         $this->choices = $this->defaults();
         $this->params = $this->attributes('params');
-        $this->configured = collect();
+        $this->configured = new Collection();
+        $this->errors = new Collection();
         $this->validates = true;
     }
 
@@ -46,11 +48,6 @@ class Choices
         return $this->configured->isNotEmpty();
     }
 
-    public function validator()
-    {
-        return $this->validator;
-    }
-
     public function needsValidation()
     {
         return $this->validates;
@@ -70,16 +67,16 @@ class Choices
         return $this;
     }
 
-    public function setConfigured($configured)
+    public function setConfigured(array $configured)
     {
-        $this->configured = $configured;
+        $this->configured = new Collection($configured);
 
         return $this;
     }
 
-    public function setValidator($validator)
+    public function errors(Collection $errors)
     {
-        $this->validator = $validator;
+        $this->errors = $errors;
 
         return $this;
     }
@@ -106,24 +103,25 @@ class Choices
 
     public function restore()
     {
-        if ($this->doesntExist()) {
+        if ($this->isNotCached()) {
             return;
         }
 
         if (! $this->console->confirm('Do you want to restore the last session?')) {
-            $this->clear();
+            $this->clearCache();
 
             return;
         }
 
         $this->load();
+
         $this->console->info('Last session restored');
         $this->console->line('');
 
         sleep(1);
     }
 
-    public function clear()
+    public function clearCache()
     {
         Cache::forget('cli_data');
     }
@@ -133,30 +131,16 @@ class Choices
         return $this->params;
     }
 
-    public function files()
+    public function invalid($choice)
     {
-        return $this->choices->get(Str::camel(Options::Files));
-    }
-
-    public function hasFiles()
-    {
-        return $this->choices->filled(Str::camel(Options::Files));
-    }
-
-    public function hasError($choice)
-    {
-        return $this->validator
-            && $this->validator->errors()
-                ->keys()
-                ->contains($choice);
+        return $this->errors->keys()->contains($choice);
     }
 
     private function defaults()
     {
         return Options::choices()
-            ->reduce(fn ($choices, $choice) => (
-                $choices->set(Str::camel($choice), $this->attributes($choice))
-            ), new Obj());
+            ->reduce(fn ($choices, $choice) => $choices
+                ->set(Str::camel($choice), $this->attributes($choice)), new Obj());
     }
 
     private function attributes($choice)
@@ -174,7 +158,7 @@ class Choices
         ] = Cache::get('cli_data');
     }
 
-    private function doesntExist()
+    private function isNotCached()
     {
         return ! Cache::has('cli_data');
     }

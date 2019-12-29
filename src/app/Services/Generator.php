@@ -1,14 +1,14 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services;
+namespace LaravelEnso\Cli\App\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Services\Helpers\Symbol;
-use LaravelEnso\Cli\app\Writers\RouteGenerator;
+use LaravelEnso\Cli\App\Services\Writers\RouteGenerator;
 
 class Generator
 {
-    private $choices;
+    private Choices $choices;
 
     public function __construct(Choices $choices)
     {
@@ -17,9 +17,8 @@ class Generator
 
     public function handle()
     {
-        if ($this->choices->needsValidation() && $this->failsValidation()) {
-            $this->outputErrors();
-
+        if ($this->isNotConfigured()
+            || $this->choices->needsValidation() && $this->failsValidation()) {
             return false;
         }
 
@@ -27,12 +26,12 @@ class Generator
             ->write()
             ->output();
 
-        $this->choices->clear();
+        $this->choices->clearCache();
 
         return true;
     }
 
-    private function failsValidation()
+    private function isNotConfigured()
     {
         if (! $this->choices->isConfigured()) {
             $this->console()->error('There is nothing configured yet!');
@@ -43,44 +42,57 @@ class Generator
             return true;
         }
 
-        $this->choices->setValidator((new Validator($this->choices))->run());
-
-        return $this->choices->validator()->fails();
+        return false;
     }
 
-    private function outputErrors()
+    private function failsValidation()
     {
-        if (! $this->choices->validator()) {
-            return;
+        $validator = (new Validator($this->choices))->run();
+        $this->choices->errors($validator->errors());
+
+        if ($validator->fails()) {
+            $this->outputErrors($validator);
+
+            return true;
         }
 
+        return false;
+    }
+
+    private function outputErrors(Validator $validator)
+    {
         $this->console()->warn('Your configuration has errors:');
         $this->console()->line('');
 
-        $this->choices->validator()->errors()
-                ->each(function ($errors, $type) {
-                    $this->console()->info($type.' '.Symbol::exclamation());
-
-                    $errors->each(fn ($error) => $this->console()->warn('    '.$error));
-                });
+        $validator->errors()
+            ->each(fn ($errors, $type) => $this->outputTypeErrors($errors, $type));
 
         $this->console()->line('');
 
         sleep(1);
     }
 
+    private function outputTypeErrors(Collection $errors, string $type)
+    {
+        $symbol = Symbol::exclamation();
+
+        $this->console()->info("{$type} {$symbol}");
+
+        $errors->each(fn ($error) => $this->console()->warn("    {$error}"));
+    }
+
     private function filterUnconfigured()
     {
         $this->choices->keys()
-            ->reject(fn ($key) => (
-                $this->choices->configured()
-                    ->first(fn ($attribute) => Str::camel($attribute) === $key)
-            ))->each(fn ($key) => $this->choices->forget($key));
+            ->reject(fn ($key) => $this->choices->configured()
+                ->first(fn ($attribute) => Str::camel($attribute) === $key)
+            )->each(fn ($key) => $this->choices->forget($key));
 
-        if ($this->choices->hasFiles()) {
-            $this->choices->files()
-                ->reject()
-                ->each(fn ($chosen, $type) => $this->choices->files()->forget($type));
+        if ($this->choices->filled('files')) {
+            $this->choices->get('files')
+                ->filter(fn ($chosen) => ! $chosen)
+                ->keys()
+                ->each(fn ($file) => $this->choices->get('files')->forget($file));
         }
 
         return $this;
@@ -103,7 +115,8 @@ class Generator
             }
         }
 
-        if ((bool) optional($this->choices->get('package'))->get('config')) {
+        if ($this->choices->filled('package')
+            && $this->choices->get('package')->get('config')) {
             $this->outputPackageInfo();
         }
 
@@ -120,17 +133,18 @@ class Generator
 
     private function outputPackageInfo()
     {
-        $this->console()->info(
-            'Your package is created, you can start playing.'
-            ." Don't forget to run `git init` in the package root folder!");
-        $this->console()->warn(
-            'Add your package namespace and path inside your `composer.json`'
-            .' file under the `psr-4` key while developing.');
+        $message = 'Your package is created, you can start playing.';
+        $message .= " Don't forget to run `git init` in the package root folder!";
+        $this->console()->info($message);
 
-        if ((bool) optional($this->choices->get('package'))->get('providers')) {
+        $message = 'Add your package namespace and path inside your `composer.json`';
+        $message .= ' file under the `psr-4` key while developing.';
+        $this->console()->warn($message);
+
+        if ($this->choices->filled('package')
+            && $this->choices->get('package')->get('providers')) {
             $this->console()->warn(
-                'Remember to add the package`s service provider'
-                .' to the `config/app.php` list of providers.');
+                'Add the package`s service provider to the `config/app.php` list of providers.');
         }
     }
 

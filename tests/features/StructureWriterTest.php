@@ -1,14 +1,13 @@
 <?php
 
-namespace LaravelEnso\Cli\tests\features;
-
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Services\Choices;
-use LaravelEnso\Cli\app\Services\Structure;
-use LaravelEnso\Cli\tests\Helpers\Cli;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Structure;
+use LaravelEnso\Cli\Tests\Cli;
+use LaravelEnso\Helpers\App\Classes\Obj;
 use Tests\TestCase;
 
 class StructureWriterTest extends TestCase
@@ -102,24 +101,26 @@ class StructureWriterTest extends TestCase
 
     private function controllersCreated()
     {
-        $this->controllers()->each(fn($controller) => (
+        $this->controllers()->each(fn ($controller) => (
             $this->assertControllerExists($controller)
         ));
     }
 
     private function pagesCreated()
     {
-        collect(['Create', 'Edit', 'Index', 'Show'])
-            ->each(fn($view) => $this->assertViewPageExists($view));
+        (new Collection(['Create', 'Edit', 'Index', 'Show']))
+            ->each(fn ($view) => $this->assertViewPageExists($view));
     }
 
     private function routesCreated()
     {
         $permission = Str::camel($this->tableName());
 
-        collect(['testing.js', "testing/{$permission}.js", "testing/{$permission}/create.js",
-            "testing/{$permission}/edit.js", "testing/{$permission}/index.js", "testing/{$permission}/show.js", ])
-            ->each(fn($route) => $this->assertViewRouteExists($route));
+        (new Collection([
+            'testing.js', "testing/{$permission}.js", "testing/{$permission}/create.js",
+            "testing/{$permission}/edit.js", "testing/{$permission}/index.js",
+            "testing/{$permission}/show.js",
+        ]))->each(fn ($route) => $this->assertViewRouteExists($route));
 
         return true;
     }
@@ -132,7 +133,7 @@ class StructureWriterTest extends TestCase
 
     private function cleanUp()
     {
-        if (! empty($this->root)) {
+        if ($this->root) {
             File::deleteDirectory(str_replace('src/', '', $this->root));
 
             return;

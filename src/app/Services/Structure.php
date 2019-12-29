@@ -1,185 +1,224 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services;
+namespace LaravelEnso\Cli\App\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Writers\FormWriter;
-use LaravelEnso\Cli\app\Writers\ModelAndMigrationWriter;
-use LaravelEnso\Cli\app\Writers\OptionsWriter;
-use LaravelEnso\Cli\app\Writers\PackageWriter;
-use LaravelEnso\Cli\app\Writers\RoutesWriter;
-use LaravelEnso\Cli\app\Writers\StructureMigrationWriter;
-use LaravelEnso\Cli\app\Writers\TableWriter;
-use LaravelEnso\Cli\app\Writers\ValidatorWriter;
-use LaravelEnso\Cli\app\Writers\ViewsWriter;
+use LaravelEnso\Cli\App\Services\Writers\EnsoStructure;
+use LaravelEnso\Cli\App\Services\Writers\Form;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Namespacer;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
+use LaravelEnso\Cli\App\Services\Writers\Migration;
+use LaravelEnso\Cli\App\Services\Writers\Model;
+use LaravelEnso\Cli\App\Services\Writers\Options;
+use LaravelEnso\Cli\App\Services\Writers\Package;
+use LaravelEnso\Cli\App\Services\Writers\Routes;
+use LaravelEnso\Cli\App\Services\Writers\Table;
+use LaravelEnso\Cli\App\Services\Writers\Validator;
+use LaravelEnso\Cli\App\Services\Writers\Views;
 
 class Structure
 {
-    private $choices;
-    private $isPackage;
+    private Choices $choices;
+    private bool $isPackage;
 
     public function __construct(Choices $choices)
     {
         $this->choices = $choices;
-
-        $this->preparePackage()
-            ->prepareModel();
     }
 
     public function handle()
     {
-        $this->writePackage()
-            ->writeStructure()
-            ->writeModelAndMigration()
-            ->writeRoutes()
-            ->writeViews()
-            ->writeForm()
-            ->writeTable()
-            ->writeOptions();
+        $this->init()
+            ->write();
     }
 
-    public function writePackage()
+    private function init()
+    {
+        $this->initPackage()
+            ->initModel()
+            ->initSegments();
+
+        return $this;
+    }
+
+    private function write()
+    {
+        $this->package()
+            ->structure()
+            ->model()
+            ->migration()
+            ->routes()
+            ->views()
+            ->form()
+            ->table()
+            ->options();
+    }
+
+    private function package()
     {
         if ($this->isPackage) {
-            (new PackageWriter($this->choices))->handle();
+            (new Package($this->choices))->handle();
         }
 
         return $this;
     }
 
-    private function writeStructure()
+    private function structure()
     {
-        (new StructureMigrationWriter($this->choices))->handle();
-
-        return $this;
-    }
-
-    private function writeModelAndMigration()
-    {
-        if ($this->hasFile('model') || $this->hasFile('table migration')) {
-            (new ModelAndMigrationWriter($this->choices))->handle();
+        if ($this->hasFile('structure')) {
+            (new Writer(new EnsoStructure($this->choices)))->handle();
         }
 
         return $this;
     }
 
-    private function writeRoutes()
+    private function model()
     {
-        if ($this->hasFile('routes')) {
-            (new RoutesWriter($this->choices))->handle();
+        if ($this->hasFile('model')) {
+            (new Writer(new Model($this->choices)))->handle();
         }
 
         return $this;
     }
 
-    private function writeViews()
-    {
-        if ($this->hasFile('views')) {
-            (new ViewsWriter($this->choices))->handle();
-        }
-
-        return $this;
-    }
-
-    private function writeForm()
-    {
-        if ($this->hasFile('form')) {
-            (new FormWriter($this->choices))->handle();
-
-            (new ValidatorWriter($this->choices))->handle();
-        }
-
-        return $this;
-    }
-
-    private function writeTable()
+    private function migration()
     {
         if ($this->hasFile('table')) {
-            (new TableWriter($this->choices))->handle();
+            (new Migration($this->choices))->handle();
         }
 
         return $this;
     }
 
-    private function writeOptions()
+    private function routes()
+    {
+        if ($this->hasFile('routes')) {
+            (new Routes($this->choices))->handle();
+        }
+
+        return $this;
+    }
+
+    private function views()
+    {
+        if ($this->hasFile('views')) {
+            (new Views($this->choices))->handle();
+        }
+
+        return $this;
+    }
+
+    private function form()
+    {
+        if ($this->hasFile('form')) {
+            (new Form($this->choices))->handle();
+            (new Writer(new Validator($this->choices)))->handle();
+        }
+
+        return $this;
+    }
+
+    private function table()
+    {
+        if ($this->hasFile('table')) {
+            (new Table($this->choices))->handle();
+        }
+
+        return $this;
+    }
+
+    private function options()
     {
         if ($this->hasFile('options')) {
-            (new OptionsWriter($this->choices))->handle();
+            (new Writer(new Options($this->choices)))->handle();
         }
 
         return $this;
     }
 
-    private function preparePackage()
+    private function initPackage()
     {
-        $this->isPackage = (bool) optional($this->choices->get('package'))->get('name');
+        $this->isPackage = $this->choices->filled('package')
+            && $this->choices->get('package')->filled('name');
 
         if ($this->isPackage) {
             $this->params()->set('root', $this->packageRoot());
-            $this->params()->set('namespace', $this->packageNamespace());
+            $this->params()->set('namespace', $this->packageNamespace('App'));
         }
+
+        Path::root($this->params()->get('root'));
+        Namespacer::prefix($this->params()->get('namespace'));
 
         return $this;
     }
 
-    private function prepareModel()
+    private function initModel()
     {
         if (! $this->choices->has('model')) {
             return $this;
         }
 
         $model = $this->choices->get('model');
+        $segments = new Collection(explode(DIRECTORY_SEPARATOR, $model->get('name')));
 
-        if (! Str::contains($model->get('name'), DIRECTORY_SEPARATOR)
-            && ! $this->isPackage) {
-            $model->set('namespace', 'App');
-
-            return $this;
+        if ($segments->first() !== 'App') {
+            $segments->prepend('App');
         }
 
-        $segments = collect(explode(DIRECTORY_SEPARATOR, $model->get('name')));
-        $model->set('name', $segments->pop());
-        $model->set('namespace', $this->modelNamespace($segments));
-        $model->set('path', $segments->implode(DIRECTORY_SEPARATOR));
+        $model->set('name', Str::ucfirst($segments->pop()))
+            ->set('namespace', $this->modelNamespace($segments))
+            ->set('path', $this->modelPath($segments));
 
         return $this;
     }
 
-    private function packageNamespace()
+    private function initSegments()
     {
-        return collect(explode(DIRECTORY_SEPARATOR, $this->packageRoot().'app'.DIRECTORY_SEPARATOR))
-            ->reject(fn ($word) => collect(['src', 'vendor'])->contains($word))
-            ->map(fn ($namespace, $word) => (
-                $word === 'app' ? $word : ucfirst(Str::camel($word))
-            ))->implode('\\');
-    }
+        Segments::set($this->choices->get('permissionGroup'));
 
-    private function packageRoot()
-    {
-        return 'vendor'.DIRECTORY_SEPARATOR
-            .Str::kebab($this->choices->get('package')->get('vendor'))
-            .DIRECTORY_SEPARATOR
-            .Str::kebab($this->choices->get('package')->get('name'))
-            .DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR;
+        return $this;
     }
 
     private function modelNamespace($segments)
     {
-        if ($this->isPackage) {
-            return $segments->implode('\\')
-                ? $this->packageNamespace().$segments->implode('\\')
-                : collect(explode('\\', $this->packageNamespace()))
-                    ->slice(0, -1)
-                    ->implode('\\')
-                    .$segments->implode('\\');
-        }
+        $namespace = $segments->implode('\\');
 
-        return 'App\\'.$segments->implode('\\');
+        return $this->isPackage
+            ? $this->packageNamespace($namespace)
+            : $namespace;
+    }
+
+    private function modelPath($segments)
+    {
+        return $segments
+            ->map(fn ($segment, $index) => ! $index ? lcfirst($segment) : $segment)
+            ->implode(DIRECTORY_SEPARATOR);
+    }
+
+    private function packageNamespace(string $suffix)
+    {
+        return (new Collection(explode(DIRECTORY_SEPARATOR, $this->packageRoot())))
+            ->reject(fn ($segment) => in_array($segment, ['src', 'vendor']))
+            ->map(fn ($segment) => Str::ucfirst(Str::camel($segment)))
+            ->push($suffix)
+            ->implode('\\');
+    }
+
+    private function packageRoot()
+    {
+        $vendor = Str::kebab($this->choices->get('package')->get('vendor'));
+        $package = Str::kebab($this->choices->get('package')->get('name'));
+
+        return (new Collection(['vendor', $vendor, $package, 'src']))
+            ->implode(DIRECTORY_SEPARATOR);
     }
 
     private function hasFile($file)
     {
-        return optional($this->choices->get('files'))->has($file);
+        return $this->choices->filled('files')
+            && $this->choices->get('files')->has($file);
     }
 
     private function params()

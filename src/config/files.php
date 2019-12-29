@@ -4,7 +4,7 @@ return [
     'requires' => ['Permissions'],
     'attributes' => [
         'model' => false,
-        'migration' => false,
+        'structure' => false,
         'routes' => false,
         'views' => false,
         'form' => false,

@@ -1,0 +1,14 @@
+<?php
+
+namespace ${namespace};
+
+use ${builderNamespace}\${Model}Table;
+use Illuminate\Routing\Controller;
+use LaravelEnso\Tables\App\Traits\Init;
+
+class InitTable extends Controller
+{
+    use Init;
+
+    protected $tableClass = ${Model}Table::class;
+}

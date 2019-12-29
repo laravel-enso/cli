@@ -1,0 +1,24 @@
+{
+    "name": "${vendor}/${package}",
+    "type": "library",
+    "description": "",
+    "authors": [],
+    "keywords": [],
+    "homepage": "https://www.laravel-enso.com",
+    "require": {
+        "php": ">=7.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "${Vendor}\\${Package}\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "${Vendor}\\${Package}\\AppServiceProvider",
+                "${Vendor}\\${Package}\\AuthServiceProvider"
+            ]
+        }
+    }
+}

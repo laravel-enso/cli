@@ -1,13 +1,12 @@
 <?php
 
-namespace LaravelEnso\Cli\tests\features;
-
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Enums\Options;
-use LaravelEnso\Cli\tests\Helpers\Cli;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\App\Enums\Options;
+use LaravelEnso\Cli\Tests\Cli;
+use LaravelEnso\Helpers\App\Classes\Obj;
 use Tests\TestCase;
 
 class CliTest extends TestCase
@@ -41,7 +40,7 @@ class CliTest extends TestCase
     public function cannot_config_choice_without_requirements()
     {
         $dependent = $this->dependent();
-        $requirements = $this->requirements($dependent);
+        $requirements = $this->config($dependent)->implode(', ');
 
         $this->artisan('enso:cli')
             ->expectsQuestion('Choose element to configure', $dependent)
@@ -54,8 +53,8 @@ class CliTest extends TestCase
     {
         Cache::put('cli_data', [
             'params' => new Obj(),
-            'choices' => new Obj(),
-            'configured' => collect(),
+            'choices' => new Obj(['files' => []]),
+            'configured' => new Collection(),
             'validates' => true,
         ]);
 
@@ -123,15 +122,14 @@ class CliTest extends TestCase
 
     private function dependent()
     {
-        return collect(Options::choices())->first(fn($choice) => (
-            ! empty(config('enso.structures.'.Str::camel($choice).'.requires'))
-        ));
+        return Options::choices()
+            ->first(fn ($choice) => $this->config($choice)->isNotEmpty());
     }
 
-    private function requirements($choice)
+    private function config($choice)
     {
-        return collect(
+        return new Collection(
             config('enso.structures.'.Str::camel($choice).'.requires')
-        )->implode(', ');
+        );
     }
 }
