@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers\Form;
+namespace LaravelEnso\Cli\App\Services\Writers\Form;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Cli\App\Contracts\BulkProvider;

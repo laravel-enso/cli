@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers\Views;
+namespace LaravelEnso\Cli\App\Services\Writers\Views;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;

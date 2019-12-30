@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers\Table;
+namespace LaravelEnso\Cli\App\Services\Writers\Table;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Cli\App\Contracts\BulkProvider;

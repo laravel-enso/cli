@@ -8,9 +8,9 @@ use LaravelEnso\Cli\App\Services\Writer;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
-use LaravelEnso\Cli\app\Services\Writers\Table\Builder;
-use LaravelEnso\Cli\app\Services\Writers\Table\Controllers;
-use LaravelEnso\Cli\app\Services\Writers\Table\Template;
+use LaravelEnso\Cli\App\Services\Writers\Table\Builder;
+use LaravelEnso\Cli\App\Services\Writers\Table\Controllers;
+use LaravelEnso\Cli\App\Services\Writers\Table\Template;
 
 class Table
 {
