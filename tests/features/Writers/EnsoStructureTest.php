@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\Writer;
+use LaravelEnso\Cli\App\Services\StubWriters\Writer;
 use LaravelEnso\Cli\App\Services\Writers\EnsoStructure;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Tests\Cli;

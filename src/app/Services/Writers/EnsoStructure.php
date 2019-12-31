@@ -43,7 +43,7 @@ class EnsoStructure implements StubProvider
         $timestamp = Carbon::now()->format('Y_m_d_His');
         $structure = Str::snake(Str::plural($this->entity()));
 
-        return $this->path("{$timestamp}_create_structure_for_{$structure}.php");
+        return "{$timestamp}_create_structure_for_{$structure}.php";
     }
 
     public function fromTo(): array

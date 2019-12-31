@@ -1,18 +1,19 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers;
+namespace LaravelEnso\Cli\App\Services\Writers;
 
-use LaravelEnso\Cli\App\Services\BulkWriter;
-use LaravelEnso\Cli\app\Services\Choices;
-use LaravelEnso\Cli\App\Services\Writer;
-use LaravelEnso\Cli\app\Services\Writers\Form\Builder;
-use LaravelEnso\Cli\app\Services\Writers\Form\Controllers;
-use LaravelEnso\Cli\app\Services\Writers\Form\Template;
+use Illuminate\Support\Collection;
+use LaravelEnso\Cli\App\Contracts\BulkProvider;
+use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Form\Builder;
+use LaravelEnso\Cli\App\Services\Writers\Form\Controllers;
+use LaravelEnso\Cli\App\Services\Writers\Form\Template;
+use LaravelEnso\Cli\App\Services\Writers\Forms\Validator;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
 
-class Form
+class Form implements BulkProvider
 {
     private Choices $choices;
 
@@ -21,14 +22,22 @@ class Form
         $this->choices = $choices;
     }
 
-    public function handle()
+    public function collection(): Collection
     {
         Segments::ucfirst();
         Path::segments();
         Stub::folder('form');
 
-        (new Writer(new Template($this->choices)))->handle();
-        (new Writer(new Builder($this->choices)))->handle();
-        (new BulkWriter(new Controllers($this->choices)))->handle();
+        return new Collection($this->providers());
+    }
+
+    private function providers()
+    {
+        return [
+            new Template($this->choices),
+            new Builder($this->choices),
+            new Controllers($this->choices),
+            new Validator($this->choices)
+        ];
     }
 }

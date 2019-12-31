@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers\Table;
+namespace LaravelEnso\Cli\App\Services\Writers\Table;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -30,7 +30,7 @@ class Template implements StubProvider
     {
         $name = Str::camel(Str::plural($this->model->get('name')));
 
-        return $this->path("{$name}.json");
+        return "{$name}.json";
     }
 
     public function fromTo(): array

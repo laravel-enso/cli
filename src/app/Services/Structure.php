@@ -15,13 +15,23 @@ use LaravelEnso\Cli\App\Services\Writers\Options;
 use LaravelEnso\Cli\App\Services\Writers\Package;
 use LaravelEnso\Cli\App\Services\Writers\Routes;
 use LaravelEnso\Cli\App\Services\Writers\Table;
-use LaravelEnso\Cli\App\Services\Writers\Validator;
 use LaravelEnso\Cli\App\Services\Writers\Views;
+use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Structure
 {
     private Choices $choices;
     private bool $isPackage;
+
+    protected array $files = [
+        'table' => Table::class,
+        'form' => Form::class,
+        'views' => Views::class,
+        'routes' => Routes::class,
+        'structure' => EnsoStructure::class,
+        'options' => Options::class,
+        'model' => Model::class,
+    ];
 
     public function __construct(Choices $choices)
     {
@@ -46,38 +56,14 @@ class Structure
     private function write()
     {
         $this->package()
-            ->structure()
-            ->model()
             ->migration()
-            ->routes()
-            ->views()
-            ->form()
-            ->table()
-            ->options();
+            ->writeProviders();
     }
 
     private function package()
     {
         if ($this->isPackage) {
             (new Package($this->choices))->handle();
-        }
-
-        return $this;
-    }
-
-    private function structure()
-    {
-        if ($this->hasFile('structure')) {
-            (new Writer(new EnsoStructure($this->choices)))->handle();
-        }
-
-        return $this;
-    }
-
-    private function model()
-    {
-        if ($this->hasFile('model')) {
-            (new Writer(new Model($this->choices)))->handle();
         }
 
         return $this;
@@ -92,50 +78,19 @@ class Structure
         return $this;
     }
 
-    private function routes()
+    private function writeProviders()
     {
-        if ($this->hasFile('routes')) {
-            (new Routes($this->choices))->handle();
-        }
-
-        return $this;
+        $this->choices->get('files', new Obj())
+            ->filter()->keys()
+            ->intersect(array_keys($this->files))
+            ->each(fn($file) => $this->writeProvider($file));
     }
 
-    private function views()
+    private function writeProvider($file)
     {
-        if ($this->hasFile('views')) {
-            (new Views($this->choices))->handle();
-        }
+        $provider = (new $this->files[$file]($this->choices));
 
-        return $this;
-    }
-
-    private function form()
-    {
-        if ($this->hasFile('form')) {
-            (new Form($this->choices))->handle();
-            (new Writer(new Validator($this->choices)))->handle();
-        }
-
-        return $this;
-    }
-
-    private function table()
-    {
-        if ($this->hasFile('table')) {
-            (new Table($this->choices))->handle();
-        }
-
-        return $this;
-    }
-
-    private function options()
-    {
-        if ($this->hasFile('options')) {
-            (new Writer(new Options($this->choices)))->handle();
-        }
-
-        return $this;
+        WriterFactory::writer($provider)->handle();
     }
 
     private function initPackage()

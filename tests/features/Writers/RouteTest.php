@@ -37,7 +37,7 @@ class RouteTest extends TestCase
     /** @test */
     public function can_create_route_directory()
     {
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertDirectoryExists($this->root.'client/src/js/routes/perm');
     }
@@ -47,7 +47,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('index');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.index'",
@@ -61,7 +61,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('show');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.show'",
@@ -75,7 +75,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.edit'",
@@ -89,7 +89,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "const routes = routeImporter(require.context('./perm', false, /.*\.js$/))",
@@ -102,7 +102,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "const routes = routeImporter(require.context('./group', false, /.*\.js$/));",
@@ -117,7 +117,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('destroy');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertFileNotExists($this->viewRoutePath('perm/group/destroy.js'));
     }
@@ -127,7 +127,7 @@ class RouteTest extends TestCase
     {
         $this->choices->put('permissions', new Collection(['show' => false]));
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertFileNotExists($this->viewRoutePath('perm/group/show.js'));
     }
@@ -137,7 +137,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('create');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.create'",

@@ -13,13 +13,11 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 
 class SegmentRoute implements StubProvider
 {
-    private Obj $model;
     private string $group;
     private Collection $segments;
 
     public function __construct(Choices $choices, Collection $segments)
     {
-        $this->model = $choices->get('model');
         $this->group = $choices->get('permissionGroup')->get('name');
         $this->segments = $segments;
 
@@ -35,7 +33,7 @@ class SegmentRoute implements StubProvider
 
     public function filename(): string
     {
-        return $this->path("{$this->segments->last()}.js");
+        return "{$this->segments->last()}.js";
     }
 
     public function fromTo(): array

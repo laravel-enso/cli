@@ -96,9 +96,10 @@ class Menu extends Validator
         $matches = false;
         $nestedMenu = $menu->name;
 
-        while (! $matches && $menu->parent_id !== null) {
+        while (! $matches && optional($menu)->parent_id !== null) {
             $nestedMenu = "{$menu->parent->name}.{$nestedMenu}";
             $matches = $nestedMenu === $this->menu->get('parentMenu');
+            $menu = $menu->parent;
         }
 
         return $matches;

@@ -81,6 +81,21 @@ class ValidatorTest extends TestCase
     }
 
     /** @test */
+    public function can_validate_parent_menu()
+    {
+        $great = Menu::create(['name' => 'great', 'has_children' => true]);
+        $grand = Menu::create(['name' => 'grand', 'has_children' => true, 'parent_id' => $great->id]);
+        Menu::create(['name' => 'parent', 'has_children' => true, 'parent_id' => $grand->id]);
+
+
+        $choices = $this->menuChoices('group', 'create', 'great.grand.parent');
+
+        $this->validator = (new Validator($choices))->run();
+
+        $this->assertFalse($this->validator->fails());
+    }
+
+    /** @test */
     public function cannot_validate_with_wrong_parent()
     {
         $choices = $this->menuChoices('group', 'create', 'not_menu');
@@ -111,6 +126,7 @@ class ValidatorTest extends TestCase
             $table->increments('id');
             $table->string('name');
             $table->string('has_children');
+            $table->integer('parent_id')->nullable();
             $table->timestamps();
         });
     }

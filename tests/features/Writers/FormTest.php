@@ -35,7 +35,7 @@ class FormTest extends TestCase
     /** @test */
     public function can_create_builder()
     {
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertFormBuilderContains([
             'class TestModelForm',
@@ -49,7 +49,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'class Edit extends Controller',
@@ -62,7 +62,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('index');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
@@ -76,7 +76,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('show');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
@@ -92,7 +92,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('create');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
@@ -107,7 +107,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('destroy');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
@@ -123,7 +123,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('update');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
@@ -140,7 +140,7 @@ class FormTest extends TestCase
     {
         $this->setPermission('store');
 
-        (new Form($this->choices))->handle();
+        $this->write(Form::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
@@ -150,5 +150,18 @@ class FormTest extends TestCase
             '$testModel->fill($request->validated())->save()',
             'public function __invoke(ValidateTestModelRequest $request, TestModel $testModel)',
         ], 'Store');
+    }
+
+    /** @test */
+    public function can_create_request()
+    {
+        $this->setPermission('store');
+
+        $this->write(Form::class);
+
+        $this->assertValidatorContains([
+            'namespace Namespace\\App\\Http\\Requests\\Group;',
+            'class ValidateTestModelRequest extends FormRequest',
+        ], 'ValidateTestModelRequest');
     }
 }

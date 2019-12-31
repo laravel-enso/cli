@@ -9,7 +9,7 @@ class ${Model}Form
 {
     protected const TemplatePath = __DIR__.'/${depth}Templates/${relativePath}/${model}.json';
 
-    protected $form;
+    protected Form $form;
 
     public function __construct()
     {

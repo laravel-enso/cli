@@ -18,14 +18,13 @@ class RouteGenerator
     private Obj $params;
     private Obj $model;
     private Collection $permissions;
-    private string $group;
+    private bool $isPackage;
 
     public function __construct(Choices $choices)
     {
         $this->params = $choices->params();
         $this->model = $choices->get('model');
         $this->permissions = $choices->get('permissions')->filter()->keys();
-        $this->group = $choices->get('permissionGroup')->get('name');
         $this->isPackage = $choices->filled('package')
             && $choices->get('package')->filled('name');
     }

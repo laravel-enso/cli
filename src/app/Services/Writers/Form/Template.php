@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers\Form;
+namespace LaravelEnso\Cli\App\Services\Writers\Form;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
@@ -29,7 +29,7 @@ class Template implements StubProvider
     {
         $name = Str::camel($this->model->get('name'));
 
-        return $this->path("{$name}.json");
+        return "{$name}.json";
     }
 
     public function fromTo(): array

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\Writer;
+use LaravelEnso\Cli\App\Services\StubWriters\Writer;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Options;
@@ -41,7 +41,7 @@ class OptionsTest extends TestCase
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'class Options extends Controller',
-            'protected $model = TestModel::class;',
+            'protected string $model = TestModel::class;',
         ], 'Options');
     }
 }

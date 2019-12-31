@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Writers\Table;
+namespace LaravelEnso\Cli\App\Services\Writers\Table;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
@@ -14,12 +14,10 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 class Builder implements StubProvider
 {
     private Obj $model;
-    private string $group;
 
     public function __construct(Choices $choices)
     {
         $this->model = $choices->get('model');
-        $this->group = $choices->get('permissionGroup')->get('name');
     }
 
     public function path(?string $filename = null): string
@@ -29,7 +27,7 @@ class Builder implements StubProvider
 
     public function filename(): string
     {
-        return $this->path("{$this->model->get('name')}Table.php");
+        return "{$this->model->get('name')}Table.php";
     }
 
     public function fromTo(): array

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\App\Services\Choices;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Views;
@@ -12,8 +13,8 @@ class ViewsTest extends TestCase
 {
     use Cli;
 
-    private $root;
-    private $choices;
+    private string $root;
+    private Choices $choices;
 
     protected function setUp(): void
     {
@@ -36,7 +37,7 @@ class ViewsTest extends TestCase
     /** @test */
     public function can_create_views()
     {
-        (new Views($this->choices))->handle();
+        $this->write(Views::class);
 
         $this->choices->get('permissions')->each(fn ($perm) => (
             $this->assertViewPageContains("name: '".ucfirst($perm)."',", $perm)

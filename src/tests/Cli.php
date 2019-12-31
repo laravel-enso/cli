@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\WriterFactory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Namespacer;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
@@ -260,6 +261,12 @@ trait Cli
     private function modelName()
     {
         return (new Collection(explode('/', $this->choices->get('model')->get('name'))))->last();
+    }
+
+    private function write($class)
+    {
+        return (new Collection((new $class($this->choices))->collection()))
+            ->each(fn ($provider) => WriterFactory::writer($provider)->handle());
     }
 
     private function tableName()

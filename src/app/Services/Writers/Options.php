@@ -14,12 +14,10 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 class Options implements StubProvider
 {
     private Obj $model;
-    private string $group;
 
     public function __construct(Choices $choices)
     {
         $this->model = $choices->get('model');
-        $this->group = $choices->get('permissionGroup')->get('name');
 
         Segments::ucfirst();
         Path::segments();
@@ -33,7 +31,7 @@ class Options implements StubProvider
 
     public function filename(): string
     {
-        return $this->path('Options.php');
+        return 'Options.php';
     }
 
     public function fromTo(): array

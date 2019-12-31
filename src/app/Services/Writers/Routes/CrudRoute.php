@@ -33,7 +33,7 @@ class CrudRoute implements StubProvider
 
     public function filename(): string
     {
-        return $this->path("{$this->permission}.js");
+        return "{$this->permission}.js";
     }
 
     public function fromTo(): array
