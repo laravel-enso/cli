@@ -26,7 +26,7 @@ class Views implements BulkProvider
         Stub::folder('views');
 
         return new Collection([
-            new Bulk($this->choices)
+            new Bulk($this->choices),
         ]);
     }
 }

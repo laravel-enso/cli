@@ -83,7 +83,7 @@ class Structure
         $this->choices->get('files', new Obj())
             ->filter()->keys()
             ->intersect(array_keys($this->files))
-            ->each(fn($file) => $this->writeProvider($file));
+            ->each(fn ($file) => $this->writeProvider($file));
     }
 
     private function writeProvider($file)

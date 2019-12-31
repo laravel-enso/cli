@@ -35,7 +35,7 @@ class Table implements BulkProvider
         return [
             new Template($this->choices),
             new Builder($this->choices),
-            new Controllers($this->choices)
+            new Controllers($this->choices),
         ];
     }
 }

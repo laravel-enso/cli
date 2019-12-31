@@ -31,7 +31,7 @@ class Routes implements BulkProvider
     {
         return [
             new CrudRoutes($this->choices),
-            new SegmentRoutes($this->choices)
+            new SegmentRoutes($this->choices),
         ];
     }
 }

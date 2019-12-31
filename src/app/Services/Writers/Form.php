@@ -37,7 +37,7 @@ class Form implements BulkProvider
             new Template($this->choices),
             new Builder($this->choices),
             new Controllers($this->choices),
-            new Validator($this->choices)
+            new Validator($this->choices),
         ];
     }
 }
