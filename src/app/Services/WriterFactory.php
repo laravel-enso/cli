@@ -12,11 +12,11 @@ class WriterFactory
     public static function writer($provider)
     {
         if ($provider instanceof StubProvider) {
-            return (new Writer($provider));
+            return new Writer($provider);
         }
 
         if ($provider instanceof BulkProvider) {
-            return (new BulkWriter($provider));
+            return new BulkWriter($provider);
         }
     }
 }

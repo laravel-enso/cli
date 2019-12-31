@@ -9,7 +9,6 @@ use LaravelEnso\Cli\App\Services\Choices;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
-use LaravelEnso\Helpers\App\Classes\Obj;
 
 class SegmentRoute implements StubProvider
 {
