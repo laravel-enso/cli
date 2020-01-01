@@ -16,7 +16,7 @@ use LaravelEnso\Cli\App\Services\Writers\Package;
 use LaravelEnso\Cli\App\Services\Writers\Routes;
 use LaravelEnso\Cli\App\Services\Writers\Table;
 use LaravelEnso\Cli\App\Services\Writers\Views;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Structure
 {
