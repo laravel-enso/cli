@@ -17,8 +17,7 @@ class Generator
 
     public function handle()
     {
-        if ($this->isNotConfigured()
-            || $this->choices->needsValidation() && $this->failsValidation()) {
+        if ($this->isNotConfigured() || $this->failsValidation()) {
             return false;
         }
 
@@ -47,6 +46,10 @@ class Generator
 
     private function failsValidation()
     {
+        if (! $this->choices->needsValidation()) {
+            return false;
+        }
+
         $validator = (new Validator($this->choices))->run();
         $this->choices->errors($validator->errors());
 
