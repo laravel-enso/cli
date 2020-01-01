@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
@@ -19,20 +20,17 @@ class SegmentRoute implements StubProvider
     {
         $this->group = $choices->get('permissionGroup')->get('name');
         $this->segments = $segments;
+    }
 
+    public function prepare(): void
+    {
         Path::segments(false);
+        Directory::prepare($this->path());
     }
 
-    public function path(?string $filename = null): string
+    public function filePath(): string
     {
-        return Path::get([
-            'client', 'src', 'js', 'routes', ...$this->segments->slice(0, -1),
-        ], $filename, true);
-    }
-
-    public function filename(): string
-    {
-        return "{$this->segments->last()}.js";
+        return $this->path("{$this->segments->last()}.js");
     }
 
     public function fromTo(): array
@@ -55,5 +53,12 @@ class SegmentRoute implements StubProvider
             : 'segment';
 
         return Stub::get($stub);
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get([
+            'client', 'src', 'js', 'routes', ...$this->segments->slice(0, -1),
+        ], $filename, true);
     }
 }

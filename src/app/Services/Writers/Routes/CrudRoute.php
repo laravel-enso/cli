@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
@@ -22,18 +23,17 @@ class CrudRoute implements StubProvider
         $this->model = $choices->get('model');
         $this->group = $choices->get('permissionGroup')->get('name');
         $this->permission = $permission;
+    }
 
+    public function prepare(): void
+    {
         Path::segments();
+        Directory::prepare($this->path());
     }
 
-    public function path(?string $filename = null): string
+    public function filePath(): string
     {
-        return Path::get(['client', 'src', 'js', 'routes'], $filename, true);
-    }
-
-    public function filename(): string
-    {
-        return "{$this->permission}.js";
+        return $this->path("{$this->permission}.js");
     }
 
     public function fromTo(): array
@@ -56,5 +56,10 @@ class CrudRoute implements StubProvider
     public function stub(): string
     {
         return Stub::get($this->permission);
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['client', 'src', 'js', 'routes'], $filename, true);
     }
 }

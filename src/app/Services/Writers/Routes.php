@@ -4,13 +4,14 @@ namespace LaravelEnso\Cli\App\Services\Writers;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Cli\App\Contracts\BulkProvider;
+use LaravelEnso\Cli\App\Contracts\PreparesBulkWriting;
 use LaravelEnso\Cli\App\Services\Choices;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
 use LaravelEnso\Cli\App\Services\Writers\Routes\CrudRoutes;
 use LaravelEnso\Cli\App\Services\Writers\Routes\SegmentRoutes;
 
-class Routes implements BulkProvider
+class Routes implements BulkProvider, PreparesBulkWriting
 {
     private Choices $choices;
 
@@ -19,19 +20,17 @@ class Routes implements BulkProvider
         $this->choices = $choices;
     }
 
-    public function collection(): Collection
+    public function prepare(): void
     {
         Segments::ucfirst(false);
         Stub::folder('routes');
-
-        return new Collection($this->providers());
     }
 
-    private function providers(): array
+    public function collection(): Collection
     {
-        return [
+        return new Collection([
             new CrudRoutes($this->choices),
             new SegmentRoutes($this->choices),
-        ];
+        ]);
     }
 }

@@ -23,7 +23,7 @@ class Structure
     private Choices $choices;
     private bool $isPackage;
 
-    protected array $files = [
+    private array $providers = [
         'table' => Table::class,
         'form' => Form::class,
         'views' => Views::class,
@@ -82,15 +82,15 @@ class Structure
     {
         $this->choices->get('files', new Obj())
             ->filter()->keys()
-            ->intersect(array_keys($this->files))
+            ->intersect(array_keys($this->providers))
             ->each(fn ($file) => $this->writeProvider($file));
     }
 
     private function writeProvider($file)
     {
-        $provider = (new $this->files[$file]($this->choices));
+        $provider = (new $this->providers[$file]($this->choices));
 
-        WriterFactory::writer($provider)->handle();
+        WriterFactory::make($provider)->handle();
     }
 
     private function initPackage()

@@ -5,10 +5,10 @@ use LaravelEnso\Permissions\App\Enums\Types;
 
 class CreateStructureFor${Entity} extends Migration
 {
-    protected ?array $permissions = ${permissions};
+    protected $permissions = ${permissions};
 
-    protected ?string $menu = ${menu};
+    protected $menu = ${menu};
 
-    protected ?string $parentMenu = ${parentMenu};
+    protected $parentMenu = ${parentMenu};
 }
 

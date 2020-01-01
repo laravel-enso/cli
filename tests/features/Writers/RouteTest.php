@@ -20,7 +20,7 @@ class RouteTest extends TestCase
     {
         parent::setUp();
 
-        $this->root = 'cli_tests_tmp/';
+        $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
         Segments::ucfirst(false);
@@ -29,7 +29,7 @@ class RouteTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
+        // parent::tearDown();
 
         File::deleteDirectory($this->root);
     }
@@ -39,7 +39,7 @@ class RouteTest extends TestCase
     {
         $this->write(Routes::class);
 
-        $this->assertDirectoryExists($this->root.'client/src/js/routes/perm');
+        $this->assertDirectoryExists($this->path(['client', 'src', 'js', 'routes', 'perm']));
     }
 
     /** @test */
@@ -53,7 +53,7 @@ class RouteTest extends TestCase
             "name: 'perm.group.index'",
             'component: TestModelIndex',
             "title: 'Test Models'",
-        ], 'perm/group/index.js');
+        ], ['perm', 'group', 'index.js']);
     }
 
     /** @test */
@@ -67,7 +67,7 @@ class RouteTest extends TestCase
             "name: 'perm.group.show'",
             'component: TestModelShow',
             "title: 'Show Test Model'",
-        ], 'perm/group/show.js');
+        ], ['perm', 'group', 'show.js']);
     }
 
     /** @test */
@@ -81,7 +81,7 @@ class RouteTest extends TestCase
             "name: 'perm.group.edit'",
             'component: TestModelEdit',
             "title: 'Edit Test Model'",
-        ], 'perm/group/edit.js');
+        ], ['perm', 'group', 'edit.js']);
     }
 
     /** @test */
@@ -109,7 +109,7 @@ class RouteTest extends TestCase
             "path: 'group'",
             "breadcrumb: 'group'",
             "route: 'perm.group.index'",
-        ], 'perm/group.js');
+        ], ['perm', 'group.js']);
     }
 
     /** @test */
@@ -143,7 +143,7 @@ class RouteTest extends TestCase
             "name: 'perm.group.create'",
             'component: TestModelCreate',
             "title: 'Create Test Model'",
-        ], 'perm/group/create.js');
+        ], ['perm',  'group', 'create.js']);
     }
 
     protected function choices()

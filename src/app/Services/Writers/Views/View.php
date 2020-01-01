@@ -5,6 +5,7 @@ namespace LaravelEnso\Cli\App\Services\Writers\Views;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
 use LaravelEnso\Helpers\App\Classes\Obj;
@@ -20,16 +21,16 @@ class View implements StubProvider
         $this->permission = $permission;
     }
 
-    public function path(?string $filename = null): string
+    public function prepare(): void
     {
-        return Path::get(['client', 'src', 'js', 'pages'], $filename, true);
+        Directory::prepare($this->path());
     }
 
-    public function filename(): string
+    public function filePath(): string
     {
         $name = Str::ucfirst($this->permission);
 
-        return "{$name}.vue";
+        return $this->path("{$name}.vue");
     }
 
     public function fromTo(): array
@@ -42,5 +43,10 @@ class View implements StubProvider
     public function stub(): string
     {
         return Stub::get($this->permission);
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['client', 'src', 'js', 'pages'], $filename, true);
     }
 }

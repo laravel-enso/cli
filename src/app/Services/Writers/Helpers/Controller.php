@@ -20,20 +20,25 @@ abstract class Controller implements StubProvider
         $this->permission = $permission;
     }
 
-    public function path(?string $filename = null): string
+    public function prepare(): void
     {
-        return Path::get(['app', 'Http', 'Controllers'], $filename, true);
+        Directory::prepare($this->path());
     }
 
-    public function filename(): string
+    public function filePath(): string
     {
         $name = Str::ucfirst($this->permission);
 
-        return "{$name}.php";
+        return $this->path("{$name}.php");
     }
 
     public function stub(): string
     {
         return Stub::get($this->permission);
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['app', 'Http', 'Controllers'], $filename, true);
     }
 }
