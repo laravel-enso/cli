@@ -1,0 +1,12 @@
+{
+    "name": "${name}",
+    "routePrefix": "${permissionGroup}",
+    "crtNo": true,
+    "buttons": ["excel", "create", "show", "edit", "destroy"],
+    "columns": [{
+        "label": "Id",
+        "name": "id",
+        "data": "${table}.id",
+        "meta": ["searchable", "sortable"]
+    }]
+}

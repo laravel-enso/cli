@@ -1,119 +1,107 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Validators;
+namespace LaravelEnso\Cli\App\Services\Validators;
 
-use LaravelEnso\Menus\app\Models\Menu as Menus;
+use Illuminate\Support\Collection;
+use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Menus\App\Models\Menu as Model;
 
 class Menu extends Validator
 {
-    private $menu;
+    private ?Obj $menu;
+    private Obj $permissions;
+
+    public function __construct(Choices $choices)
+    {
+        parent::__construct();
+
+        $this->menu = $choices->get('menu');
+        $this->permissions = $choices->get('permissions')->filter()->keys();
+    }
 
     public function run(): Validator
     {
-        if (! $this->choices->has('menu')) {
-            return $this;
-        }
+        if ($this->menu !== null) {
+            $this->menu();
 
-        $this->menu = $this->choices->get('menu');
-
-        if ($this->menu->filled('route')) {
-            $this->validateRoute();
-        }
-
-        if (! $this->menu->filled('route') && ! $this->menu->get('has_children')) {
-            $this->error('A regular menu must have the route attribute filled');
-        }
-
-        if ($this->menu->filled('parentMenu')) {
-            $this->validateParentMenu();
+            if ($this->menu->filled('parentMenu')) {
+                $this->parent();
+            }
         }
 
         return $this;
     }
 
-    private function validateRoute()
+    private function menu()
     {
+        if (! $this->menu->filled('route')) {
+            if (! $this->menu->get('has_children')) {
+                $this->error('A regular menu must have the route attribute filled');
+            }
+
+            return;
+        }
+
         if ($this->menu->get('has_children')) {
             $this->error('A parent menu must have the route attribute empty');
         }
 
-        $this->validateGroup();
-
-        $this->validatePermission();
-    }
-
-    private function validateGroup()
-    {
-        if ($this->choices->has('permissionGroup')
-            && $this->choices->get('permissionGroup')
-                ->get('name') !== $this->routeSegments()
-                    ->slice(0, -1)->implode('.')) {
-            $this->error('The menu\'s route does not match the configured permission group');
+        if ($this->invalidPermission()) {
+            $this->error("The menu's route does not match the configured permissions");
         }
     }
 
-    private function validatePermission()
+    private function invalidPermission()
     {
-        if (! collect($this->choices->get('permissions')->all())
-            ->filter()
-            ->keys()
-            ->contains($this->routeSegments()->last())) {
-            $this->error('The menu\'s route does not match the configured permissions');
-        }
+        return ! $this->permissions->contains($this->menu->get('route'));
     }
 
-    private function validateParentMenu()
+    private function parent()
     {
-        $matches = $this->parentMenuMatches();
+        $matchCount = $this->parentMatchCount();
 
-        if ($matches === 0) {
-            $this->error(
-                'The parent menu '.$this->menu->get('parentMenu').' does not exist in the system'
-            );
+        if ($matchCount === 1) {
+            return;
         }
 
-        if ($matches > 1) {
-            $this->error(
-                "The parent menu {$this->menu->get('parentMenu')} is ambiguous."
-                .' Please use dotted notation to specify its parent too.'
-            );
-        }
+        $error = "The parent menu {$this->menu->get('parentMenu')} ";
+
+        $error .= $matchCount === 0
+            ? 'does not exist in the system'
+            : 'is ambiguous. Please use dotted notation to specify its parent too.';
+
+        $this->error($error);
     }
 
-    private function parentMenuMatches()
+    private function parentMatchCount()
     {
-        $parentMenu = collect(explode('.', $this->menu->get('parentMenu')))->pop();
+        $segments = new Collection(explode('.', $this->menu->get('parentMenu')));
 
-        $parents = Menus::whereName($parentMenu)
+        return Model::whereName($segments->pop())
             ->whereHasChildren(true)
-            ->get();
+            ->get()
+            ->filter(fn ($menu) => $this->parentMatches($menu))
+            ->count();
+    }
 
-        return $parents->filter(fn ($menu) => (
-                $menu->name === $this->menu->get('parentMenu')
-                || $this->nestedParentMatches($menu)
-            ))->count();
+    private function parentMatches($menu)
+    {
+        return $menu->name === $this->menu->get('parentMenu')
+            || $this->nestedParentMatches($menu);
     }
 
     private function nestedParentMatches($menu)
     {
-        $found = false;
+        $matches = false;
         $nestedMenu = $menu->name;
 
-        while ($menu->parent_id !== null) {
-            $parent = $menu->parent;
-            $nestedMenu = $parent->name.'.'.$nestedMenu;
-
-            if ($nestedMenu === $this->menu->get('parentMenu')) {
-                $found = true;
-                break;
-            }
+        while (! $matches && optional($menu)->parent_id !== null) {
+            $nestedMenu = "{$menu->parent->name}.{$nestedMenu}";
+            $matches = $nestedMenu === $this->menu->get('parentMenu');
+            $menu = $menu->parent;
         }
 
-        return $found;
-    }
-
-    private function routeSegments()
-    {
-        return collect(explode('.', $this->menu->get('route')));
+        return $matches;
     }
 }

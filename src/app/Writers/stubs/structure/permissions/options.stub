@@ -1,1 +1,0 @@
-        ['name' => '${permissionGroup}.options', 'description' => 'Get ${model} options for select', 'type' => 0, 'is_default' => false],

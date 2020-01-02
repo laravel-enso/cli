@@ -1,13 +1,12 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services;
+namespace LaravelEnso\Cli\App\Services;
 
-use LaravelEnso\Cli\app\Enums\Options;
-use LaravelEnso\Cli\app\Services\Helpers\Symbol;
+use LaravelEnso\Cli\App\Enums\Options;
 
 class Status
 {
-    private $choices;
+    private Choices $choices;
 
     public function __construct(Choices $choices)
     {
@@ -16,8 +15,8 @@ class Status
 
     public function display()
     {
-        $this->currentConfiguration();
-        $this->willGenerate();
+        $this->currentConfiguration()
+            ->willGenerate();
 
         return $this;
     }
@@ -29,35 +28,37 @@ class Status
         );
     }
 
-    private function console()
-    {
-        return $this->choices->console();
-    }
-
     private function currentConfiguration()
     {
         $this->console()->info('Current configuration status:');
 
-        Options::choices()->each(fn ($choice) => (
-            $this->console()->line(
-                $choice.' '.($this->choices->hasError($choice)
-                    ? Symbol::exclamation()
-                    : Symbol::bool($this->choices->configured()->contains($choice)))
-            )
-        ));
+        Options::choices()->each(fn ($choice) => $this->console()
+            ->line("{$choice} {$this->status($choice)}"));
+
+        return $this;
+    }
+
+    private function status(string $choice)
+    {
+        return $this->choices->invalid($choice)
+            ? Symbol::exclamation()
+            : Symbol::bool($this->choices->configured()->contains($choice));
     }
 
     private function willGenerate()
     {
-        if ($this->choices->configured()->isNotEmpty()) {
+        $files = $this->choices->get('files')->filter()->keys();
+
+        if ($files->isNotEmpty()) {
             $this->console()->line('');
             $this->console()->info('Will generate:');
-            $this->console()->line('structure migration');
 
-            $this->choices->files()
-                ->filter()
-                ->keys()
-                ->each(fn ($file) => $this->console()->line($file));
+            $files->each(fn ($file) => $this->console()->line($file));
         }
+    }
+
+    private function console()
+    {
+        return $this->choices->console();
     }
 }

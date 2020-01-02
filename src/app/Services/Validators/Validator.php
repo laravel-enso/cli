@@ -1,19 +1,16 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services\Validators;
+namespace LaravelEnso\Cli\App\Services\Validators;
 
-use LaravelEnso\Cli\app\Services\Choices;
+use Illuminate\Support\Collection;
 
 abstract class Validator
 {
-    protected $choices;
+    private Collection $errors;
 
-    private $errors;
-
-    public function __construct(Choices $choices)
+    public function __construct()
     {
-        $this->choices = $choices;
-        $this->errors = collect();
+        $this->errors = new Collection();
     }
 
     abstract public function run(): self;

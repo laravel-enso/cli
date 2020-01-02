@@ -2,7 +2,7 @@
 
 return [
     'attributes' => [
-        'namespace' => 'App\\',
+        'namespace' => 'App',
         'root' => '',
     ],
 ];

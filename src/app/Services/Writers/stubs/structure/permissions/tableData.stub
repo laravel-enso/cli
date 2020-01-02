@@ -1,0 +1,1 @@
+        ['name' => '${permissionGroup}.tableData', 'description' => 'Get table data for ${models}', 'type' => Types::Read, 'is_default' => false],

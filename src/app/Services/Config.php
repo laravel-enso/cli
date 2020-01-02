@@ -1,47 +1,42 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Services;
+namespace LaravelEnso\Cli\App\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\app\Enums\Options;
-use LaravelEnso\Cli\app\Services\Helpers\Symbol;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Cli\App\Enums\Options;
+use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Config
 {
-    private $choices;
+    private Choices $choices;
 
     public function __construct(Choices $choices)
     {
         $this->choices = $choices;
     }
 
-    public function fill($choice)
+    public function fill(string $choice)
     {
-        if ($this->missesRequired($choice)) {
+        if ($this->missesRequired($choice) || $this->togglesValidation($choice)) {
             return;
         }
 
-        if ($choice === Options::ToggleValidation) {
-            $this->toggleValidation();
-
-            return;
-        }
-
-        $this->console()->info(Str::title($choice).' configuration:');
-
+        $choiceLabel = Str::title($choice);
+        $this->console()->info("{$choiceLabel} configuration:");
         $this->display($choice);
 
-        if ($this->console()->confirm('Configure '.Str::title($choice))) {
+        if ($this->console()->confirm("Configure {$choiceLabel}")) {
             $this->update($choice);
         }
 
         $this->choices->save();
     }
 
-    private function missesRequired($choice)
+    private function missesRequired(string $choice)
     {
-        $diff = $this->requires($choice)->diff($this->choices->configured());
+        $diff = $this->required(Str::camel($choice))
+            ->diff($this->choices->configured());
 
         if ($diff->isNotEmpty()) {
             $this->console()->warn('You must configure first: '.$diff->implode(', '));
@@ -53,64 +48,75 @@ class Config
         return $diff->isNotEmpty();
     }
 
-    private function requires($choice)
+    private function togglesValidation(string $choice)
     {
-        return new Obj(config('enso.structures.'.Str::camel($choice).'.requires'));
+        if ($choice === Options::ToggleValidation) {
+            $this->toggleValidation();
+
+            return true;
+        }
+
+        return false;
     }
 
-    private function display($choice)
+    private function required(string $choice)
     {
-        $config = $this->choices->get(Str::camel($choice));
+        $structure = Str::camel($choice);
 
-        $config->keys()->each(fn ($key) => (
-            $this->console()->line($key.' => '.$this->key($key, $config))
-        ));
+        return new Collection(config("enso.structures.{$structure}.requires"));
     }
 
-    private function key($key, $config)
+    private function display(string $choice)
     {
-        return is_bool($config->get($key))
-            ? Symbol::bool($config->get($key))
-            : $config->get($key);
+        $config = $this->config($choice);
+
+        $config->keys()->each(fn ($option) => $this->console()
+            ->line("{$option} => {$this->option($config, $option)}"));
     }
 
-    private function update($choice)
+    private function option(Obj $config, string $option)
     {
-        $config = $this->choices->get(Str::camel($choice));
+        $value = $config->get($option);
 
-        $config->keys()->each(fn ($key) => (
-            $config->set($key, $this->input($config, $key))
-        ));
+        return is_bool($value) ? Symbol::bool($value) : $value;
+    }
+
+    private function update(string $choice)
+    {
+        $config = $this->config($choice);
+
+        $config->keys()
+            ->each(fn ($option) => $config->set($option, $this->input($config, $option)));
 
         if (! $this->choices->configured()->contains($choice)) {
             $this->choices->configured()->push($choice);
         }
     }
 
-    private function input($config, $key)
+    private function input(Obj $config, string $option)
     {
-        $type = gettype($config->get($key));
+        $expectedType = gettype($config->get($option));
 
-        $value = is_bool($config->get($key))
-            ? $this->console()->confirm($key)
-            : $this->console()->anticipate($key, [$config->get($key) ?? '']);
+        $input = is_bool($config->get($option))
+            ? $this->console()->confirm($option)
+            : $this->console()->anticipate($option, [$config->get($option) ?? '']);
 
-        if ($this->isValid($type, $value)) {
-            return $type === 'integer' ? (int) $value : $value;
+        if ($this->isValid($expectedType, $input)) {
+            return $expectedType === 'integer' ? (int) $input : $input;
         }
 
-        $this->console()->error($key.' must be of type '.$type);
+        $this->console()->error("{$option} must be of type {$expectedType}");
 
         sleep(1);
 
-        return $this->input($config, $key);
+        return $this->input($config, $option);
     }
 
-    private function isValid($type, $value)
+    private function isValid($expectedType, $input)
     {
-        return $type === 'NULL'
-            || ($type === 'integer' && (string) $value === $value)
-            || (gettype($value) === $type);
+        return $expectedType === 'NULL'
+            || ($expectedType === 'integer' && (string) $input === $input)
+            || ($expectedType === gettype($input));
     }
 
     private function toggleValidation()
@@ -121,6 +127,11 @@ class Config
         $this->console()->line('');
 
         sleep(1);
+    }
+
+    private function config(string $choice)
+    {
+        return $this->choices->get(Str::camel($choice));
     }
 
     private function console()

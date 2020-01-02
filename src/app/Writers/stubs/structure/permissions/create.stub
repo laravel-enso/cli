@@ -1,1 +1,0 @@
-        ['name' => '${permissionGroup}.create', 'description' => 'Create ${model}', 'type' => 1, 'is_default' => false],

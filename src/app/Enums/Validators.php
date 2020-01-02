@@ -1,14 +1,14 @@
 <?php
 
-namespace LaravelEnso\Cli\app\Enums;
+namespace LaravelEnso\Cli\App\Enums;
 
-use LaravelEnso\Cli\app\Services\Validators\Menu;
-use LaravelEnso\Cli\app\Services\Validators\Model;
-use LaravelEnso\Enums\app\Services\Enum;
+use LaravelEnso\Cli\App\Services\Validators\Menu;
+use LaravelEnso\Cli\App\Services\Validators\Model;
+use LaravelEnso\Enums\App\Services\Enum;
 
 class Validators extends Enum
 {
-    public static $data = [
+    public static array $data = [
         Options::Model => Model::class,
         Options::Menu => Menu::class,
     ];

@@ -3,36 +3,28 @@
 namespace LaravelEnso\Cli;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelEnso\Cli\app\Commands\Cli;
+use LaravelEnso\Cli\App\Commands\Cli;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands(Cli::class);
-
         $this->load()
-            ->publish();
+            ->publish()
+            ->commands(Cli::class);
     }
 
     private function load()
     {
         $this->mergeConfigFrom(__DIR__.'/config/model.php', 'enso.structures.model');
-
         $this->mergeConfigFrom(__DIR__.'/config/menu.php', 'enso.structures.menu');
-
-        $this->mergeConfigFrom(
-            __DIR__.'/config/permissionGroup.php',
-            'enso.structures.permissionGroup'
-        );
-
         $this->mergeConfigFrom(__DIR__.'/config/permissions.php', 'enso.structures.permissions');
-
         $this->mergeConfigFrom(__DIR__.'/config/package.php', 'enso.structures.package');
-
         $this->mergeConfigFrom(__DIR__.'/config/params.php', 'enso.structures.params');
-
         $this->mergeConfigFrom(__DIR__.'/config/files.php', 'enso.structures.files');
+        $this->mergeConfigFrom(
+            __DIR__.'/config/permissionGroup.php', 'enso.structures.permissionGroup'
+        );
 
         return $this;
     }
@@ -41,10 +33,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/config' => config_path('enso/structures'),
-        ], 'cli-config');
+        ], ['cli-config', 'enso-config']);
 
-        $this->publishes([
-            __DIR__.'/config' => config_path('enso/structures'),
-        ], 'enso-config');
+        return $this;
     }
 }
