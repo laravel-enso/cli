@@ -4,9 +4,9 @@ namespace LaravelEnso\Cli\App\Contracts;
 
 interface StubProvider
 {
-    public function path(): string;
+    public function prepare(): void;
 
-    public function filename(): string;
+    public function filePath(): string;
 
     public function fromTo(): array;
 

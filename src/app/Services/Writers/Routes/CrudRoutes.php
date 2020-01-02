@@ -11,6 +11,7 @@ class CrudRoutes implements BulkProvider
     private const Routes = ['create', 'edit', 'index', 'show'];
 
     private Choices $choices;
+    private Collection $permissions;
 
     public function __construct(Choices $choices)
     {

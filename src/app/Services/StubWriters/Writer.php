@@ -1,30 +1,28 @@
 <?php
 
-namespace LaravelEnso\Cli\App\Services;
+namespace LaravelEnso\Cli\App\Services\StubWriters;
 
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
+use LaravelEnso\Cli\App\Contracts\Writer as Contract;
 
-class Writer
+class Writer implements Contract
 {
-    private $provider;
+    private StubProvider $provider;
 
     public function __construct(StubProvider $provider)
     {
         $this->provider = $provider;
     }
 
-    public function handle()
+    public function handle(): void
     {
-        Directory::prepare($this->provider->path());
+        $this->provider->prepare();
 
-        File::put($this->provider->filename(), $this->content());
-
-        return $this;
+        File::put($this->provider->filePath(), $this->content());
     }
 
-    public function content()
+    private function content(): string
     {
         $fromTo = $this->provider->fromTo();
         [$from, $to] = [array_keys($fromTo), array_values($fromTo)];

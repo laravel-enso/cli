@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
 use LaravelEnso\Helpers\App\Classes\Obj;
@@ -21,12 +22,12 @@ class Template implements StubProvider
         $this->group = $choices->get('permissionGroup')->get('name');
     }
 
-    public function path(?string $filename = null): string
+    public function prepare(): void
     {
-        return Path::get(['app', 'Tables', 'Templates'], $filename);
+        Directory::prepare($this->path());
     }
 
-    public function filename(): string
+    public function filePath(): string
     {
         $name = Str::camel(Str::plural($this->model->get('name')));
 
@@ -48,5 +49,10 @@ class Template implements StubProvider
     public function stub(): string
     {
         return Stub::get('template');
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['app', 'Tables', 'Templates'], $filename);
     }
 }

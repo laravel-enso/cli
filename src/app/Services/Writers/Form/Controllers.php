@@ -2,28 +2,22 @@
 
 namespace LaravelEnso\Cli\App\Services\Writers\Form;
 
-use Illuminate\Support\Collection;
-use LaravelEnso\Cli\App\Contracts\BulkProvider;
-use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Controller as BaseController;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Controllers as BaseControllers;
 
-class Controllers implements BulkProvider
+class Controllers extends BaseControllers
 {
     private const Routes = [
         'index', 'create', 'store', 'show', 'edit', 'update', 'destroy',
     ];
 
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function create($permission): BaseController
     {
-        $this->choices = $choices;
-        $this->permissions = $choices->get('permissions')->filter()->keys();
+        return new Controller($this->choices, $permission);
     }
 
-    public function collection(): Collection
+    public function routes(): array
     {
-        return $this->permissions->intersect(self::Routes)
-            ->reduce(fn ($collection, $permission) => $collection
-                ->push(new Controller($this->choices, $permission)), new Collection());
+        return static::Routes;
     }
 }

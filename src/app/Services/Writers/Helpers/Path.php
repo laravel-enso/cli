@@ -11,7 +11,7 @@ class Path
 
     public static function get(array $segments, ?string $filename = null, bool $full = false)
     {
-        $collection = (new Collection([self::$root, ...$segments]));
+        $collection = (new Collection([self::$root, ...$segments]))->filter();
 
         if (self::$segments) {
             $collection = $collection->concat(Segments::get($full));

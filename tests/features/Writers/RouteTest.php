@@ -20,7 +20,7 @@ class RouteTest extends TestCase
     {
         parent::setUp();
 
-        $this->root = 'cli_tests_tmp/';
+        $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
         Segments::ucfirst(false);
@@ -29,7 +29,7 @@ class RouteTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
+        // parent::tearDown();
 
         File::deleteDirectory($this->root);
     }
@@ -37,9 +37,9 @@ class RouteTest extends TestCase
     /** @test */
     public function can_create_route_directory()
     {
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
-        $this->assertDirectoryExists($this->root.'client/src/js/routes/perm');
+        $this->assertDirectoryExists($this->path(['client', 'src', 'js', 'routes', 'perm']));
     }
 
     /** @test */
@@ -47,13 +47,13 @@ class RouteTest extends TestCase
     {
         $this->setPermission('index');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.index'",
             'component: TestModelIndex',
             "title: 'Test Models'",
-        ], 'perm/group/index.js');
+        ], ['perm', 'group', 'index.js']);
     }
 
     /** @test */
@@ -61,13 +61,13 @@ class RouteTest extends TestCase
     {
         $this->setPermission('show');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.show'",
             'component: TestModelShow',
             "title: 'Show Test Model'",
-        ], 'perm/group/show.js');
+        ], ['perm', 'group', 'show.js']);
     }
 
     /** @test */
@@ -75,13 +75,13 @@ class RouteTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.edit'",
             'component: TestModelEdit',
             "title: 'Edit Test Model'",
-        ], 'perm/group/edit.js');
+        ], ['perm', 'group', 'edit.js']);
     }
 
     /** @test */
@@ -89,7 +89,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "const routes = routeImporter(require.context('./perm', false, /.*\.js$/))",
@@ -102,14 +102,14 @@ class RouteTest extends TestCase
     {
         $this->setPermission('edit');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "const routes = routeImporter(require.context('./group', false, /.*\.js$/));",
             "path: 'group'",
             "breadcrumb: 'group'",
             "route: 'perm.group.index'",
-        ], 'perm/group.js');
+        ], ['perm', 'group.js']);
     }
 
     /** @test */
@@ -117,7 +117,7 @@ class RouteTest extends TestCase
     {
         $this->setPermission('destroy');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertFileNotExists($this->viewRoutePath('perm/group/destroy.js'));
     }
@@ -127,7 +127,7 @@ class RouteTest extends TestCase
     {
         $this->choices->put('permissions', new Collection(['show' => false]));
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertFileNotExists($this->viewRoutePath('perm/group/show.js'));
     }
@@ -137,13 +137,13 @@ class RouteTest extends TestCase
     {
         $this->setPermission('create');
 
-        (new Routes($this->choices))->handle();
+        $this->write(Routes::class);
 
         $this->assertViewRouteContains([
             "name: 'perm.group.create'",
             'component: TestModelCreate',
             "title: 'Create Test Model'",
-        ], 'perm/group/create.js');
+        ], ['perm',  'group', 'create.js']);
     }
 
     protected function choices()

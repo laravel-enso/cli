@@ -11,7 +11,7 @@ class Options extends Controller
 {
     use OptionsBuilder;
 
-    protected $model = ${Model}::class;
+    protected string $model = ${Model}::class;
 
     //protected $queryAttributes = ['name'];
 

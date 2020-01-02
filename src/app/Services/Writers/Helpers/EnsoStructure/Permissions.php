@@ -24,7 +24,8 @@ class Permissions
     {
         return $this->permissions
             ? $this->permissions->reduce(fn ($content, $permission) => $content
-                .$this->permission($permission), '[').PHP_EOL.'    ]'
+                .$this->permission($permission), '[').PHP_EOL
+                .'    ]'
             : 'null';
     }
 

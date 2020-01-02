@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\WriterFactory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Namespacer;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
@@ -70,7 +71,7 @@ trait Cli
 
     private function assertCliFileContains($needle, $filePath)
     {
-        $this->assertFileContains($needle, "{$this->root}{$filePath}");
+        $this->assertFileContains($needle, $this->path($filePath));
     }
 
     private function assertViewRouteContains($needle, $filePath)
@@ -128,7 +129,7 @@ trait Cli
 
     private function assertMigrationCreated($migration)
     {
-        $files = (new Collection(File::files("{$this->root}database/migrations")))
+        $files = (new Collection(File::files($this->path(['database', 'migrations']))))
             ->filter(fn ($file) => Str::contains($file->getFilename(), $migration));
 
         $this->assertTrue($files->isNotEmpty(), $migration.' not exists!');
@@ -158,11 +159,13 @@ trait Cli
 
     private function deleteMigration($migration)
     {
-        if (! File::isDirectory($this->root.'database/migrations')) {
+        $path = $this->path('database/migrations');
+
+        if (! File::isDirectory($path)) {
             return;
         }
 
-        $file = (new Collection(File::files($this->root.'database/migrations')))
+        $file = (new Collection(File::files($path)))
             ->filter(fn ($file) => Str::contains($file->getFilename(), $migration))
             ->last();
 
@@ -171,68 +174,62 @@ trait Cli
 
     private function controllerPath($controller): string
     {
-        return (new Collection([
-            $this->root, 'app', 'Http', 'Controllers', ...$this->segments(), "{$controller}.php",
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        return $this->path([
+            'app', 'Http', 'Controllers', ...$this->segments(), "{$controller}.php",
+        ]);
     }
 
     private function validatorPath($validator): string
     {
-        return (new Collection([
-            $this->root, 'app', 'Http', 'Requests', ...$this->segments(false), "{$validator}.php",
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        return $this->path([
+            'app', 'Http', 'Requests', ...$this->segments(false), "{$validator}.php",
+        ]);
     }
 
     private function formBuilderPath(): string
     {
-        return (new Collection([
-            $this->root, 'app', 'Forms', 'Builders',
-            ...$this->segments(false),
-            Str::ucfirst("{$this->modelName()}Form.php"),
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        return $this->path([
+            'app', 'Forms', 'Builders', ...$this->segments(false),
+            Str::ucfirst("{$this->modelName()}Form.php")
+        ]);
     }
 
     private function formTemplatePath(): string
     {
-        return (new Collection([
-            $this->root, 'app', 'Forms', 'Templates',
-            ...$this->segments(false),
+        return $this->path([
+            'app', 'Forms', 'Templates', ...$this->segments(false),
             Str::camel($this->modelName()).'.json',
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        ]);
     }
 
     private function viewRoutePath($filePath): string
     {
-        return (new Collection([
-            $this->root, 'client', 'src', 'js', 'routes', $filePath,
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        return $this->path(['client', 'src', 'js', 'routes', ...(array) $filePath]);
     }
 
     private function viewPagePath($method): string
     {
         $segments = $this->segments(true)->map(fn ($segment) => lcfirst($segment));
 
-        return (new Collection([
-            $this->root, 'client', 'src', 'js', 'pages', ...$segments, Str::ucfirst($method).'.vue',
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        return $this->path([
+            'client', 'src', 'js', 'pages', ...$segments, Str::ucfirst($method).'.vue',
+        ]);
     }
 
     private function tableBuilderPath(): string
     {
-        return (new Collection([
-            $this->root, 'app', 'Tables', 'Builders',
-            ...$this->segments(false),
+        return $this->path([
+            'app', 'Tables', 'Builders', ...$this->segments(false),
             Str::ucfirst($this->modelName()).'Table.php',
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        ]);
     }
 
     private function tableTemplatePath(): string
     {
-        return (new Collection([
-            $this->root, 'app', 'Tables', 'Templates',
-            ...$this->segments(false),
+        return $this->path([
+            'app', 'Tables', 'Templates', ...$this->segments(false),
             Str::camel(Str::plural($this->modelName())).'.json',
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        ]);
     }
 
     private function structureMigrationPath()
@@ -240,10 +237,9 @@ trait Cli
         $model = Str::snake(Str::plural($this->modelName()));
         $timestamp = Carbon::now()->format('Y_m_d_His');
 
-        return (new Collection([
-            $this->root, 'database', 'migrations',
-            "{$timestamp}_create_structure_for_{$model}.php",
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        return $this->path([
+            'database', 'migrations', "{$timestamp}_create_structure_for_{$model}.php",
+        ]);
     }
 
     private function segments(bool $full = true)
@@ -259,7 +255,14 @@ trait Cli
 
     private function modelName()
     {
-        return (new Collection(explode('/', $this->choices->get('model')->get('name'))))->last();
+        return (new Collection(
+            explode('/', $this->choices->get('model')->get('name')))
+        )->last();
+    }
+
+    private function write($provider)
+    {
+        WriterFactory::make(new $provider($this->choices))->handle();
     }
 
     private function tableName()
@@ -286,5 +289,11 @@ trait Cli
             'root' => $this->root,
             'namespace' => 'Namespace\App',
         ]);
+    }
+
+    private function path($segments)
+    {
+        return (new Collection([$this->root, ...(array) $segments]))
+            ->filter()->implode(DIRECTORY_SEPARATOR);
     }
 }

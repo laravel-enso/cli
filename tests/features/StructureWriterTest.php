@@ -47,7 +47,7 @@ class StructureWriterTest extends TestCase
     /** @test */
     public function can_generate_package()
     {
-        $this->root = 'vendor/laravel-enso/testing/src/';
+        $this->root = 'vendor/laravel-enso/testing/src';
 
         $this->choices->set('package', new Obj([
             'name' => 'testing',
@@ -79,7 +79,7 @@ class StructureWriterTest extends TestCase
 
     private function modelCreated()
     {
-        $this->assertFileExists($this->root."app/Testing/{$this->modelName()}.php");
+        $this->assertFileExists($this->path(['app', 'Testing', "{$this->modelName()}.php"]));
     }
 
     private function requestValidatorCreated()
@@ -139,16 +139,16 @@ class StructureWriterTest extends TestCase
             return;
         }
 
-        File::deleteDirectory($this->root.'app/Testing');
-        File::deleteDirectory($this->root.'app/Forms/Builders/Testing');
-        File::deleteDirectory($this->root.'app/Forms/Templates/Testing');
-        File::deleteDirectory($this->root.'app/Tables/Builders/Testing');
-        File::deleteDirectory($this->root.'app/Tables/Templates/Testing');
-        File::deleteDirectory($this->root.'app/Http/Controllers/Testing');
-        File::deleteDirectory($this->root.'app/Http/Requests/Testing');
-        File::deleteDirectory($this->root.'client/src/js/pages/testing');
-        File::deleteDirectory($this->root.'client/src/js/routes/testing');
-        File::delete($this->root.'client/src/js/routes/testing.js');
+        File::deleteDirectory($this->path(['app/Testing']));
+        File::deleteDirectory($this->path(['app/Forms', 'Builders', 'Testing']));
+        File::deleteDirectory($this->path(['app', 'Forms', 'Templates', 'Testing']));
+        File::deleteDirectory($this->path(['app', 'Tables', 'Builders', 'Testing']));
+        File::deleteDirectory($this->path(['app', 'Tables', 'Templates', 'Testing']));
+        File::deleteDirectory($this->path(['app', 'Http', 'Controllers', 'Testing']));
+        File::deleteDirectory($this->path(['app', 'Http', 'Requests', 'Testing']));
+        File::deleteDirectory($this->path(['client', 'src', 'js', 'pages', 'testing']));
+        File::deleteDirectory($this->path(['client', 'src', 'js', 'routes', 'testing']));
+        File::delete($this->path(['client', 'src', 'js', 'routes', 'testing.js']));
         $this->deleteMigration("create_{$this->tableName()}_table");
         $this->deleteMigration("create_structure_for_{$this->tableName()}");
     }

@@ -5,6 +5,7 @@ namespace LaravelEnso\Cli\App\Services\Writers\Table;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Namespacer;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
@@ -14,20 +15,18 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 class Builder implements StubProvider
 {
     private Obj $model;
-    private string $group;
 
     public function __construct(Choices $choices)
     {
         $this->model = $choices->get('model');
-        $this->group = $choices->get('permissionGroup')->get('name');
     }
 
-    public function path(?string $filename = null): string
+    public function prepare(): void
     {
-        return Path::get(['app', 'Tables', 'Builders'], $filename);
+        Directory::prepare($this->path());
     }
 
-    public function filename(): string
+    public function filePath(): string
     {
         return $this->path("{$this->model->get('name')}Table.php");
     }
@@ -48,5 +47,10 @@ class Builder implements StubProvider
     public function stub(): string
     {
         return Stub::get('builder');
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['app', 'Tables', 'Builders'], $filename);
     }
 }

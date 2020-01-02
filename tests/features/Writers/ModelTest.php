@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\Writer;
+use LaravelEnso\Cli\App\Services\StubWriters\Writer;
 use LaravelEnso\Cli\App\Services\Writers\Model;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
@@ -17,7 +17,7 @@ class ModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->root = 'cli_tests_tmp/';
+        $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
     }
@@ -44,6 +44,6 @@ class ModelTest extends TestCase
     {
         (new Writer(new Model($this->choices)))->handle();
 
-        $this->assertCliFileContains('class TestModel extends Model', 'TestModel.php');
+        $this->assertCliFileContains('class TestModel extends Model', ['TestModel.php']);
     }
 }

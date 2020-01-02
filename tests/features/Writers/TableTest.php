@@ -19,7 +19,7 @@ class TableTest extends TestCase
     {
         parent::setUp();
 
-        $this->root = 'cli_tests_tmp/';
+        $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
         Segments::ucfirst();
@@ -36,7 +36,7 @@ class TableTest extends TestCase
     /** @test */
     public function can_create_template()
     {
-        (new Table($this->choices))->handle();
+        $this->write(Table::class);
 
         $this->assertTableTemplateContains([
             '"routePrefix": "group.testModels"',
@@ -48,7 +48,7 @@ class TableTest extends TestCase
     /** @test */
     public function can_create_builder()
     {
-        (new Table($this->choices))->handle();
+        $this->write(Table::class);
 
         $this->assertTableBuilderContains([
             'namespace Namespace\App\Tables\Builders\Group;',
@@ -62,13 +62,13 @@ class TableTest extends TestCase
     {
         $this->setPermission('initTable');
 
-        (new Table($this->choices))->handle();
+        $this->write(Table::class);
 
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'class InitTable extends Controller',
             'use Init;',
-            'protected $tableClass = TestModelTable::class;',
+            'protected string $tableClass = TestModelTable::class;',
         ], 'InitTable');
     }
 

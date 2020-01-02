@@ -5,6 +5,7 @@ namespace LaravelEnso\Cli\App\Services\Writers;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Namespacer;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
@@ -14,24 +15,21 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 class Options implements StubProvider
 {
     private Obj $model;
-    private string $group;
 
     public function __construct(Choices $choices)
     {
         $this->model = $choices->get('model');
-        $this->group = $choices->get('permissionGroup')->get('name');
+    }
 
+    public function prepare(): void
+    {
         Segments::ucfirst();
         Path::segments();
         Stub::folder('options');
+        Directory::prepare($this->path());
     }
 
-    public function path(?string $filename = null): string
-    {
-        return Path::get(['app', 'Http', 'Controllers'], $filename, true);
-    }
-
-    public function filename(): string
+    public function filePath(): string
     {
         return $this->path('Options.php');
     }
@@ -48,5 +46,10 @@ class Options implements StubProvider
     public function stub(): string
     {
         return Stub::get('controller');
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['app', 'Http', 'Controllers'], $filename, true);
     }
 }

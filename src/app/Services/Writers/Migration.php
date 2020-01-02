@@ -12,13 +12,11 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 class Migration
 {
     private Obj $model;
-    private Obj $files;
     private ?string $root;
 
     public function __construct(Choices $choices)
     {
         $this->model = $choices->get('model');
-        $this->files = $choices->get('files');
         $this->root = $choices->params()->get('root');
     }
 

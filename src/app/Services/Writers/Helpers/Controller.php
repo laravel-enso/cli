@@ -1,23 +1,22 @@
 <?php
 
-namespace LaravelEnso\Cli\App\Services\Writers\Views;
+namespace LaravelEnso\Cli\App\Services\Writers\Helpers;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;
 use LaravelEnso\Helpers\App\Classes\Obj;
 
-class View implements StubProvider
+abstract class Controller implements StubProvider
 {
-    private Obj $model;
-    private string $permission;
+    protected Obj $model;
+    protected string $group;
+    protected string $permission;
 
     public function __construct(Choices $choices, string $permission)
     {
         $this->model = $choices->get('model');
+        $this->group = $choices->get('permissionGroup')->get('name');
         $this->permission = $permission;
     }
 
@@ -30,14 +29,7 @@ class View implements StubProvider
     {
         $name = Str::ucfirst($this->permission);
 
-        return $this->path("{$name}.vue");
-    }
-
-    public function fromTo(): array
-    {
-        return [
-            '${models}' => Str::plural(Str::snake($this->model->get('name'))),
-        ];
+        return $this->path("{$name}.php");
     }
 
     public function stub(): string
@@ -47,6 +39,6 @@ class View implements StubProvider
 
     private function path(?string $filename = null): string
     {
-        return Path::get(['client', 'src', 'js', 'pages'], $filename, true);
+        return Path::get(['app', 'Http', 'Controllers'], $filename, true);
     }
 }

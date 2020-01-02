@@ -1,17 +1,15 @@
 <?php
 
-namespace LaravelEnso\Cli\App\Services\Writers\Views;
+namespace LaravelEnso\Cli\App\Services\Writers\Helpers;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Cli\App\Contracts\BulkProvider;
 use LaravelEnso\Cli\App\Services\Choices;
 
-class Views implements BulkProvider
+abstract class Controllers implements BulkProvider
 {
-    private const Views = ['create', 'edit', 'index', 'show'];
-
-    private Choices $choices;
-    private Collection $permissions;
+    protected Choices $choices;
+    protected Collection $permissions;
 
     public function __construct(Choices $choices)
     {
@@ -21,8 +19,12 @@ class Views implements BulkProvider
 
     public function collection(): Collection
     {
-        return $this->permissions->intersect(self::Views)
+        return $this->permissions->intersect($this->routes())
             ->reduce(fn ($collection, $permission) => $collection
-                ->push(new View($this->choices, $permission)), new Collection());
+                ->push($this->create($permission)), new Collection());
     }
+
+    abstract public function create($permission): Controller;
+
+    abstract public function routes(): array;
 }

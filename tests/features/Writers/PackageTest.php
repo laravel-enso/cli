@@ -17,7 +17,7 @@ class PackageTest extends TestCase
     {
         parent::setUp();
 
-        $this->root = 'cli_tests_tmp/';
+        $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
     }
@@ -39,7 +39,7 @@ class PackageTest extends TestCase
             '"Enso\\\\Cli\\\\": "src/"',
             '"Enso\\\\Cli\\\\AppServiceProvider"',
             '"Enso\\\\Cli\\\\AuthServiceProvider"',
-        ], 'composer.json');
+        ], ['composer.json']);
     }
 
     /** @test */
@@ -55,7 +55,7 @@ class PackageTest extends TestCase
     {
         (new Package($this->choices))->handle();
 
-        $this->assertCliFileContains('Copyright (c) '.now()->format('Y').' enso', 'LICENSE');
+        $this->assertCliFileContains('Copyright (c) '.now()->format('Y').' enso', ['LICENSE']);
     }
 
     /** @test */
@@ -65,7 +65,7 @@ class PackageTest extends TestCase
 
         (new Package($this->choices))->handle();
 
-        $this->assertFileExists($this->root.'config/cli.php');
+        $this->assertFileExists($this->path(['config',  'cli.php']));
     }
 
     /** @test */
@@ -78,11 +78,12 @@ class PackageTest extends TestCase
         $this->assertCliFileContains([
             'namespace Enso\Cli',
             'class AppServiceProvider extends ServiceProvider',
-        ], 'AppServiceProvider.php');
+        ], ['AppServiceProvider.php']);
+
         $this->assertCliFileContains([
             'namespace Enso\Cli',
             'class AuthServiceProvider extends ServiceProvider',
-        ], 'AuthServiceProvider.php');
+        ], ['AuthServiceProvider.php']);
     }
 
     protected function choices()

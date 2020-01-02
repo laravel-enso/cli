@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
+use LaravelEnso\Cli\App\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\EnsoStructure\Mapping;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\EnsoStructure\Permissions;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
@@ -28,17 +29,16 @@ class EnsoStructure implements StubProvider
         $this->permissions = $choices->has('permissions')
             ? $choices->get('permissions')->filter()->keys()
             : null;
+    }
 
+    public function prepare(): void
+    {
         Path::segments(false);
         Stub::folder('structure');
+        Directory::prepare($this->path());
     }
 
-    public function path(?string $filename = null): string
-    {
-        return Path::get(['database', 'migrations'], $filename);
-    }
-
-    public function filename(): string
+    public function filePath(): string
     {
         $timestamp = Carbon::now()->format('Y_m_d_His');
         $structure = Str::snake(Str::plural($this->entity()));
@@ -65,10 +65,15 @@ class EnsoStructure implements StubProvider
         return Stub::get('migration');
     }
 
-    private function entity()
+    private function entity(): string
     {
         return $this->model
             ? Str::ucfirst($this->model->get('name'))
             : Str::ucfirst($this->menu->get('name'));
+    }
+
+    private function path(?string $filename = null): string
+    {
+        return Path::get(['database', 'migrations'], $filename);
     }
 }

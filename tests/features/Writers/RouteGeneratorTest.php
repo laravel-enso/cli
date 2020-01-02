@@ -17,7 +17,7 @@ class RouteGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->root = 'cli_tests_tmp/';
+        $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
     }
@@ -55,7 +55,10 @@ class RouteGeneratorTest extends TestCase
 
         (new RouteGenerator($this->choices))->handle();
 
-        $this->assertCliFileContains("Route::namespace('Namespace\App\Http\Controllers\Perm\Group')", 'routes/api.php');
+        $this->assertCliFileContains(
+            "Route::namespace('Namespace\App\Http\Controllers\Perm\Group')",
+            ['routes', 'api.php']);
+
         $this->assertRoutes(File::get("{$this->root}/routes/api.php"));
     }
 
