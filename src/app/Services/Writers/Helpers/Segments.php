@@ -15,9 +15,10 @@ class Segments
     {
         $segments = $full ? self::$segments : self::$segments->slice(0, -1);
 
-        return self::$ucfirst
-            ? $segments->map(fn ($segment) => Str::ucfirst($segment))
-            : $segments;
+        return $segments->when(
+            self::$ucfirst,
+            fn ($segments) => $segments->map(fn ($segment) => Str::ucfirst($segment))
+        );
     }
 
     public static function count()

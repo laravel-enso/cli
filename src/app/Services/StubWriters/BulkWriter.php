@@ -4,10 +4,10 @@ namespace LaravelEnso\Cli\App\Services\StubWriters;
 
 use LaravelEnso\Cli\App\Contracts\BulkProvider;
 use LaravelEnso\Cli\App\Contracts\PreparesBulkWriting;
-use LaravelEnso\Cli\App\Contracts\Writer as Factory;
+use LaravelEnso\Cli\App\Contracts\Writer as Contract;
 use LaravelEnso\Cli\App\Services\WriterFactory;
 
-class BulkWriter implements Factory
+class BulkWriter implements Contract
 {
     private BulkProvider $bulkProvider;
 
