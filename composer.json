@@ -22,7 +22,7 @@
         "laravel-enso/core": "4.7.*",
         "laravel-enso/helpers": "1.15.*",
         "laravel-enso/menus": "3.4.*",
-        "laravel-enso/permissions": "3.3.*",
+        "laravel-enso/permissions": "3.4.*",
         "laravel-enso/enums": "1.2.*",
         "laravel-enso/roles": "3.4.*"
     },
