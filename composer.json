@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": ">=7.4.0",
-        "laravel-enso/core": "4.7.*",
+        "laravel-enso/core": "4.8.*",
         "laravel-enso/helpers": "1.15.*",
         "laravel-enso/menus": "3.4.*",
         "laravel-enso/permissions": "3.4.*",
