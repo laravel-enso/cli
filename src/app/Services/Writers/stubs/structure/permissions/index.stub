@@ -1,1 +1,1 @@
-        ['name' => '${permissionGroup}.index', 'description' => 'Show index for ${models}', 'type' => Types::Read, 'is_default' => false],
+        ['name' => '${permissionGroup}.index', 'description' => 'Show index for ${models}', 'is_default' => false],

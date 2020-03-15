@@ -1,1 +1,1 @@
-        ['name' => '${permissionGroup}.initTable', 'description' => 'Init table for ${models}', 'type' => Types::Read, 'is_default' => false],
+        ['name' => '${permissionGroup}.initTable', 'description' => 'Init table for ${models}', 'is_default' => false],

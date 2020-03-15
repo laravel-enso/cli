@@ -1,1 +1,1 @@
-        ['name' => '${permissionGroup}.options', 'description' => 'Get ${model} options for select', 'type' => Types::Read, 'is_default' => false],
+        ['name' => '${permissionGroup}.options', 'description' => 'Get ${model} options for select', 'is_default' => false],

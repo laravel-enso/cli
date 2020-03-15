@@ -1,1 +1,1 @@
-        ['name' => '${permissionGroup}.destroy', 'description' => 'Delete ${model}', 'type' => Types::Write, 'is_default' => false],
+        ['name' => '${permissionGroup}.destroy', 'description' => 'Delete ${model}', 'is_default' => false],

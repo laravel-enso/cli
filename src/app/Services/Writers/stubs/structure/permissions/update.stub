@@ -1,1 +1,1 @@
-        ['name' => '${permissionGroup}.update', 'description' => 'Update ${model}', 'type' => Types::Write, 'is_default' => false],
+        ['name' => '${permissionGroup}.update', 'description' => 'Update ${model}', 'is_default' => false],
