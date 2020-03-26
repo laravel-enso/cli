@@ -24,8 +24,6 @@ class Path
     public static function root(string $root)
     {
         self::$root = $root;
-
-
     }
 
     public static function segments(bool $segments = true)

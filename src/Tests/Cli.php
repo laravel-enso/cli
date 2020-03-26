@@ -176,14 +176,14 @@ trait Cli
     private function controllerPath($controller): string
     {
         return $this->path([
-           $this->rootSegment, 'Http', 'Controllers', ...$this->segments(), "{$controller}.php",
+            $this->rootSegment, 'Http', 'Controllers', ...$this->segments(), "{$controller}.php",
         ]);
     }
 
     private function validatorPath($validator): string
     {
         return $this->path([
-           $this->rootSegment, 'Http', 'Requests', ...$this->segments(false), "{$validator}.php",
+            $this->rootSegment, 'Http', 'Requests', ...$this->segments(false), "{$validator}.php",
         ]);
     }
 
@@ -191,7 +191,7 @@ trait Cli
     {
         return $this->path([
             $this->rootSegment, 'Forms', 'Builders', ...$this->segments(false),
-            Str::ucfirst("{$this->modelName()}Form.php")
+            Str::ucfirst("{$this->modelName()}Form.php"),
         ]);
     }
 
