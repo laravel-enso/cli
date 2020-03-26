@@ -99,8 +99,9 @@ class Structure
             && $this->choices->get('package')->filled('name');
 
         if ($this->isPackage) {
-            $this->params()->set('root', $this->packageRoot());
             $this->params()->set('namespace', $this->packageNamespace('App'));
+            $this->params()->set('root', $this->packageRoot());
+            $this->params()->set('rootSegment', 'App');
         }
 
         Path::root($this->params()->get('root'));
@@ -147,9 +148,9 @@ class Structure
 
     private function modelPath($segments)
     {
-        return $segments
-            ->map(fn ($segment, $index) => ! $index ? lcfirst($segment) : $segment)
-            ->implode(DIRECTORY_SEPARATOR);
+        $segments[0] = $this->params()->get('rootSegment');
+
+        return $segments->implode(DIRECTORY_SEPARATOR);
     }
 
     private function packageNamespace(string $suffix)

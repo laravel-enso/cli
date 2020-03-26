@@ -12,12 +12,14 @@ abstract class Controller implements StubProvider
     protected Obj $model;
     protected string $group;
     protected string $permission;
+    private string $rootSegment;
 
     public function __construct(Choices $choices, string $permission)
     {
         $this->model = $choices->get('model');
         $this->group = $choices->get('permissionGroup')->get('name');
         $this->permission = $permission;
+        $this->rootSegment = $choices->params()->get('rootSegment');
     }
 
     public function prepare(): void
@@ -39,6 +41,6 @@ abstract class Controller implements StubProvider
 
     private function path(?string $filename = null): string
     {
-        return Path::get(['app', 'Http', 'Controllers'], $filename, true);
+        return Path::get([$this->rootSegment, 'Http', 'Controllers'], $filename, true);
     }
 }

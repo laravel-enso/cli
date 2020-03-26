@@ -53,12 +53,4 @@ class ViewsTest extends TestCase
                 ->only(['index', 'create', 'show', 'edit']),
         ]);
     }
-
-    protected function params()
-    {
-        return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App',
-        ]);
-    }
 }

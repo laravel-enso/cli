@@ -9,7 +9,7 @@ use LaravelEnso\Cli\App\Services\Choices;
 use LaravelEnso\Cli\App\Services\Writers\Form\Builder;
 use LaravelEnso\Cli\App\Services\Writers\Form\Controllers;
 use LaravelEnso\Cli\App\Services\Writers\Form\Template;
-use LaravelEnso\Cli\App\Services\Writers\Forms\Validator;
+use LaravelEnso\Cli\App\Services\Writers\Form\Validator;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\App\Services\Writers\Helpers\Stub;

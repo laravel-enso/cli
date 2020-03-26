@@ -101,6 +101,7 @@ class PackageTest extends TestCase
         return new Obj([
             'root' => $this->root,
             'namespace' => 'Enso\Cli\App',
+            'rootSegment' => 'app'
         ]);
     }
 }

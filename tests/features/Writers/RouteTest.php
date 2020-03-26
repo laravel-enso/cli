@@ -155,11 +155,5 @@ class RouteTest extends TestCase
         ]);
     }
 
-    protected function params()
-    {
-        return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App',
-        ]);
-    }
+
 }

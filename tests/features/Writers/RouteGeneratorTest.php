@@ -85,12 +85,4 @@ class RouteGeneratorTest extends TestCase
             'permissions' => $this->permissions(),
         ]);
     }
-
-    private function params(): Obj
-    {
-        return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App',
-        ]);
-    }
 }

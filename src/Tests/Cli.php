@@ -17,6 +17,7 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 trait Cli
 {
     private $segments;
+    protected string $rootSegment = 'app';
 
     private function initChoices()
     {
@@ -175,21 +176,21 @@ trait Cli
     private function controllerPath($controller): string
     {
         return $this->path([
-            'app', 'Http', 'Controllers', ...$this->segments(), "{$controller}.php",
+           $this->rootSegment, 'Http', 'Controllers', ...$this->segments(), "{$controller}.php",
         ]);
     }
 
     private function validatorPath($validator): string
     {
         return $this->path([
-            'app', 'Http', 'Requests', ...$this->segments(false), "{$validator}.php",
+           $this->rootSegment, 'Http', 'Requests', ...$this->segments(false), "{$validator}.php",
         ]);
     }
 
     private function formBuilderPath(): string
     {
         return $this->path([
-            'app', 'Forms', 'Builders', ...$this->segments(false),
+            $this->rootSegment, 'Forms', 'Builders', ...$this->segments(false),
             Str::ucfirst("{$this->modelName()}Form.php")
         ]);
     }
@@ -197,7 +198,7 @@ trait Cli
     private function formTemplatePath(): string
     {
         return $this->path([
-            'app', 'Forms', 'Templates', ...$this->segments(false),
+            $this->rootSegment, 'Forms', 'Templates', ...$this->segments(false),
             Str::camel($this->modelName()).'.json',
         ]);
     }
@@ -219,7 +220,7 @@ trait Cli
     private function tableBuilderPath(): string
     {
         return $this->path([
-            'app', 'Tables', 'Builders', ...$this->segments(false),
+            $this->rootSegment, 'Tables', 'Builders', ...$this->segments(false),
             Str::ucfirst($this->modelName()).'Table.php',
         ]);
     }
@@ -227,7 +228,7 @@ trait Cli
     private function tableTemplatePath(): string
     {
         return $this->path([
-            'app', 'Tables', 'Templates', ...$this->segments(false),
+            $this->rootSegment, 'Tables', 'Templates', ...$this->segments(false),
             Str::camel(Str::plural($this->modelName())).'.json',
         ]);
     }
@@ -262,6 +263,8 @@ trait Cli
 
     private function write($provider)
     {
+        \Log::debug($this->choices->params());
+
         WriterFactory::make(new $provider($this->choices))->handle();
     }
 
@@ -288,6 +291,7 @@ trait Cli
         return new Obj([
             'root' => $this->root,
             'namespace' => 'Namespace\App',
+            'rootSegment' => 'app',
         ]);
     }
 

@@ -88,12 +88,4 @@ class EnsoStructureTest extends TestCase
             'model' => ['name' => 'TestModel'],
         ]);
     }
-
-    protected function params()
-    {
-        return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App',
-        ]);
-    }
 }
