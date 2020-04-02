@@ -48,6 +48,7 @@ class StructureWriterTest extends TestCase
     public function can_generate_package()
     {
         $this->root = 'vendor/laravel-enso/testing/src';
+        $this->rootSegment = 'App';
 
         $this->choices->set('package', new Obj([
             'name' => 'testing',
@@ -79,7 +80,7 @@ class StructureWriterTest extends TestCase
 
     private function modelCreated()
     {
-        $this->assertFileExists($this->path(['app', 'Testing', "{$this->modelName()}.php"]));
+        $this->assertFileExists($this->path([$this->rootSegment, 'Testing', "{$this->modelName()}.php"]));
     }
 
     private function requestValidatorCreated()
@@ -139,13 +140,13 @@ class StructureWriterTest extends TestCase
             return;
         }
 
-        File::deleteDirectory($this->path(['app/Testing']));
-        File::deleteDirectory($this->path(['app/Forms', 'Builders', 'Testing']));
-        File::deleteDirectory($this->path(['app', 'Forms', 'Templates', 'Testing']));
-        File::deleteDirectory($this->path(['app', 'Tables', 'Builders', 'Testing']));
-        File::deleteDirectory($this->path(['app', 'Tables', 'Templates', 'Testing']));
-        File::deleteDirectory($this->path(['app', 'Http', 'Controllers', 'Testing']));
-        File::deleteDirectory($this->path(['app', 'Http', 'Requests', 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Forms', 'Builders', 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Forms', 'Templates', 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Tables', 'Builders', 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Tables', 'Templates', 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Http', 'Controllers', 'Testing']));
+        File::deleteDirectory($this->path([$this->rootSegment, 'Http', 'Requests', 'Testing']));
         File::deleteDirectory($this->path(['client', 'src', 'js', 'pages', 'testing']));
         File::deleteDirectory($this->path(['client', 'src', 'js', 'routes', 'testing']));
         File::delete($this->path(['client', 'src', 'js', 'routes', 'testing.js']));

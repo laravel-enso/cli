@@ -1,8 +1,7 @@
 <?php
 
-namespace LaravelEnso\Cli\App\Services\Writers\Table;
+namespace LaravelEnso\Cli\App\Services\Writers\Form;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\App\Contracts\StubProvider;
 use LaravelEnso\Cli\App\Services\Choices;
@@ -15,11 +14,13 @@ class Template implements StubProvider
 {
     private Obj $model;
     private string $group;
+    private string $rootSegment;
 
     public function __construct(Choices $choices)
     {
         $this->model = $choices->get('model');
         $this->group = $choices->get('permissionGroup')->get('name');
+        $this->rootSegment = $choices->params()->get('rootSegment');
     }
 
     public function prepare(): void
@@ -29,21 +30,14 @@ class Template implements StubProvider
 
     public function filePath(): string
     {
-        $name = Str::camel(Str::plural($this->model->get('name')));
+        $name = Str::camel($this->model->get('name'));
 
         return $this->path("{$name}.json");
     }
 
     public function fromTo(): array
     {
-        $model = $this->model->get('name');
-        $name = (new Collection(explode('_', Str::snake($model))))->implode(' ');
-
-        return [
-            '${permissionGroup}' => $this->group,
-            '${name}' => Str::title($name),
-            '${table}' => Str::snake(Str::plural($model)),
-        ];
+        return ['${permissionGroup}' => $this->group];
     }
 
     public function stub(): string
@@ -53,6 +47,6 @@ class Template implements StubProvider
 
     private function path(?string $filename = null): string
     {
-        return Path::get(['app', 'Tables', 'Templates'], $filename);
+        return Path::get([$this->rootSegment, 'Forms', 'Templates'], $filename);
     }
 }
