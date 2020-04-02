@@ -190,7 +190,7 @@ trait Cli
     {
         return $this->path([
             'app', 'Forms', 'Builders', ...$this->segments(false),
-            Str::ucfirst("{$this->modelName()}Form.php")
+            Str::ucfirst("{$this->modelName()}Form.php"),
         ]);
     }
 
@@ -256,8 +256,8 @@ trait Cli
     private function modelName()
     {
         return (new Collection(
-            explode('/', $this->choices->get('model')->get('name')))
-        )->last();
+            explode('/', $this->choices->get('model')->get('name'))
+        ))->last();
     }
 
     private function write($provider)
