@@ -119,7 +119,7 @@ class RouteTest extends TestCase
 
         $this->write(Routes::class);
 
-        $this->assertFileNotExists($this->viewRoutePath('perm/group/destroy.js'));
+        $this->assertFileDoesNotExists($this->viewRoutePath('perm/group/destroy.js'));
     }
 
     /** @test */
@@ -129,7 +129,7 @@ class RouteTest extends TestCase
 
         $this->write(Routes::class);
 
-        $this->assertFileNotExists($this->viewRoutePath('perm/group/show.js'));
+        $this->assertFileDoesNotExists($this->viewRoutePath('perm/group/show.js'));
     }
 
     /** @test */
@@ -154,6 +154,4 @@ class RouteTest extends TestCase
             'permissions' => [],
         ]);
     }
-
-
 }
