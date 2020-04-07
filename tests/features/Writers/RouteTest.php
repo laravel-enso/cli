@@ -154,6 +154,4 @@ class RouteTest extends TestCase
             'permissions' => [],
         ]);
     }
-
-
 }

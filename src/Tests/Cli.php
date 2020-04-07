@@ -263,8 +263,6 @@ trait Cli
 
     private function write($provider)
     {
-        \Log::debug($this->choices->params());
-
         WriterFactory::make(new $provider($this->choices))->handle();
     }
 
