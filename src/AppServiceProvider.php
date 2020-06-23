@@ -16,14 +16,14 @@ class AppServiceProvider extends ServiceProvider
 
     private function load()
     {
-        $this->mergeConfigFrom(__DIR__.'/config/model.php', 'enso.structures.model');
-        $this->mergeConfigFrom(__DIR__.'/config/menu.php', 'enso.structures.menu');
-        $this->mergeConfigFrom(__DIR__.'/config/permissions.php', 'enso.structures.permissions');
-        $this->mergeConfigFrom(__DIR__.'/config/package.php', 'enso.structures.package');
-        $this->mergeConfigFrom(__DIR__.'/config/params.php', 'enso.structures.params');
-        $this->mergeConfigFrom(__DIR__.'/config/files.php', 'enso.structures.files');
+        $this->mergeConfigFrom(__DIR__.'/../config/model.php', 'enso.structures.model');
+        $this->mergeConfigFrom(__DIR__.'/../config/menu.php', 'enso.structures.menu');
+        $this->mergeConfigFrom(__DIR__.'/../config/permissions.php', 'enso.structures.permissions');
+        $this->mergeConfigFrom(__DIR__.'/../config/package.php', 'enso.structures.package');
+        $this->mergeConfigFrom(__DIR__.'/../config/params.php', 'enso.structures.params');
+        $this->mergeConfigFrom(__DIR__.'/../config/files.php', 'enso.structures.files');
         $this->mergeConfigFrom(
-            __DIR__.'/config/permissionGroup.php', 'enso.structures.permissionGroup'
+            __DIR__.'/../config/permissionGroup.php', 'enso.structures.permissionGroup'
         );
 
         return $this;
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     private function publish()
     {
         $this->publishes([
-            __DIR__.'/config' => config_path('enso/structures'),
+            __DIR__.'/../config' => config_path('enso/structures'),
         ], ['cli-config', 'enso-config']);
 
         return $this;
