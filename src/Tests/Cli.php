@@ -7,12 +7,12 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\App\Services\Choices;
-use LaravelEnso\Cli\App\Services\WriterFactory;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Namespacer;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
-use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Cli\Services\Choices;
+use LaravelEnso\Cli\Services\WriterFactory;
+use LaravelEnso\Cli\Services\Writers\Helpers\Namespacer;
+use LaravelEnso\Cli\Services\Writers\Helpers\Path;
+use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
+use LaravelEnso\Helpers\Classes\Obj;
 
 trait Cli
 {

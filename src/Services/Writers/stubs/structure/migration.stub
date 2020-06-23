@@ -1,0 +1,13 @@
+<?php
+
+use LaravelEnso\Migrator\Database\Migration;
+
+class CreateStructureFor${Entity} extends Migration
+{
+    protected $permissions = ${permissions};
+
+    protected $menu = ${menu};
+
+    protected $parentMenu = ${parentMenu};
+}
+

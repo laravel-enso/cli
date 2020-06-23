@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\StubWriters\Writer;
-use LaravelEnso\Cli\App\Services\Writers\Model;
+use LaravelEnso\Cli\Services\StubWriters\Writer;
+use LaravelEnso\Cli\Services\Writers\Model;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
 

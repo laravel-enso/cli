@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\StubWriters\Writer;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
-use LaravelEnso\Cli\App\Services\Writers\Options;
+use LaravelEnso\Cli\Services\StubWriters\Writer;
+use LaravelEnso\Cli\Services\Writers\Helpers\Path;
+use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
+use LaravelEnso\Cli\Services\Writers\Options;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
 

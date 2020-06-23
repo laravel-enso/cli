@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\Writers\Migration;
+use LaravelEnso\Cli\Services\Writers\Migration;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
 

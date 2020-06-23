@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\Writers\Form;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Path;
-use LaravelEnso\Cli\App\Services\Writers\Helpers\Segments;
+use LaravelEnso\Cli\Services\Writers\Form;
+use LaravelEnso\Cli\Services\Writers\Helpers\Path;
+use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
 

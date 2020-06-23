@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Cli\App\Services\Writers\Package;
+use LaravelEnso\Cli\Services\Writers\Package;
 use LaravelEnso\Cli\Tests\Cli;
-use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Helpers\Classes\Obj;
 use Tests\TestCase;
 
 class PackageTest extends TestCase

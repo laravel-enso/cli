@@ -2,10 +2,10 @@
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
-use LaravelEnso\Cli\App\Services\Choices;
-use LaravelEnso\Cli\App\Services\Validator;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Menus\App\Models\Menu;
+use LaravelEnso\Cli\Services\Choices;
+use LaravelEnso\Cli\Services\Validator;
+use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Menus\Models\Menu;
 use Tests\TestCase;
 
 class ValidatorTest extends TestCase

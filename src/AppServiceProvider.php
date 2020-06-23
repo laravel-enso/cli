@@ -3,7 +3,7 @@
 namespace LaravelEnso\Cli;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelEnso\Cli\App\Commands\Cli;
+use LaravelEnso\Cli\Commands\Cli;
 
 class AppServiceProvider extends ServiceProvider
 {
