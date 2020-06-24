@@ -12,7 +12,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\EnsoStructure\Mapping;
 use LaravelEnso\Cli\Services\Writers\Helpers\EnsoStructure\Permissions;
 use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Services\Writers\Helpers\Stub;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 class EnsoStructure implements StubProvider
 {

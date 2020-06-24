@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\Enums\Options;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 class Choices
 {

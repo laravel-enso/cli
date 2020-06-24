@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Writers\Helpers\Directory;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 class Migration
 {

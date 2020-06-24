@@ -4,7 +4,7 @@ namespace LaravelEnso\Cli\Services\Writers\Helpers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 class Segments
 {

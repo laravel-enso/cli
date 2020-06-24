@@ -7,7 +7,7 @@ use LaravelEnso\Cli\Services\StubWriters\Writer;
 use LaravelEnso\Cli\Services\Writers\EnsoStructure;
 use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Tests\Cli;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
 
 class EnsoStructureTest extends TestCase

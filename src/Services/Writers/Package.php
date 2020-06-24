@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Writers\Helpers\Directory;
 use LaravelEnso\Cli\Services\Writers\Helpers\Stub;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 class Package
 {

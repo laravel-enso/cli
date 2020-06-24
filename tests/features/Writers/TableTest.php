@@ -5,7 +5,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Services\Writers\Table;
 use LaravelEnso\Cli\Tests\Cli;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
 
 class TableTest extends TestCase

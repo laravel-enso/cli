@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\Services\Writers\RouteGenerator;
 use LaravelEnso\Cli\Tests\Cli;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
 
 class RouteGeneratorTest extends TestCase

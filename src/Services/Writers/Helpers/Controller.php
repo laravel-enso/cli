@@ -5,7 +5,7 @@ namespace LaravelEnso\Cli\Services\Writers\Helpers;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\Contracts\StubProvider;
 use LaravelEnso\Cli\Services\Choices;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 abstract class Controller implements StubProvider
 {

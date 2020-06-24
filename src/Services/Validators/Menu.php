@@ -4,7 +4,7 @@ namespace LaravelEnso\Cli\Services\Validators;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Cli\Services\Choices;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Menus\Models\Menu as Model;
 
 class Menu extends Validator

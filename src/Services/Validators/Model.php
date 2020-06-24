@@ -4,7 +4,7 @@ namespace LaravelEnso\Cli\Services\Validators;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\Services\Choices;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 class Model extends Validator
 {

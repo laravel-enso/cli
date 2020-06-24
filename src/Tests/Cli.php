@@ -12,7 +12,7 @@ use LaravelEnso\Cli\Services\WriterFactory;
 use LaravelEnso\Cli\Services\Writers\Helpers\Namespacer;
 use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 
 trait Cli
 {

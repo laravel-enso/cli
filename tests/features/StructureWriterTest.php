@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Structure;
 use LaravelEnso\Cli\Tests\Cli;
-use LaravelEnso\Helpers\Classes\Obj;
+use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
 
 class StructureWriterTest extends TestCase
