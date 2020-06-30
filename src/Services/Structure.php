@@ -31,6 +31,7 @@ class Structure
         'structure' => EnsoStructure::class,
         'options' => Options::class,
         'model' => Model::class,
+        'package' => Package::class,
     ];
 
     public function __construct(Choices $choices)
@@ -55,18 +56,8 @@ class Structure
 
     private function write()
     {
-        $this->package()
-            ->migration()
+        $this->migration()
             ->writeProviders();
-    }
-
-    private function package()
-    {
-        if ($this->isPackage) {
-            (new Package($this->choices))->handle();
-        }
-
-        return $this;
     }
 
     private function migration()
@@ -99,9 +90,13 @@ class Structure
             && $this->choices->get('package')->filled('name');
 
         if ($this->isPackage) {
-            $this->params()->set('namespace', $this->packageNamespace('App'));
+            $this->params()->set('namespace', $this->packageNamespace());
             $this->params()->set('root', $this->packageRoot());
-            $this->params()->set('rootSegment', 'App');
+            $this->params()->set('rootSegment', 'src');
+            $this->choices->get('files')->put('package', true);
+            $segments = new Collection(explode(DIRECTORY_SEPARATOR, $this->choices->get('model')->get('name')));
+            $segments->prepend('src');
+            $this->choices->get('model')->put('name', $segments->implode(DIRECTORY_SEPARATOR));
         }
 
         Path::root($this->params()->get('root'));
@@ -119,7 +114,7 @@ class Structure
         $model = $this->choices->get('model');
         $segments = new Collection(explode(DIRECTORY_SEPARATOR, $model->get('name')));
 
-        if ($segments->first() !== 'App') {
+        if ($segments->first() !== 'App' && ! $this->isPackage) {
             $segments->prepend('App');
         }
 
@@ -139,7 +134,7 @@ class Structure
 
     private function modelNamespace($segments)
     {
-        $namespace = $segments->implode('\\');
+        $namespace = $this->filterNamespace($segments)->implode('\\');
 
         return $this->isPackage
             ? $this->packageNamespace($namespace)
@@ -153,21 +148,27 @@ class Structure
         return $segments->implode(DIRECTORY_SEPARATOR);
     }
 
-    private function packageNamespace(string $suffix)
+    private function packageNamespace(?string $suffix = null)
     {
         return (new Collection(explode(DIRECTORY_SEPARATOR, $this->packageRoot())))
-            ->reject(fn ($segment) => in_array($segment, ['src', 'vendor']))
+            ->pipe(fn ($segments) => $this->filterNamespace($segments))
             ->map(fn ($segment) => Str::ucfirst(Str::camel($segment)))
             ->push($suffix)
             ->implode('\\');
     }
+
+    private function filterNamespace($segments)
+    {
+        return $segments
+            ->reject(fn ($segment) => in_array($segment, ['src', 'vendor']));
+  }
 
     private function packageRoot()
     {
         $vendor = Str::kebab($this->choices->get('package')->get('vendor'));
         $package = Str::kebab($this->choices->get('package')->get('name'));
 
-        return (new Collection(['vendor', $vendor, $package, 'src']))
+        return (new Collection(['vendor', $vendor, $package]))
             ->implode(DIRECTORY_SEPARATOR);
     }
 

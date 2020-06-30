@@ -11,8 +11,10 @@ class Stub
 
     public static function get(string $file)
     {
+        [$name] = explode('.', $file);
+
         $filePath = (new Collection([
-            __DIR__, '..', 'stubs', self::$folder, "{$file}.stub",
+            __DIR__, '..', 'stubs', self::$folder, "{$name}.stub",
         ]))->implode(DIRECTORY_SEPARATOR);
 
         return File::get($filePath);

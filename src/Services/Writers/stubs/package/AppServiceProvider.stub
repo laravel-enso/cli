@@ -14,19 +14,19 @@ class AppServiceProvider extends ServiceProvider
 
     private function load()
     {
-        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
-        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
-        $this->mergeConfigFrom(__DIR__.'/config/${package}.php', '${package}');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->mergeConfigFrom(__DIR__.'/../config/${package}.php', '${package}');
     }
 
     private function publish()
     {
         $this->publishes([
-            __DIR__ . '/config' => config_path('${vendor}'),
+            __DIR__ . '/../config' => config_path('${vendor}'),
         ], '${package}-config');
 
         $this->publishes([
-            __DIR__.'/client/src/js' => base_path('client/src/js'),
+            __DIR__.'/../client/src/js' => base_path('client/src/js'),
         ], '${package}-assets');
     }
 

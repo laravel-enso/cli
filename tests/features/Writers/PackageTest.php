@@ -32,7 +32,7 @@ class PackageTest extends TestCase
     /** @test */
     public function can_create_composer()
     {
-        (new Package($this->choices))->handle();
+        $this->write(Package::class);
 
         $this->assertCliFileContains([
             '"name": "enso/cli"',
@@ -45,7 +45,7 @@ class PackageTest extends TestCase
     /** @test */
     public function can_create_readme()
     {
-        (new Package($this->choices))->handle();
+        $this->write(Package::class);
 
         $this->assertCliFileContains('###  enso - cli', 'README.md');
     }
@@ -53,7 +53,7 @@ class PackageTest extends TestCase
     /** @test */
     public function can_create_licence()
     {
-        (new Package($this->choices))->handle();
+        $this->write(Package::class);
 
         $this->assertCliFileContains('Copyright (c) '.now()->format('Y').' enso', ['LICENSE']);
     }
@@ -63,7 +63,7 @@ class PackageTest extends TestCase
     {
         $this->choices->get('package')->put('config', true);
 
-        (new Package($this->choices))->handle();
+        $this->write(Package::class);
 
         $this->assertFileExists($this->path(['config',  'cli.php']));
     }
@@ -73,14 +73,14 @@ class PackageTest extends TestCase
     {
         $this->choices->get('package')->put('providers', true);
 
-        (new Package($this->choices))->handle();
+        $this->write(Package::class);
 
-        $this->assertCliFileContains([
+        $this->assertProvidersContains([
             'namespace Enso\Cli',
             'class AppServiceProvider extends ServiceProvider',
         ], ['AppServiceProvider.php']);
 
-        $this->assertCliFileContains([
+        $this->assertProvidersContains([
             'namespace Enso\Cli',
             'class AuthServiceProvider extends ServiceProvider',
         ], ['AuthServiceProvider.php']);

@@ -70,6 +70,11 @@ trait Cli
         $this->assertFileExists($this->formTemplatePath());
     }
 
+    private function assertProvidersContains($needle, $filePath)
+    {
+        $this->assertFileContains($needle, $this->providerPath($filePath));
+    }
+
     private function assertCliFileContains($needle, $filePath)
     {
         $this->assertFileContains($needle, $this->path($filePath));
@@ -206,6 +211,11 @@ trait Cli
     private function viewRoutePath($filePath): string
     {
         return $this->path(['client', 'src', 'js', 'routes', ...(array) $filePath]);
+    }
+
+    private function providerPath($filePath): string
+    {
+        return $this->path([$this->rootSegment, ...$filePath]);
     }
 
     private function viewPagePath($method): string
