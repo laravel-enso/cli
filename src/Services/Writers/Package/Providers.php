@@ -19,7 +19,7 @@ class Providers implements BulkProvider
     {
         return new Collection([
             new Provider($this->choices, 'AppServiceProvider.php'),
-            new Provider($this->choices, 'AuthServiceProvider.php')
+            new Provider($this->choices, 'AuthServiceProvider.php'),
         ]);
     }
 }

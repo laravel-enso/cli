@@ -161,7 +161,7 @@ class Structure
     {
         return $segments
             ->reject(fn ($segment) => in_array($segment, ['src', 'vendor']));
-  }
+    }
 
     private function packageRoot()
     {

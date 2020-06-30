@@ -19,7 +19,6 @@ class Config implements StubProvider
         $this->root = $choices->params()->get('root');
     }
 
-
     public function prepare(): void
     {
         Directory::prepare($this->path());
@@ -43,7 +42,7 @@ class Config implements StubProvider
     private function path(?string $filename = null): string
     {
         return (new Collection([
-            $this->root, 'config', $filename
+            $this->root, 'config', $filename,
         ]))->filter()->implode(DIRECTORY_SEPARATOR);
     }
 }
