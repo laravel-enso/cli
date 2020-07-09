@@ -1,6 +1,6 @@
 # Cli
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4d11f692afc45769893a5299069e643)](https://www.codacy.com/app/laravel-enso/cli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/Cli&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/828351c187f24dd6b3dc66ab882aa84d)](https://www.codacy.com/gh/laravel-enso/cli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/cli&amp;utm_campaign=Badge_Grade) 
 [![StyleCI](https://github.styleci.io/repos/95235866/shield?branch=master)](https://github.styleci.io/repos/95235866)
 [![License](https://poser.pugx.org/laravel-enso/cli/license)](https://packagist.org/packages/laravel-enso/cli)
 [![Total Downloads](https://poser.pugx.org/laravel-enso/cli/downloads)](https://packagist.org/packages/laravel-enso/cli)
