@@ -112,7 +112,7 @@ class Structure
         }
 
         $model = $this->choices->get('model');
-        $segments = new Collection(explode(DIRECTORY_SEPARATOR, $model->get('name')));
+        $segments = new Collection(explode('\\', $model->get('name')));
 
         if ($segments->first() !== 'App' && ! $this->isPackage) {
             $segments->prepend('App');
