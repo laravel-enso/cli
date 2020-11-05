@@ -1,1 +1,1 @@
-Route::get('create', 'Create')->name('create');
+Route::get('create', Create::class)->name('create');

@@ -1,1 +1,1 @@
-Route::get('tableData', 'TableData')->name('tableData');
+Route::get('tableData', TableData::class)->name('tableData');

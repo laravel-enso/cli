@@ -1,1 +1,1 @@
-Route::get('exportExcel', 'ExportExcel')->name('exportExcel');
+Route::get('exportExcel', ExportExcel::class)->name('exportExcel');
