@@ -83,7 +83,7 @@ class RouteGenerator
         return $this->permissions
             ->map(fn ($permission) => $this->use($from, $to, $permission))
             ->push('use Illuminate\Support\Facades\Route;')
-            ->map(fn($use) => trim($use))
+            ->map(fn ($use) => trim($use))
             ->sort()
             ->implode(PHP_EOL);
     }
@@ -96,7 +96,7 @@ class RouteGenerator
     private function use($from, $to, $permission)
     {
         return str_replace(
-            ['${namespace}', '${permission}',],
+            ['${namespace}', '${permission}'],
             [$this->namespacer(), Str::ucfirst($permission)],
             Stub::get('use')
         );
