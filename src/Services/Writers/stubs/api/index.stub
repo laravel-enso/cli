@@ -1,1 +1,1 @@
-Route::get('', 'Index')->name('index');
+Route::get('', Index::class)->name('index');

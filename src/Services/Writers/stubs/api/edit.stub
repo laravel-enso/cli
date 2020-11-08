@@ -1,1 +1,1 @@
-Route::get('{${model}}/edit', 'Edit')->name('edit');
+Route::get('{${model}}/edit', Edit::class)->name('edit');

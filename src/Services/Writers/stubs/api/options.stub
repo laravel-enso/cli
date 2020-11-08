@@ -1,1 +1,1 @@
-Route::get('options', 'Options')->name('options');
+Route::get('options', Options::class)->name('options');

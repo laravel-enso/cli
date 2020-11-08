@@ -20,7 +20,7 @@ class Mapping
     {
         return $this->menu
             ? str_replace($this->mapping(), $this->values(), Stub::get('menu'))
-            : 'null';
+            : '[]';
     }
 
     public function parentMenu()

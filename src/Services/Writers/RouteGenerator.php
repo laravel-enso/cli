@@ -33,11 +33,16 @@ class RouteGenerator
     {
         Segments::ucfirst(false);
         Stub::folder('api');
+        $this->sortPermissions();
 
         [$from, $to] = $this->fromTo();
 
         $from[] = '${routes}';
         $to[] = $this->routes($from, $to);
+
+        $from[] = '${uses}';
+        $to[] = $this->uses($from, $to);
+
         $content = str_replace($from, $to, Stub::get('routes'));
 
         if (! $this->isPackage) {
@@ -57,8 +62,8 @@ class RouteGenerator
 
         $array = [
             '${namespace}' => $this->namespacer(),
-            '${prefix}' => "->prefix('{$packagePrefix}{$prefix}')",
-            '${alias}' => "->as('{$alias}.')",
+            '${prefix}' => "prefix('{$packagePrefix}{$prefix}')",
+            '${alias}' => "as('{$alias}.')",
             '${model}' => lcfirst($this->model->get('name')),
         ];
 
@@ -67,29 +72,40 @@ class RouteGenerator
 
     private function routes($from, $to)
     {
-        $showIndex = $this->permissions->search(self::ShowRoute);
-
-        if ($showIndex !== false) {
-            tap($this->permissions)->splice($showIndex, 1)->push(self::ShowRoute);
-        }
-
         return $this->permissions
-            ->reduce(fn ($routes, $permission) => $routes
-                .$this->route($from, $to, $permission), PHP_EOL);
+            ->map(fn ($permission) => $this->route($from, $to, $permission))
+            ->map(fn ($route) => trim($route))
+            ->implode(PHP_EOL."\t\t");
+    }
+
+    private function uses($from, $to)
+    {
+        return $this->permissions
+            ->map(fn ($permission) => $this->use($from, $to, $permission))
+            ->push('use Illuminate\Support\Facades\Route;')
+            ->map(fn ($use) => trim($use))
+            ->sort()
+            ->implode(PHP_EOL);
     }
 
     private function route($from, $to, $permission)
     {
-        return "\t\t".str_replace($from, $to, Stub::get($permission)).PHP_EOL;
+        return str_replace($from, $to, Stub::get($permission));
+    }
+
+    private function use($from, $to, $permission)
+    {
+        return str_replace(
+            ['${namespace}', '${permission}'],
+            [$this->namespacer(), Str::ucfirst($permission)],
+            Stub::get('use')
+        );
     }
 
     private function namespacer()
     {
         $segments = new Collection();
-
-        if ($this->isPackage) {
-            $segments = $segments->concat([$this->params->get('namespace'), 'Http', 'Controllers']);
-        }
+        $segments = $segments->concat([$this->params->get('namespace'), 'Http', 'Controllers']);
 
         return $segments->concat(Segments::get())
             ->map(fn ($segment) => Str::ucfirst($segment))
@@ -98,7 +114,16 @@ class RouteGenerator
 
     private function packageRoutesPath(?string $file = null)
     {
-        return (new Collection([$this->params->get('root'), 'routes',  $file]))
+        return (new Collection([$this->params->get('root'), 'routes', $file]))
             ->implode(DIRECTORY_SEPARATOR);
+    }
+
+    private function sortPermissions(): void
+    {
+        $showIndex = $this->permissions->search(self::ShowRoute);
+
+        if ($showIndex !== false) {
+            tap($this->permissions)->splice($showIndex, 1)->push(self::ShowRoute);
+        }
     }
 }

@@ -44,7 +44,7 @@ class EnsoStructureTest extends TestCase
 
         $this->assertStructureMigrationContains('class CreateStructureForTestModels extends Migration');
         $this->assertStructureMigrationContains('$permissions = null');
-        $this->assertStructureMigrationContains('$menu = null');
+        $this->assertStructureMigrationContains('$menu = []');
         $this->assertStructureMigrationContains('$parentMenu = null');
     }
 

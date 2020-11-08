@@ -1,1 +1,1 @@
-Route::post('', 'Store')->name('store');
+Route::post('', Store::class)->name('store');

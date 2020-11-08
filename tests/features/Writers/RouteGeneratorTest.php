@@ -34,7 +34,6 @@ class RouteGeneratorTest extends TestCase
     {
         $result = (new RouteGenerator($this->choices))->handle();
 
-        $this->assertStringContainsString("Route::namespace('Perm\Group')", $result);
         $this->assertStringContainsString("->prefix('perm/group')", $result);
         $this->assertStringContainsString("->as('perm.group.')", $result);
     }
@@ -48,36 +47,58 @@ class RouteGeneratorTest extends TestCase
     }
 
     /** @test */
-    public function can_create_routes_for_package()
+    public function can_create_imports()
     {
-        $this->choices->put('package', new Obj(['name' => 'testPackage']));
-        $this->choices->params()->put('namespace', 'Namespace\App');
+        $result = (new RouteGenerator($this->choices))->handle();
 
-        (new RouteGenerator($this->choices))->handle();
+        $this->assertUses('Namespace\App\Http\Controllers\Perm\Group', $result);
+    }
 
-        $this->assertCliFileContains(
-            "Route::namespace('Namespace\App\Http\Controllers\Perm\Group')",
-            ['routes', 'api.php']);
+    /** @test */
+    public function can_create_imports_sorted()
+    {
+        $this->choices->params()->put('namespace', 'AAA');
 
-        $this->assertRoutes(File::get("{$this->root}/routes/api.php"));
+        $result = (new RouteGenerator($this->choices))->handle();
+
+        $this->assertStringContainsString("use Illuminate\Support\Facades\Route;\n\n", $result);
+
+        $this->choices->params()->put('namespace', 'ZZZ');
+
+        $result = (new RouteGenerator($this->choices))->handle();
+
+        $this->assertStringContainsString("\n\nuse Illuminate\Support\Facades\Route;", $result);
     }
 
     private function assertRoutes($result)
     {
-        $this->assertStringContainsString("Route::get('', 'Index')->name('index');", $result);
-        $this->assertStringContainsString("Route::get('create', 'Create')->name('create');", $result);
-        $this->assertStringContainsString("Route::get('{testModel}/edit', 'Edit')->name('edit');", $result);
-        $this->assertStringContainsString("Route::get('options', 'Options')->name('options');", $result);
-        $this->assertStringContainsString("Route::patch('{testModel}', 'Update')->name('update');", $result);
-        $this->assertStringContainsString("Route::post('', 'Store')->name('store');", $result);
-        $this->assertStringContainsString("Route::delete('{testModel}', 'Destroy')->name('destroy');", $result);
-        $this->assertStringContainsString("Route::get('initTable', 'InitTable')->name('initTable');", $result);
-        $this->assertStringContainsString("Route::get('tableData', 'TableData')->name('tableData');", $result);
-        $this->assertStringContainsString("Route::get('exportExcel', 'ExportExcel')->name('exportExcel');", $result);
-        $this->assertStringContainsString("Route::get('{testModel}', 'Show')->name('show');", $result);
+        $this->assertStringContainsString("Route::get('create', Create::class)->name('create');", $result);
+        $this->assertStringContainsString("Route::get('{testModel}/edit', Edit::class)->name('edit');", $result);
+        $this->assertStringContainsString("Route::get('options', Options::class)->name('options');", $result);
+        $this->assertStringContainsString("Route::patch('{testModel}', Update::class)->name('update');", $result);
+        $this->assertStringContainsString("Route::post('', Store::class)->name('store');", $result);
+        $this->assertStringContainsString("Route::delete('{testModel}', Destroy::class)->name('destroy');", $result);
+        $this->assertStringContainsString("Route::get('initTable', InitTable::class)->name('initTable');", $result);
+        $this->assertStringContainsString("Route::get('tableData', TableData::class)->name('tableData');", $result);
+        $this->assertStringContainsString("Route::get('exportExcel', ExportExcel::class)->name('exportExcel');", $result);
+        $this->assertStringContainsString("Route::get('{testModel}', Show::class)->name('show');", $result);
     }
 
-    private function choices(): Obj
+    private function assertUses($baseNamespace, $result)
+    {
+        $this->assertStringContainsString("use {$baseNamespace}\Index;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\Edit;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\Options;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\Update;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\Store;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\Destroy;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\InitTable;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\TableData;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\ExportExcel;", $result);
+        $this->assertStringContainsString("use {$baseNamespace}\Show;", $result);
+    }
+
+    protected function choices(): Obj
     {
         return new Obj([
             'permissionGroup' => ['name' => 'perm.group'],
