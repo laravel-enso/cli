@@ -40,7 +40,7 @@ class Config
 
         if ($diff->isNotEmpty()) {
             $this->console()->warn('You must configure first: '.$diff->implode(', '));
-            $this->console()->line('');
+            $this->console()->newLine();
 
             sleep(1);
         }
@@ -124,7 +124,7 @@ class Config
         $this->choices->toggleValidation();
         $status = $this->choices->needsValidation() ? 'enabled' : 'disabled';
         $this->console()->error("Validation {$status}");
-        $this->console()->line('');
+        $this->console()->newLine();
 
         sleep(1);
     }

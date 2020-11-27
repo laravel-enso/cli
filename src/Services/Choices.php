@@ -116,7 +116,7 @@ class Choices
         $this->load();
 
         $this->console->info('Last session restored');
-        $this->console->line('');
+        $this->console->newLine();
 
         sleep(1);
     }

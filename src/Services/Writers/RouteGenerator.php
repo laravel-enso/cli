@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Writers\Helpers\Directory;
+use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Services\Writers\Helpers\Stub;
 use LaravelEnso\Helpers\Services\Obj;
@@ -17,6 +18,7 @@ class RouteGenerator
 
     private Obj $params;
     private Obj $model;
+    private string $group;
     private Collection $permissions;
     private bool $isPackage;
 
@@ -24,6 +26,7 @@ class RouteGenerator
     {
         $this->params = $choices->params();
         $this->model = $choices->get('model');
+        $this->group = $choices->get('permissionGroup')->get('name');
         $this->permissions = $choices->get('permissions')->filter()->keys();
         $this->isPackage = $choices->filled('package')
             && $choices->get('package')->filled('name');
@@ -46,7 +49,9 @@ class RouteGenerator
         $content = str_replace($from, $to, Stub::get('routes'));
 
         if (! $this->isPackage) {
-            return $content;
+            File::put($this->appRoutesPath(), $content);
+
+            return $this->appRoutesPath(null);
         }
 
         Directory::prepare($this->packageRoutesPath());
@@ -116,6 +121,16 @@ class RouteGenerator
     {
         return (new Collection([$this->params->get('root'), 'routes', $file]))
             ->implode(DIRECTORY_SEPARATOR);
+    }
+
+    private function appRoutesPath(?string $directory='routes')
+    {
+        Path::segments(false);
+        $segments = explode('.', $this->group);
+        $path = Path::get([$directory, 'app', ...array_slice($segments, 0, -1)], null, true);
+        Directory::prepare($path);
+
+        return $path.DIRECTORY_SEPARATOR.last($segments).'.php';
     }
 
     private function sortPermissions(): void

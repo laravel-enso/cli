@@ -26,7 +26,7 @@ class Cli extends Command
     public function handle()
     {
         $this->info('Create a new Laravel Enso Structure');
-        $this->line('');
+        $this->newLine();
 
         $this->choices->restore();
 

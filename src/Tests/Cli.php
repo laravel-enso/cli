@@ -85,6 +85,11 @@ trait Cli
         $this->assertFileContains($needle, $this->viewRoutePath($filePath));
     }
 
+    private function assertRouteContains($needle, $filePath)
+    {
+        $this->assertFileContains($needle, $this->routesPath($filePath));
+    }
+
     private function assertViewRouteExists($filePath)
     {
         $this->assertFileExists($this->viewRoutePath($filePath));
@@ -211,6 +216,11 @@ trait Cli
     private function viewRoutePath($filePath): string
     {
         return $this->path(['client', 'src', 'js', 'routes', ...(array) $filePath]);
+    }
+
+    private function routesPath($filePath): string
+    {
+        return $this->path(['routes', ...(array) $filePath]);
     }
 
     private function providerPath($filePath): string
