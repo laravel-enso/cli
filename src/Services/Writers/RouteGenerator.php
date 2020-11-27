@@ -123,7 +123,7 @@ class RouteGenerator
             ->implode(DIRECTORY_SEPARATOR);
     }
 
-    private function appRoutesPath(?string $directory='routes')
+    private function appRoutesPath(?string $directory = 'routes')
     {
         Path::segments(false);
         $segments = explode('.', $this->group);
