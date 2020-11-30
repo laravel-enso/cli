@@ -34,7 +34,7 @@ class Generator
     {
         if (! $this->choices->isConfigured()) {
             $this->console()->error('There is nothing configured yet!');
-            $this->console()->line('');
+            $this->console()->newLine();
 
             sleep(1);
 
@@ -65,12 +65,12 @@ class Generator
     private function outputErrors(Validator $validator)
     {
         $this->console()->warn('Your configuration has errors:');
-        $this->console()->line('');
+        $this->console()->newLine();
 
         $validator->errors()
             ->each(fn ($errors, $type) => $this->outputTypeErrors($errors, $type));
 
-        $this->console()->line('');
+        $this->console()->newLine();
 
         sleep(1);
     }
@@ -123,15 +123,15 @@ class Generator
             $this->outputPackageInfo();
         }
 
-        $this->console()->line('');
+        $this->console()->newLine();
     }
 
     private function outputRoutes($routes)
     {
-        $this->console()->info('Copy and paste the following code into your api.php routes file:');
-        $this->console()->line('');
-        $this->console()->warn($routes);
-        $this->console()->line('');
+        $this->console()->info('Please add this line to your routes/app.php');
+        $this->console()->newLine();
+        $this->console()->warn("require '$routes';");
+        $this->console()->newLine();
     }
 
     private function outputPackageInfo()

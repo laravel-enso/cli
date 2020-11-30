@@ -53,6 +53,7 @@ class TableTest extends TestCase
         $this->assertTableBuilderContains([
             'namespace Namespace\App\Tables\Builders\Group;',
             'class TestModelTable implements Table',
+            "protected const TemplatePath = __DIR__.'/../../Templates/Group/testModels.json'",
             'test_models.id',
         ]);
     }

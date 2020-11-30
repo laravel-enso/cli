@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\Services\Writers\Helpers\Path;
+use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Services\Writers\RouteGenerator;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
@@ -13,16 +15,19 @@ class RouteGeneratorTest extends TestCase
     private $root;
     private $choices;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->root = 'cli_tests_tmp';
 
         $this->initChoices();
+
+        Segments::ucfirst(false);
+        Path::segments();
     }
 
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         parent::tearDown();
 
@@ -32,10 +37,12 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function can_create_route_group()
     {
-        $result = (new RouteGenerator($this->choices))->handle();
+        (new RouteGenerator($this->choices))->handle();
 
-        $this->assertStringContainsString("->prefix('perm/group')", $result);
-        $this->assertStringContainsString("->as('perm.group.')", $result);
+        $this->assertRouteContains([
+            "->prefix('perm/group')",
+            "->as('perm.group.')",
+        ], ['app', 'perm', 'group.php']);
     }
 
     /** @test */
@@ -61,42 +68,21 @@ class RouteGeneratorTest extends TestCase
 
         $result = (new RouteGenerator($this->choices))->handle();
 
-        $this->assertStringContainsString("use Illuminate\Support\Facades\Route;\n\n", $result);
+        $this->assertRouteContains(
+            ["use Illuminate\Support\Facades\Route;\n\n"],
+            ['app', 'perm', 'group.php']
+        );
 
         $this->choices->params()->put('namespace', 'ZZZ');
 
         $result = (new RouteGenerator($this->choices))->handle();
 
-        $this->assertStringContainsString("\n\nuse Illuminate\Support\Facades\Route;", $result);
+        $this->assertRouteContains(
+            ["\n\nuse Illuminate\Support\Facades\Route;"],
+            ['app', 'perm', 'group.php']
+        );
     }
 
-    private function assertRoutes($result)
-    {
-        $this->assertStringContainsString("Route::get('create', Create::class)->name('create');", $result);
-        $this->assertStringContainsString("Route::get('{testModel}/edit', Edit::class)->name('edit');", $result);
-        $this->assertStringContainsString("Route::get('options', Options::class)->name('options');", $result);
-        $this->assertStringContainsString("Route::patch('{testModel}', Update::class)->name('update');", $result);
-        $this->assertStringContainsString("Route::post('', Store::class)->name('store');", $result);
-        $this->assertStringContainsString("Route::delete('{testModel}', Destroy::class)->name('destroy');", $result);
-        $this->assertStringContainsString("Route::get('initTable', InitTable::class)->name('initTable');", $result);
-        $this->assertStringContainsString("Route::get('tableData', TableData::class)->name('tableData');", $result);
-        $this->assertStringContainsString("Route::get('exportExcel', ExportExcel::class)->name('exportExcel');", $result);
-        $this->assertStringContainsString("Route::get('{testModel}', Show::class)->name('show');", $result);
-    }
-
-    private function assertUses($baseNamespace, $result)
-    {
-        $this->assertStringContainsString("use {$baseNamespace}\Index;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\Edit;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\Options;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\Update;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\Store;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\Destroy;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\InitTable;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\TableData;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\ExportExcel;", $result);
-        $this->assertStringContainsString("use {$baseNamespace}\Show;", $result);
-    }
 
     protected function choices(): Obj
     {
@@ -105,5 +91,37 @@ class RouteGeneratorTest extends TestCase
             'model' => ['name' => 'TestModel'],
             'permissions' => $this->permissions(),
         ]);
+    }
+
+    private function assertRoutes($result)
+    {
+        $this->assertRouteContains([
+            "Route::get('create', Create::class)->name('create');",
+            "Route::get('{testModel}/edit', Edit::class)->name('edit');",
+            "Route::get('options', Options::class)->name('options');",
+            "Route::patch('{testModel}', Update::class)->name('update');",
+            "Route::post('', Store::class)->name('store');",
+            "Route::delete('{testModel}', Destroy::class)->name('destroy');",
+            "Route::get('initTable', InitTable::class)->name('initTable');",
+            "Route::get('tableData', TableData::class)->name('tableData');",
+            "Route::get('exportExcel', ExportExcel::class)->name('exportExcel');",
+            "Route::get('{testModel}', Show::class)->name('show');",
+        ], ['app', 'perm', 'group.php']);
+    }
+
+    private function assertUses($baseNamespace, $result)
+    {
+        $this->assertRouteContains([
+            "use {$baseNamespace}\Index;",
+            "use {$baseNamespace}\Edit;",
+            "use {$baseNamespace}\Options;",
+            "use {$baseNamespace}\Update;",
+            "use {$baseNamespace}\Store;",
+            "use {$baseNamespace}\Destroy;",
+            "use {$baseNamespace}\InitTable;",
+            "use {$baseNamespace}\TableData;",
+            "use {$baseNamespace}\ExportExcel;",
+            "use {$baseNamespace}\Show;",
+        ], ['app', 'perm', 'group.php']);
     }
 }

@@ -50,7 +50,7 @@ class Status
         $files = $this->choices->get('files')->filter()->keys();
 
         if ($files->isNotEmpty()) {
-            $this->console()->line('');
+            $this->console()->newLine();
             $this->console()->info('Will generate:');
 
             $files->each(fn ($file) => $this->console()->line($file));
