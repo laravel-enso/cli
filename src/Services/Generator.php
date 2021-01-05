@@ -87,8 +87,9 @@ class Generator
     private function filterUnconfigured()
     {
         $this->choices->keys()
-            ->reject(fn ($key) => $this->choices->configured()
-                ->first(fn ($attribute) => Str::camel($attribute) === $key)
+            ->reject(
+                fn ($key) => $this->choices->configured()
+                    ->first(fn ($attribute) => Str::camel($attribute) === $key)
             )->each(fn ($key) => $this->choices->forget($key));
 
         if ($this->choices->filled('files')) {
@@ -118,8 +119,10 @@ class Generator
             }
         }
 
-        if ($this->choices->filled('package')
-            && $this->choices->get('package')->get('config')) {
+        if (
+            $this->choices->filled('package')
+            && $this->choices->get('package')->get('config')
+        ) {
             $this->outputPackageInfo();
         }
 
@@ -128,7 +131,7 @@ class Generator
 
     private function outputRoutes($routes)
     {
-        $this->console()->info('Please add this line to your routes/app.php');
+        $this->console()->info('Please add this line to your routes/api.php');
         $this->console()->newLine();
         $this->console()->warn("require '$routes';");
         $this->console()->newLine();
@@ -144,10 +147,13 @@ class Generator
         $message .= ' file under the `psr-4` key while developing.';
         $this->console()->warn($message);
 
-        if ($this->choices->filled('package')
-            && $this->choices->get('package')->get('providers')) {
+        if (
+            $this->choices->filled('package')
+            && $this->choices->get('package')->get('providers')
+        ) {
             $this->console()->warn(
-                'Add the package`s service provider to the `config/app.php` list of providers.');
+                'Add the package`s service provider to the `config/app.php` list of providers.'
+            );
         }
     }
 
