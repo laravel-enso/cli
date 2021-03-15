@@ -153,7 +153,7 @@ class Structure
         return (new Collection(explode(DIRECTORY_SEPARATOR, $this->packageRoot())))
             ->pipe(fn ($segments) => $this->filterNamespace($segments))
             ->map(fn ($segment) => Str::ucfirst(Str::camel($segment)))
-            ->push($suffix)
+            ->when($suffix, fn ($segments) => $segments->push($suffix))
             ->implode('\\');
     }
 
