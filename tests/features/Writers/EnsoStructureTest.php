@@ -74,7 +74,7 @@ class EnsoStructureTest extends TestCase
     /** @test */
     public function can_create_menu()
     {
-        $this->choices->put('menu', new Obj(['parentMenu' => 'parent', ]));
+        $this->choices->put('menu', new Obj(['parentMenu' => 'parent']));
 
         (new Writer(new EnsoStructure($this->choices)))->handle();
 

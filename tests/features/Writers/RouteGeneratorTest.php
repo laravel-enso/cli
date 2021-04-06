@@ -83,7 +83,6 @@ class RouteGeneratorTest extends TestCase
         );
     }
 
-
     protected function choices(): Obj
     {
         return new Obj([

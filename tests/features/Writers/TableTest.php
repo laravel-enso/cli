@@ -81,5 +81,4 @@ class TableTest extends TestCase
             'permissions' => [],
         ]);
     }
-
 }

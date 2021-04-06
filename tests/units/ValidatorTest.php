@@ -87,7 +87,6 @@ class ValidatorTest extends TestCase
         $grand = Menu::create(['name' => 'grand', 'has_children' => true, 'parent_id' => $great->id]);
         Menu::create(['name' => 'parent', 'has_children' => true, 'parent_id' => $grand->id]);
 
-
         $choices = $this->menuChoices('group', 'create', 'great.grand.parent');
 
         $this->validator = (new Validator($choices))->run();
@@ -110,7 +109,7 @@ class ValidatorTest extends TestCase
     {
         Menu::insert([
             ['name' => 'parent', 'has_children' => true],
-            ['name' => 'parent', 'has_children' => true]
+            ['name' => 'parent', 'has_children' => true],
         ]);
 
         $choices = $this->menuChoices('group', 'create', 'parent');
