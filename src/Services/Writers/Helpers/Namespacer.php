@@ -10,9 +10,9 @@ class Namespacer
 
     public static function get(array $segments, bool $full = false)
     {
-        return (new Collection([
+        return Collection::wrap([
             self::$prefix, ...$segments, ...Segments::get($full),
-        ]))->implode('\\');
+        ])->implode('\\');
     }
 
     public static function prefix(string $prefix)

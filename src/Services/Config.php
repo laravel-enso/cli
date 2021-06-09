@@ -9,11 +9,8 @@ use LaravelEnso\Helpers\Services\Obj;
 
 class Config
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function fill(string $choice)

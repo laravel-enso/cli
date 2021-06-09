@@ -6,7 +6,7 @@
     "keywords": [],
     "homepage": "https://www.laravel-enso.com",
     "require": {
-        "php": ">=7.4.0"
+        "php": ">=8.0"
     },
     "autoload": {
         "psr-4": {

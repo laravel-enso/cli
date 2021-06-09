@@ -38,7 +38,7 @@ class CrudRoute implements StubProvider
 
     public function fromTo(): array
     {
-        $title = (new Collection(explode('_', Str::snake($this->model->get('name')))))
+        $title = Collection::wrap(explode('_', Str::snake($this->model->get('name'))))
             ->map(fn ($word) => Str::ucfirst($word))
             ->implode(' ');
 

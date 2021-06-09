@@ -18,8 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4.0",
-        "laravel-enso/core": "^5.0|^6.0",
+        "laravel-enso/core": "^7.0",
         "laravel-enso/helpers": "^2.0",
         "laravel-enso/menus": "^4.0",
         "laravel-enso/permissions": "^4.0",

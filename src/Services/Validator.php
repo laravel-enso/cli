@@ -38,7 +38,7 @@ class Validator
     {
         $validator = $this->validator($choice);
 
-        if (optional($validator)->fails()) {
+        if ($validator?->fails()) {
             $this->errors->put($choice, $validator->errors());
         }
     }

@@ -13,12 +13,8 @@ use LaravelEnso\Cli\Services\Writers\Package\Resources;
 
 class Package implements BulkProvider
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
-
         Path::segments(false);
         Stub::folder('package');
     }

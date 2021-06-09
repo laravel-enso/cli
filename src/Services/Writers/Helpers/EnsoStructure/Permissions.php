@@ -9,15 +9,11 @@ use LaravelEnso\Helpers\Services\Obj;
 
 class Permissions
 {
-    private Obj $model;
-    private ?Collection $permissions;
-    private string $group;
-
-    public function __construct(Obj $model, ?Collection $permissions, string $group)
-    {
-        $this->model = $model;
-        $this->permissions = $permissions;
-        $this->group = $group;
+    public function __construct(
+        private Obj $model,
+        private ?Collection $permissions,
+        private string $group
+    ) {
     }
 
     public function get()
@@ -25,7 +21,7 @@ class Permissions
         return $this->permissions
             ? $this->permissions->reduce(fn ($content, $permission) => $content
                 .$this->permission($permission), '[').PHP_EOL
-                .'    ]'
+            .'    ]'
             : 'null';
     }
 

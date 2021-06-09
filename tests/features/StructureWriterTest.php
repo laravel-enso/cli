@@ -109,7 +109,7 @@ class StructureWriterTest extends TestCase
 
     private function pagesCreated()
     {
-        (new Collection(['Create', 'Edit', 'Index', 'Show']))
+        Collection::wrap(['Create', 'Edit', 'Index', 'Show'])
             ->each(fn ($view) => $this->assertViewPageExists($view));
     }
 
@@ -117,11 +117,11 @@ class StructureWriterTest extends TestCase
     {
         $permission = Str::camel($this->tableName());
 
-        (new Collection([
+        Collection::wrap([
             'testing.js', "testing/{$permission}.js", "testing/{$permission}/create.js",
             "testing/{$permission}/edit.js", "testing/{$permission}/index.js",
             "testing/{$permission}/show.js",
-        ]))->each(fn ($route) => $this->assertViewRouteExists($route));
+        ])->each(fn ($route) => $this->assertViewRouteExists($route));
 
         return true;
     }

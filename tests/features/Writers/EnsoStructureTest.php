@@ -65,10 +65,8 @@ class EnsoStructureTest extends TestCase
             'Get table data for test models',
         ];
 
-        (new Collection($descriptions))
-            ->each(fn ($description) => $this->assertStructureMigrationContains(
-                "'description' => '{$description}'"
-            ));
+        Collection::wrap($descriptions)->each(fn ($description) => $this
+            ->assertStructureMigrationContains("'description' => '{$description}'"));
     }
 
     /** @test */

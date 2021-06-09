@@ -37,7 +37,7 @@ class Provider implements StubProvider
 
     public function fromTo(): array
     {
-        $segments = (new Collection(explode('\\', $this->namespace)))->slice(0, 2);
+        $segments = Collection::wrap(explode('\\', $this->namespace))->slice(0, 2);
 
         return [
             '${vendor}' => $this->package->get('vendor'),

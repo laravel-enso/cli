@@ -7,13 +7,10 @@ use LaravelEnso\Helpers\Services\Obj;
 
 class Mapping
 {
-    private ?Obj $menu;
-    private ?string $group;
-
-    public function __construct(?Obj $menu, ?string $group)
-    {
-        $this->menu = $menu;
-        $this->group = $group;
+    public function __construct(
+        private ?Obj $menu,
+        private ?string $group
+    ) {
     }
 
     public function menu()

@@ -37,7 +37,7 @@ class Resource implements StubProvider
 
     public function fromTo(): array
     {
-        $segments = (new Collection(explode('\\', $this->namespace)))->slice(0, 2);
+        $segments = Collection::wrap(explode('\\', $this->namespace))->slice(0, 2);
 
         return [
             '${year}' => Carbon::now()->format('Y'),
@@ -56,7 +56,7 @@ class Resource implements StubProvider
 
     private function path(?string $filename = null): string
     {
-        return (new Collection([$this->root, $filename]))
+        return Collection::wrap([$this->root, $filename])
             ->filter()->implode(DIRECTORY_SEPARATOR);
     }
 }

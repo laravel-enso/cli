@@ -6,11 +6,8 @@ use LaravelEnso\Cli\Enums\Options;
 
 class Status
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function display()
@@ -24,7 +21,8 @@ class Status
     public function choice()
     {
         return $this->console()->choice(
-            'Choose element to configure', Options::keys()->toArray()
+            'Choose element to configure',
+            Options::keys()->toArray()
         );
     }
 

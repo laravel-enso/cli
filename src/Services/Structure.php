@@ -20,7 +20,6 @@ use LaravelEnso\Helpers\Services\Obj;
 
 class Structure
 {
-    private Choices $choices;
     private bool $isPackage;
 
     private array $providers = [
@@ -34,9 +33,8 @@ class Structure
         'package' => Package::class,
     ];
 
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function handle()
@@ -150,7 +148,7 @@ class Structure
 
     private function packageNamespace(?string $suffix = null)
     {
-        return (new Collection(explode(DIRECTORY_SEPARATOR, $this->packageRoot())))
+        return Collection::wrap(explode(DIRECTORY_SEPARATOR, $this->packageRoot()))
             ->pipe(fn ($segments) => $this->filterNamespace($segments))
             ->map(fn ($segment) => Str::ucfirst(Str::camel($segment)))
             ->when($suffix, fn ($segments) => $segments->push($suffix))
@@ -168,7 +166,7 @@ class Structure
         $vendor = Str::kebab($this->choices->get('package')->get('vendor'));
         $package = Str::kebab($this->choices->get('package')->get('name'));
 
-        return (new Collection(['vendor', $vendor, $package]))
+        return Collection::wrap(['vendor', $vendor, $package])
             ->implode(DIRECTORY_SEPARATOR);
     }
 

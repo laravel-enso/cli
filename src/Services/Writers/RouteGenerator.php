@@ -119,7 +119,7 @@ class RouteGenerator
 
     private function packageRoutesPath(?string $file = null)
     {
-        return (new Collection([$this->params->get('root'), 'routes', $file]))
+        return Collection::wrap([$this->params->get('root'), 'routes', $file])
             ->implode(DIRECTORY_SEPARATOR);
     }
 

@@ -13,9 +13,9 @@ class Stub
     {
         [$name] = explode('.', $file);
 
-        $filePath = (new Collection([
+        $filePath = Collection::wrap([
             __DIR__, '..', 'stubs', self::$folder, "{$name}.stub",
-        ]))->implode(DIRECTORY_SEPARATOR);
+        ])->implode(DIRECTORY_SEPARATOR);
 
         return File::get($filePath);
     }

@@ -36,7 +36,7 @@ class Migration
 
     private function path()
     {
-        return (new Collection([$this->root, 'database', 'migrations']))
+        return Collection::wrap([$this->root, 'database', 'migrations'])
             ->filter()->implode(DIRECTORY_SEPARATOR);
     }
 }

@@ -8,11 +8,8 @@ use LaravelEnso\Cli\Services\Choices;
 
 class Resources implements BulkProvider
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function collection(): Collection

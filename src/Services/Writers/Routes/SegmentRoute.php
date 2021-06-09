@@ -40,7 +40,7 @@ class SegmentRoute implements StubProvider
 
         return [
             '${segment}' => $segment,
-            '${breadcrumb}' => (new Collection(explode('_', Str::snake($segment))))->implode(' '),
+            '${breadcrumb}' => Collection::wrap(explode('_', Str::snake($segment)))->implode(' '),
             '${permissionGroup}' => $this->group,
             '${relativePath}' => $depth === 1 ? DIRECTORY_SEPARATOR.$segment : $segment,
         ];

@@ -15,11 +15,8 @@ use LaravelEnso\Cli\Services\Writers\Table\Template;
 
 class Table implements BulkProvider, PreparesBulkWriting
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function prepare(): void

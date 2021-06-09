@@ -39,7 +39,7 @@ class Template implements StubProvider
     public function fromTo(): array
     {
         $model = $this->model->get('name');
-        $name = (new Collection(explode('_', Str::snake($model))))->implode(' ');
+        $name = Collection::wrap(explode('_', Str::snake($model)))->implode(' ');
 
         return [
             '${permissionGroup}' => $this->group,

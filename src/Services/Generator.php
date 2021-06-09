@@ -8,11 +8,8 @@ use LaravelEnso\Cli\Services\Writers\RouteGenerator;
 
 class Generator
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function handle()
@@ -133,7 +130,7 @@ class Generator
     {
         $this->console()->info('Please add this line to your routes/api.php');
         $this->console()->newLine();
-        $this->console()->warn("require '$routes';");
+        $this->console()->warn("require __DIR__.'/$routes';");
         $this->console()->newLine();
     }
 

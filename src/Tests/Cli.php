@@ -134,13 +134,13 @@ trait Cli
     {
         $content = File::get($filePath);
 
-        (new Collection($needle))
+        Collection::wrap($needle)
             ->each(fn ($needle) => $this->assertStringContainsString($needle, $content));
     }
 
     private function assertMigrationCreated($migration)
     {
-        $files = (new Collection(File::files($this->path(['database', 'migrations']))))
+        $files = Collection::wrap(File::files($this->path(['database', 'migrations'])))
             ->filter(fn ($file) => Str::contains($file->getFilename(), $migration));
 
         $this->assertTrue($files->isNotEmpty(), $migration.' not exists!');
@@ -176,7 +176,7 @@ trait Cli
             return;
         }
 
-        $file = (new Collection(File::files($path)))
+        $file = Collection::wrap(File::files($path))
             ->filter(fn ($file) => Str::contains($file->getFilename(), $migration))
             ->last();
 
@@ -267,18 +267,18 @@ trait Cli
     {
         Segments::set($this->choices->get('permissionGroup'));
 
-        $this->segments ??= (new Collection(
+        $this->segments ??= Collection::wrap(
             explode('.', $this->choices->get('permissionGroup')->get('name'))
-        ))->map(fn ($segment) => Str::ucfirst($segment));
+        )->map(fn ($segment) => Str::ucfirst($segment));
 
         return $full ? $this->segments : $this->segments->slice(0, -1);
     }
 
     private function modelName()
     {
-        return (new Collection(
+        return Collection::wrap(
             explode('/', $this->choices->get('model')->get('name'))
-        ))->last();
+        )->last();
     }
 
     private function write($provider)
@@ -315,7 +315,7 @@ trait Cli
 
     private function path($segments)
     {
-        return (new Collection([$this->root, ...(array) $segments]))
+        return Collection::wrap([$this->root, ...(array) $segments])
             ->filter()->implode(DIRECTORY_SEPARATOR);
     }
 }

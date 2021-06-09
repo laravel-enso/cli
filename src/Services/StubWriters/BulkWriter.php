@@ -9,11 +9,8 @@ use LaravelEnso\Cli\Services\WriterFactory;
 
 class BulkWriter implements Contract
 {
-    private BulkProvider $bulkProvider;
-
-    public function __construct(BulkProvider $bulkProvider)
+    public function __construct(private BulkProvider $bulkProvider)
     {
-        $this->bulkProvider = $bulkProvider;
     }
 
     public function handle(): void

@@ -41,8 +41,8 @@ class Config implements StubProvider
 
     private function path(?string $filename = null): string
     {
-        return (new Collection([
+        return Collection::wrap([
             $this->root, 'config', $filename,
-        ]))->filter()->implode(DIRECTORY_SEPARATOR);
+        ])->filter()->implode(DIRECTORY_SEPARATOR);
     }
 }

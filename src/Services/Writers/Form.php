@@ -16,11 +16,8 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Stub;
 
 class Form implements BulkProvider, PreparesBulkWriting
 {
-    private Choices $choices;
-
-    public function __construct(Choices $choices)
+    public function __construct(private Choices $choices)
     {
-        $this->choices = $choices;
     }
 
     public function prepare(): void

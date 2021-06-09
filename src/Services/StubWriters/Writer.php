@@ -8,11 +8,8 @@ use LaravelEnso\Cli\Contracts\Writer as Contract;
 
 class Writer implements Contract
 {
-    private StubProvider $provider;
-
-    public function __construct(StubProvider $provider)
+    public function __construct(private StubProvider $provider)
     {
-        $this->provider = $provider;
     }
 
     public function handle(): void
