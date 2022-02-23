@@ -7,7 +7,7 @@ use LaravelEnso\Forms\Services\Form;
 
 class ${Model}
 {
-    private const TemplatePath = __DIR__.'/${depth}Templates/${relativePath}/${model}.json';
+    private const TemplatePath = __DIR__.'/${depth}Templates/${relativePath}${model}.json';
 
     protected Form $form;
 
