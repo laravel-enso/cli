@@ -8,6 +8,8 @@ class WriterProvider extends InvalidArgumentException
 {
     public static function unknown(object $provider)
     {
-        return new static("Unkonwn provider type: {$provider::class}");
+        $class = $provider::class;
+
+        return new static("Unkonwn provider type: {$class}");
     }
 }
