@@ -2,7 +2,7 @@
 
 namespace ${namespace};
 
-use ${builderNamespace}\${Model}Table;
+use ${builderNamespace}\${Model};
 use Illuminate\Routing\Controller;
 use LaravelEnso\Tables\Traits\Data;
 
@@ -10,5 +10,5 @@ class TableData extends Controller
 {
     use Data;
 
-    protected string $tableClass = ${Model}Table::class;
+    protected string $tableClass = ${Model}::class;
 }

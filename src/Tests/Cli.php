@@ -201,7 +201,7 @@ trait Cli
     {
         return $this->path([
             $this->rootSegment, 'Forms', 'Builders', ...$this->segments(false),
-            Str::ucfirst("{$this->modelName()}Form.php"),
+            Str::ucfirst("{$this->modelName()}.php"),
         ]);
     }
 
@@ -241,7 +241,7 @@ trait Cli
     {
         return $this->path([
             $this->rootSegment, 'Tables', 'Builders', ...$this->segments(false),
-            Str::ucfirst($this->modelName()).'Table.php',
+            Str::ucfirst($this->modelName()).'.php',
         ]);
     }
 

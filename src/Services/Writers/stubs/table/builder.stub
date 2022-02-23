@@ -2,17 +2,17 @@
 
 namespace ${namespace};
 
-use ${modelNamespace}\${Model};
+use ${modelNamespace}\${Model} as Model;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\Contracts\Table;
 
-class ${Model}Table implements Table
+class ${Model} implements Table
 {
-    protected const TemplatePath = __DIR__.'/${depth}Templates/${relativePath}/${models}.json';
+    private const TemplatePath = __DIR__.'/${depth}Templates/${relativePath}/${models}.json';
 
     public function query(): Builder
     {
-        return ${Model}::selectRaw('
+        return Model::selectRaw('
             ${table}.id
         ');
     }

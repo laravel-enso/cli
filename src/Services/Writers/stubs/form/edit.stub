@@ -4,11 +4,11 @@ namespace ${namespace};
 
 use ${modelNamespace}\${Model};
 use Illuminate\Routing\Controller;
-use ${builderNamespace}\${Model}Form;
+use ${builderNamespace}\${Model} as Form;
 
 class Edit extends Controller
 {
-    public function __invoke(${Model} $${model}, ${Model}Form $form)
+    public function __invoke(${Model} $${model}, Form $form)
     {
         return ['form' => $form->edit($${model})];
     }

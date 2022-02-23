@@ -38,7 +38,7 @@ class FormTest extends TestCase
         $this->write(Form::class);
 
         $this->assertFormBuilderContains([
-            'class TestModelForm',
+            'class TestModel',
             'public function edit(TestModel $testModel)',
             'return $this->form->edit($testModel);',
         ]);
@@ -53,7 +53,7 @@ class FormTest extends TestCase
 
         $this->assertControllerContains([
             'class Edit extends Controller',
-            'public function __invoke(TestModel $testModel, TestModelForm $form)',
+            'public function __invoke(TestModel $testModel, Form $form)',
         ], 'Edit');
     }
 
@@ -97,7 +97,7 @@ class FormTest extends TestCase
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'class Create extends Controller',
-            'public function __invoke(TestModelForm $form)',
+            'public function __invoke(TestModel $form)',
             'return [\'form\' => $form->create()]',
         ], 'Create');
     }
@@ -128,9 +128,9 @@ class FormTest extends TestCase
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'use App\TestModel;',
-            'use Namespace\App\Http\Requests\Group\ValidateTestModelRequest',
+            'use Namespace\App\Http\Requests\Group\ValidateTestModel',
             'class Update extends Controller',
-            'public function __invoke(ValidateTestModelRequest $request, TestModel $testModel)',
+            'public function __invoke(ValidateTestModel $request, TestModel $testModel)',
             "return ['message' => __('The test model was successfully updated')]",
         ], 'Update');
     }
@@ -145,10 +145,10 @@ class FormTest extends TestCase
         $this->assertControllerContains([
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'use App\TestModel;',
-            'use Namespace\App\Http\Requests\Group\ValidateTestModelRequest',
+            'use Namespace\App\Http\Requests\Group\ValidateTestModel',
             'class Store extends Controller',
             '$testModel->fill($request->validated())->save()',
-            'public function __invoke(ValidateTestModelRequest $request, TestModel $testModel)',
+            'public function __invoke(ValidateTestModel $request, TestModel $testModel)',
         ], 'Store');
     }
 
@@ -161,7 +161,7 @@ class FormTest extends TestCase
 
         $this->assertValidatorContains([
             'namespace Namespace\\App\\Http\\Requests\\Group;',
-            'class ValidateTestModelRequest extends FormRequest',
-        ], 'ValidateTestModelRequest');
+            'class ValidateTestModel extends FormRequest',
+        ], 'ValidateTestModel');
     }
 }

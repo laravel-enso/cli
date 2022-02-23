@@ -29,7 +29,7 @@ class Validator implements StubProvider
 
     public function filePath(): string
     {
-        return $this->path("Validate{$this->model->get('name')}Request.php");
+        return $this->path("Validate{$this->model->get('name')}.php");
     }
 
     public function fromTo(): array

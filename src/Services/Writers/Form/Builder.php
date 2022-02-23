@@ -30,7 +30,7 @@ class Builder implements StubProvider
 
     public function filePath(): string
     {
-        return $this->path("{$this->model->get('name')}Form.php");
+        return $this->path("{$this->model->get('name')}.php");
     }
 
     public function fromTo(): array

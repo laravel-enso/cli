@@ -19,7 +19,7 @@ class Controller extends BaseController
             '${modelNamespace}' => $this->model->get('namespace'),
             '${builderNamespace}' => Namespacer::get(['Forms', 'Builders']),
             '${requestNamespace}' => Namespacer::get(['Http', 'Requests']),
-            '${request}' => "Validate{$this->model->get('name')}Request",
+            '${request}' => "Validate{$this->model->get('name')}",
         ];
     }
 }

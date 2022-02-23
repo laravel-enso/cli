@@ -52,8 +52,8 @@ class TableTest extends TestCase
 
         $this->assertTableBuilderContains([
             'namespace Namespace\App\Tables\Builders\Group;',
-            'class TestModelTable implements Table',
-            "protected const TemplatePath = __DIR__.'/../../Templates/Group/testModels.json'",
+            'class TestModel implements Table',
+            "private const TemplatePath = __DIR__.'/../../Templates/Group/testModels.json'",
             'test_models.id',
         ]);
     }
@@ -69,7 +69,7 @@ class TableTest extends TestCase
             'namespace Namespace\App\Http\Controllers\Group\TestModels;',
             'class InitTable extends Controller',
             'use Init;',
-            'protected string $tableClass = TestModelTable::class;',
+            'protected string $tableClass = TestModel::class;',
         ], 'InitTable');
     }
 
