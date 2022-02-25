@@ -4,7 +4,7 @@ namespace ${namespace};
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Validate${Model}Request extends FormRequest
+class Validate${Model} extends FormRequest
 {
     public function authorize()
     {

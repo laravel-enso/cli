@@ -2,7 +2,7 @@
 
 namespace ${namespace};
 
-use ${builderNamespace}\${Model}Table;
+use ${builderNamespace}\${Model};
 use Illuminate\Routing\Controller;
 use LaravelEnso\Tables\Traits\Excel;
 
@@ -10,5 +10,5 @@ class ExportExcel extends Controller
 {
     use Excel;
 
-    protected string $tableClass = ${Model}Table::class;
+    protected string $tableClass = ${Model}::class;
 }

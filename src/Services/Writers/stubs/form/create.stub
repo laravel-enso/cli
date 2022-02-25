@@ -3,11 +3,11 @@
 namespace ${namespace};
 
 use Illuminate\Routing\Controller;
-use ${builderNamespace}\${Model}Form;
+use ${builderNamespace}\${Model};
 
 class Create extends Controller
 {
-    public function __invoke(${Model}Form $form)
+    public function __invoke(${Model} $form)
     {
         return ['form' => $form->create()];
     }

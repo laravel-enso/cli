@@ -30,13 +30,15 @@ class Builder implements StubProvider
 
     public function filePath(): string
     {
-        return $this->path("{$this->model->get('name')}Form.php");
+        return $this->path("{$this->model->get('name')}.php");
     }
 
     public function fromTo(): array
     {
         return [
-            '${relativePath}' => Segments::get(false)->implode(DIRECTORY_SEPARATOR),
+            '${relativePath}' => Segments::get(false)
+                ->whenNotEmpty(fn ($segments) => $segments->push(''))
+                ->implode(DIRECTORY_SEPARATOR),
             '${namespace}' => Namespacer::get(['Forms', 'Builders']),
             '${modelNamespace}' => $this->model->get('namespace'),
             '${depth}' => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count()),

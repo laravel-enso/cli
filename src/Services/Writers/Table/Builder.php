@@ -30,7 +30,7 @@ class Builder implements StubProvider
 
     public function filePath(): string
     {
-        return $this->path("{$this->model->get('name')}Table.php");
+        return $this->path("{$this->model->get('name')}.php");
     }
 
     public function fromTo(): array
@@ -42,7 +42,9 @@ class Builder implements StubProvider
             '${models}' => Str::camel(Str::plural($this->model->get('name'))),
             '${table}' => Str::snake(Str::plural($this->model->get('name'))),
             '${depth}' => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count()),
-            '${relativePath}' => Segments::get(false)->implode(DIRECTORY_SEPARATOR),
+            '${relativePath}' => Segments::get(false)
+                ->whenNotEmpty(fn ($segments) => $segments->push(''))
+                ->implode(DIRECTORY_SEPARATOR),
         ];
     }
 
