@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Writers\Form;
 use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
@@ -12,7 +13,7 @@ class FormTest extends TestCase
     use Cli;
 
     private $root;
-    private $choices;
+    private Choices $choices;
 
     protected function setUp(): void
     {
@@ -39,7 +40,7 @@ class FormTest extends TestCase
 
         $this->assertFormBuilderContains([
             'class TestModel',
-            'public function edit(TestModel $testModel)',
+            'public function edit(Model $testModel)',
             'return $this->form->edit($testModel);',
         ]);
     }
