@@ -3,7 +3,7 @@
 namespace LaravelEnso\Cli\Commands;
 
 use Illuminate\Console\Command;
-use LaravelEnso\Cli\Enums\Options;
+use LaravelEnso\Cli\Enums\Option;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Config;
 use LaravelEnso\Cli\Services\Generator;
@@ -35,20 +35,15 @@ class Cli extends Command
 
     private function index()
     {
-        $choice = $this->input();
+        $choice = Option::from($this->input());
 
-        switch ($choice) {
-            case Options::Exit:
-                break;
-            case Options::Generate:
-                if (! (new Generator($this->choices))->handle()) {
-                    $this->index();
-                }
-                break;
-            default:
-                (new Config($this->choices))->fill($choice);
+        if ($choice === Option::Generate) {
+            if (! (new Generator($this->choices))->handle()) {
                 $this->index();
-                break;
+            }
+        } elseif ($choice !== Option::Exit) {
+            (new Config($this->choices))->fill($choice->value);
+            $this->index();
         }
     }
 

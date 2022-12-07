@@ -3,7 +3,7 @@
 namespace LaravelEnso\Cli\Services;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Cli\Enums\Validators;
+use LaravelEnso\Cli\Enums\Option;
 
 class Validator
 {
@@ -45,7 +45,7 @@ class Validator
 
     private function validator($choice)
     {
-        $validator = Validators::get($choice);
+        $validator = Option::from($choice)->validator();
 
         return $validator ? (new $validator($this->choices))->run() : null;
     }

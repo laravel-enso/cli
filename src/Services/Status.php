@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Cli\Services;
 
-use LaravelEnso\Cli\Enums\Options;
+use LaravelEnso\Cli\Enums\Option;
 
 class Status
 {
@@ -20,17 +20,15 @@ class Status
 
     public function choice()
     {
-        return $this->console()->choice(
-            'Choose element to configure',
-            Options::keys()->toArray()
-        );
+        return $this->console()
+            ->choice('Choose element to configure', Option::values());
     }
 
     private function currentConfiguration()
     {
         $this->console()->info('Current configuration status:');
 
-        Options::choices()->each(fn ($choice) => $this->console()
+        Option::choices()->each(fn ($choice) => $this->console()
             ->line("{$choice} {$this->status($choice)}"));
 
         return $this;

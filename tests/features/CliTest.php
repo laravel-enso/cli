@@ -4,7 +4,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\Enums\Options;
+use LaravelEnso\Cli\Enums\Option;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
@@ -20,7 +20,7 @@ class CliTest extends TestCase
     {
         parent::setUp();
 
-        $this->choice = Options::choices()->first();
+        $this->choice = Option::choices()->first();
 
         $this->root = '';
 
@@ -45,7 +45,7 @@ class CliTest extends TestCase
         $this->artisan('enso:cli')
             ->expectsQuestion('Choose element to configure', $dependent)
             ->expectsOutput('You must configure first: '.$requirements)
-            ->expectsQuestion('Choose element to configure', Options::Exit);
+            ->expectsQuestion('Choose element to configure', Option::Exit->value);
     }
 
     /** @test */
@@ -60,7 +60,7 @@ class CliTest extends TestCase
 
         $this->artisan('enso:cli')
             ->expectsQuestion('Do you want to restore the last session?', 'yes')
-            ->expectsQuestion('Choose element to configure', Options::Exit);
+            ->expectsQuestion('Choose element to configure', Option::Exit->value);
     }
 
     /** @test */
@@ -70,7 +70,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', $this->choice)
             ->expectsQuestion('Configure '.$this->choice, true)
             ->expectsQuestion('name', 'test')
-            ->expectsQuestion('Choose element to configure', Options::Exit);
+            ->expectsQuestion('Choose element to configure', Option::Exit->value);
 
         $this->assertEquals('test', Cache::get('cli_data')['choices'][Str::camel($this->choice)]['name']);
     }
@@ -82,7 +82,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', $this->choice)
             ->expectsQuestion('Configure '.$this->choice, true)
             ->expectsQuestion('name', 'test')
-            ->expectsQuestion('Choose element to configure', Options::Generate);
+            ->expectsQuestion('Choose element to configure', Option::Generate->value);
 
         $this->assertFalse(Cache::has('cli_data'));
     }
@@ -91,38 +91,38 @@ class CliTest extends TestCase
     public function cannot_generate_with_nothing_configured()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', Options::Generate)
+            ->expectsQuestion('Choose element to configure', Option::Generate->value)
             ->expectsOutput('There is nothing configured yet!')
-            ->expectsQuestion('Choose element to configure', Options::Exit);
+            ->expectsQuestion('Choose element to configure', Option::Exit->value);
     }
 
     /** @test */
     public function cannot_generate_with_failed_validation()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', Options::Model)
-            ->expectsQuestion('Configure '.Options::Model, true)
+            ->expectsQuestion('Choose element to configure', Option::Model->value)
+            ->expectsQuestion('Configure '.Option::Model->value, true)
             ->expectsQuestion('name', 'test\\test')
-            ->expectsQuestion('Choose element to configure', Options::Generate)
+            ->expectsQuestion('Choose element to configure', Option::Generate->value)
             ->expectsOutput('Your configuration has errors:')
-            ->expectsQuestion('Choose element to configure', Options::Exit);
+            ->expectsQuestion('Choose element to configure', Option::Exit->value);
     }
 
     /** @test */
     public function can_generate_with_disabled_validation()
     {
         $this->artisan('enso:cli')
-            ->expectsQuestion('Choose element to configure', Options::Model)
-            ->expectsQuestion('Configure '.Options::Model, true)
+            ->expectsQuestion('Choose element to configure', Option::Model->value)
+            ->expectsQuestion('Configure '.Option::Model->value, true)
             ->expectsQuestion('name', 'test\\test')
-            ->expectsQuestion('Choose element to configure', Options::ToggleValidation)
-            ->expectsQuestion('Choose element to configure', Options::Generate)
+            ->expectsQuestion('Choose element to configure', Option::ToggleValidation->value)
+            ->expectsQuestion('Choose element to configure', Option::Generate->value)
             ->assertExitCode(0);
     }
 
     private function dependent()
     {
-        return Options::choices()
+        return Option::choices()
             ->first(fn ($choice) => $this->config($choice)->isNotEmpty());
     }
 

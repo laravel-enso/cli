@@ -4,7 +4,7 @@ namespace LaravelEnso\Cli\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\Enums\Options;
+use LaravelEnso\Cli\Enums\Option;
 use LaravelEnso\Helpers\Services\Obj;
 
 class Config
@@ -47,7 +47,7 @@ class Config
 
     private function togglesValidation(string $choice)
     {
-        if ($choice === Options::ToggleValidation) {
+        if (Option::from($choice) === Option::ToggleValidation) {
             $this->toggleValidation();
 
             return true;
