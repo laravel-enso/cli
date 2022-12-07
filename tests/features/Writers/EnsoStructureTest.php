@@ -83,7 +83,7 @@ class EnsoStructureTest extends TestCase
     {
         return new Obj([
             'permissionGroup' => ['name' => 'group.testModels'],
-            'model' => ['name' => 'TestModel'],
+            'model'           => ['name' => 'TestModel'],
         ]);
     }
 }

@@ -33,8 +33,8 @@ enum Option: string
     {
         return match ($this) {
             self::Model => Model::class,
-            self::Menu => Menu::class,
-            default => null,
+            self::Menu  => Menu::class,
+            default     => null,
         };
     }
 }

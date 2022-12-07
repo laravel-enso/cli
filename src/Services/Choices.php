@@ -83,7 +83,7 @@ class Choices
 
     public function toggleValidation()
     {
-        $this->validates = ! $this->validates;
+        $this->validates = !$this->validates;
         $this->save();
 
         return $this;
@@ -92,10 +92,10 @@ class Choices
     public function save()
     {
         Cache::put('cli_data', [
-            'params' => $this->params,
-            'choices' => $this->choices,
+            'params'     => $this->params,
+            'choices'    => $this->choices,
             'configured' => $this->configured,
-            'validates' => $this->validates,
+            'validates'  => $this->validates,
         ]);
 
         return $this;
@@ -107,7 +107,7 @@ class Choices
             return;
         }
 
-        if (! $this->console->confirm('Do you want to restore the last session?')) {
+        if (!$this->console->confirm('Do you want to restore the last session?')) {
             $this->clearCache();
 
             return;
@@ -151,15 +151,15 @@ class Choices
     private function load()
     {
         [
-            'params' => $this->params,
-            'choices' => $this->choices,
+            'params'     => $this->params,
+            'choices'    => $this->choices,
             'configured' => $this->configured,
-            'validates' => $this->validates,
+            'validates'  => $this->validates,
         ] = Cache::get('cli_data');
     }
 
     private function isNotCached()
     {
-        return ! Cache::has('cli_data');
+        return !Cache::has('cli_data');
     }
 }

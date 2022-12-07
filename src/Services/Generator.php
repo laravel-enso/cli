@@ -29,7 +29,7 @@ class Generator
 
     private function isNotConfigured()
     {
-        if (! $this->choices->isConfigured()) {
+        if (!$this->choices->isConfigured()) {
             $this->console()->error('There is nothing configured yet!');
             $this->console()->newLine();
 
@@ -43,7 +43,7 @@ class Generator
 
     private function failsValidation()
     {
-        if (! $this->choices->needsValidation()) {
+        if (!$this->choices->needsValidation()) {
             return false;
         }
 
@@ -91,7 +91,7 @@ class Generator
 
         if ($this->choices->filled('files')) {
             $this->choices->get('files')
-                ->filter(fn ($chosen) => ! $chosen)
+                ->filter(fn ($chosen) => !$chosen)
                 ->keys()
                 ->each(fn ($file) => $this->choices->get('files')->forget($file));
         }

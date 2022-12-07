@@ -10,9 +10,9 @@ class Controller extends BaseController
     public function fromTo(): array
     {
         return [
-            '${namespace}' => Namespacer::get(['Http', 'Controllers'], true),
+            '${namespace}'        => Namespacer::get(['Http', 'Controllers'], true),
             '${builderNamespace}' => Namespacer::get(['Tables', 'Builders']),
-            '${Model}' => $this->model->get('name'),
+            '${Model}'            => $this->model->get('name'),
         ];
     }
 }

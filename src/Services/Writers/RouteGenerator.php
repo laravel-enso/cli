@@ -48,7 +48,7 @@ class RouteGenerator
 
         $content = str_replace($from, $to, Stub::get('routes'));
 
-        if (! $this->isPackage) {
+        if (!$this->isPackage) {
             File::put($this->appRoutesPath(), $content);
 
             return $this->appRoutesPath(null);
@@ -67,9 +67,9 @@ class RouteGenerator
 
         $array = [
             '${namespace}' => $this->namespacer(),
-            '${prefix}' => "prefix('{$packagePrefix}{$prefix}')",
-            '${alias}' => "as('{$alias}.')",
-            '${model}' => lcfirst($this->model->get('name')),
+            '${prefix}'    => "prefix('{$packagePrefix}{$prefix}')",
+            '${alias}'     => "as('{$alias}.')",
+            '${model}'     => lcfirst($this->model->get('name')),
         ];
 
         return [array_keys($array), array_values($array)];

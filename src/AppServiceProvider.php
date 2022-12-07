@@ -23,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/params.php', 'enso.structures.params');
         $this->mergeConfigFrom(__DIR__.'/../config/files.php', 'enso.structures.files');
         $this->mergeConfigFrom(
-            __DIR__.'/../config/permissionGroup.php', 'enso.structures.permissionGroup'
+            __DIR__.'/../config/permissionGroup.php',
+            'enso.structures.permissionGroup'
         );
 
         return $this;

@@ -43,13 +43,13 @@ class CrudRoute implements StubProvider
             ->implode(' ');
 
         return [
-            '${Model}' => $this->model->get('name'),
-            '${depth}' => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count() + 1),
-            '${modelTitle}' => $title,
-            '${modelsTitle}' => Str::plural($title),
-            '${model}' => Str::camel($this->model->get('name')),
+            '${Model}'        => $this->model->get('name'),
+            '${depth}'        => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count() + 1),
+            '${modelTitle}'   => $title,
+            '${modelsTitle}'  => Str::plural($title),
+            '${model}'        => Str::camel($this->model->get('name')),
             '${relativePath}' => Segments::get()->implode(DIRECTORY_SEPARATOR),
-            '${prefix}' => $this->group,
+            '${prefix}'       => $this->group,
         ];
     }
 

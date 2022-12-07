@@ -51,10 +51,10 @@ class StructureWriterTest extends TestCase
         $this->rootSegment = 'src';
 
         $this->choices->set('package', new Obj([
-            'name' => 'testing',
-            'vendor' => 'laravel-enso',
+            'name'      => 'testing',
+            'vendor'    => 'laravel-enso',
             'providers' => true,
-            'config' => true,
+            'config'    => true,
         ]));
 
         $this->choices->get('model')->set('name', 'Testing/PackageTest');

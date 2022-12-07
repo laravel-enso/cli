@@ -36,7 +36,7 @@ class Validator implements StubProvider
     {
         return [
             '${namespace}' => Namespacer::get(['Http', 'Requests']),
-            '${Model}' => Str::ucfirst($this->model->get('name')),
+            '${Model}'     => Str::ucfirst($this->model->get('name')),
         ];
     }
 

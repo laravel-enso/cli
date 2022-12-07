@@ -51,11 +51,13 @@ class EnsoStructure implements StubProvider
         $mapping = (new Mapping($this->menu, $this->group));
 
         return [
-            '${Entity}' => Str::plural($this->entity()),
-            '${menu}' => $mapping->menu(),
-            '${parentMenu}' => $mapping->parentMenu(),
+            '${Entity}'      => Str::plural($this->entity()),
+            '${menu}'        => $mapping->menu(),
+            '${parentMenu}'  => $mapping->parentMenu(),
             '${permissions}' => (new Permissions(
-                $this->model, $this->permissions, $this->group
+                $this->model,
+                $this->permissions,
+                $this->group
             ))->get(),
         ];
     }

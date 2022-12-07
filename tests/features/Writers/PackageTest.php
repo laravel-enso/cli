@@ -91,7 +91,7 @@ class PackageTest extends TestCase
         return new Obj([
             'package' => [
                 'vendor' => 'enso',
-                'name' => 'cli',
+                'name'   => 'cli',
             ],
         ]);
     }
@@ -99,8 +99,8 @@ class PackageTest extends TestCase
     protected function params()
     {
         return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Enso\Cli\App',
+            'root'        => $this->root,
+            'namespace'   => 'Enso\Cli\App',
             'rootSegment' => 'app',
         ]);
     }

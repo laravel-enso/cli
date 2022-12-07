@@ -149,9 +149,9 @@ trait Cli
     private function permissions()
     {
         return new Collection([
-            'index' => 'index', 'create' => 'create', 'store' => 'store', 'edit' => 'edit',
+            'index'       => 'index', 'create' => 'create', 'store' => 'store', 'edit' => 'edit',
             'exportExcel' => 'exportExcel', 'destroy' => 'destroy', 'initTable' => 'initTable',
-            'tableData' => 'tableData', 'update' => 'update', 'options' => 'options', 'show' => 'show',
+            'tableData'   => 'tableData', 'update' => 'update', 'options' => 'options', 'show' => 'show',
         ]);
     }
 
@@ -172,7 +172,7 @@ trait Cli
     {
         $path = $this->path('database/migrations');
 
-        if (! File::isDirectory($path)) {
+        if (!File::isDirectory($path)) {
             return;
         }
 
@@ -295,20 +295,20 @@ trait Cli
     {
         return new Obj([
             'permissionGroup' => ['name' => 'group.testModels'],
-            'model' => [
-                'name' => 'TestModel',
+            'model'           => [
+                'name'      => 'TestModel',
                 'namespace' => 'App',
             ],
             'permissions' => [],
-            'files' => [],
+            'files'       => [],
         ]);
     }
 
     private function params()
     {
         return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Namespace\App',
+            'root'        => $this->root,
+            'namespace'   => 'Namespace\App',
             'rootSegment' => 'app',
         ]);
     }

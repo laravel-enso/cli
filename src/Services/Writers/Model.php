@@ -35,7 +35,7 @@ class Model implements StubProvider
     {
         return [
             '${modelNamespace}' => $this->model->get('namespace'),
-            '${Model}' => Str::ucfirst($this->model->get('name')),
+            '${Model}'          => Str::ucfirst($this->model->get('name')),
         ];
     }
 

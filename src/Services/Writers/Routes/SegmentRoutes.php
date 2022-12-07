@@ -23,7 +23,8 @@ class SegmentRoutes implements BulkProvider
         return Segments::get()
             ->reduce(fn ($collection, $segment) => $collection
                 ->push(new SegmentRoute(
-                    $this->choices, clone $this->segments->push($segment)
+                    $this->choices,
+                    clone $this->segments->push($segment)
                 )), new Collection());
     }
 }

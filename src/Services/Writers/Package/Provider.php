@@ -40,8 +40,8 @@ class Provider implements StubProvider
         $segments = Collection::wrap(explode('\\', $this->namespace))->slice(0, 2);
 
         return [
-            '${vendor}' => $this->package->get('vendor'),
-            '${package}' => $this->package->get('name'),
+            '${vendor}'    => $this->package->get('vendor'),
+            '${package}'   => $this->package->get('name'),
             '${namespace}' => $segments->implode('\\'),
         ];
     }

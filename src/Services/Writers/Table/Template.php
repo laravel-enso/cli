@@ -43,8 +43,8 @@ class Template implements StubProvider
 
         return [
             '${permissionGroup}' => $this->group,
-            '${name}' => Str::title($name),
-            '${table}' => Str::snake(Str::plural($model)),
+            '${name}'            => Str::title($name),
+            '${table}'           => Str::snake(Str::plural($model)),
         ];
     }
 

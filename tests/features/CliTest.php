@@ -52,10 +52,10 @@ class CliTest extends TestCase
     public function can_reload_session_if_available()
     {
         Cache::put('cli_data', [
-            'params' => new Obj(),
-            'choices' => new Obj(['files' => []]),
+            'params'     => new Obj(),
+            'choices'    => new Obj(['files' => []]),
             'configured' => new Collection(),
-            'validates' => true,
+            'validates'  => true,
         ]);
 
         $this->artisan('enso:cli')

@@ -77,8 +77,8 @@ class TableTest extends TestCase
     {
         return new Obj([
             'permissionGroup' => ['name' => 'group.testModels'],
-            'model' => ['name' => 'TestModel'],
-            'permissions' => [],
+            'model'           => ['name' => 'TestModel'],
+            'permissions'     => [],
         ]);
     }
 }

@@ -35,8 +35,8 @@ class Menu extends Validator
 
     private function menu()
     {
-        if (! $this->menu->filled('route')) {
-            if (! $this->menu->get('has_children')) {
+        if (!$this->menu->filled('route')) {
+            if (!$this->menu->get('has_children')) {
                 $this->error('A regular menu must have the route attribute filled');
             }
 
@@ -54,7 +54,7 @@ class Menu extends Validator
 
     private function invalidPermission()
     {
-        return ! $this->permissions->contains($this->menu->get('route'));
+        return !$this->permissions->contains($this->menu->get('route'));
     }
 
     private function parent()
@@ -96,7 +96,7 @@ class Menu extends Validator
         $matches = false;
         $nestedMenu = $menu->name;
 
-        while (! $matches && $menu?->parent_id !== null) {
+        while (!$matches && $menu?->parent_id !== null) {
             $nestedMenu = "{$menu->parent->name}.{$nestedMenu}";
             $matches = $nestedMenu === $this->menu->get('parentMenu');
             $menu = $menu->parent;

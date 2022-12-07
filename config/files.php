@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'requires' => ['Permissions'],
+    'requires'   => ['Permissions'],
     'attributes' => [
-        'model' => false,
+        'model'     => false,
         'structure' => false,
-        'routes' => false,
-        'views' => false,
-        'form' => false,
-        'table' => false,
-        'options' => false,
+        'routes'    => false,
+        'views'     => false,
+        'form'      => false,
+        'table'     => false,
+        'options'   => false,
     ],
 ];

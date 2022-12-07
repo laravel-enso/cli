@@ -87,8 +87,8 @@ class RouteGeneratorTest extends TestCase
     {
         return new Obj([
             'permissionGroup' => ['name' => 'perm.group'],
-            'model' => ['name' => 'TestModel'],
-            'permissions' => $this->permissions(),
+            'model'           => ['name' => 'TestModel'],
+            'permissions'     => $this->permissions(),
         ]);
     }
 

@@ -8,7 +8,7 @@ class Directory
 {
     public static function prepare(string $directory)
     {
-        if (! File::isDirectory($directory)) {
+        if (!File::isDirectory($directory)) {
             File::makeDirectory($directory, 0755, true);
         }
     }

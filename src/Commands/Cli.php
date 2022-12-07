@@ -38,7 +38,7 @@ class Cli extends Command
         $choice = Option::from($this->input());
 
         if ($choice === Option::Generate) {
-            if (! (new Generator($this->choices))->handle()) {
+            if (!(new Generator($this->choices))->handle()) {
                 $this->index();
             }
         } elseif ($choice !== Option::Exit) {

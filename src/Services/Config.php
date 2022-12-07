@@ -85,7 +85,7 @@ class Config
         $config->keys()
             ->each(fn ($option) => $config->set($option, $this->input($config, $option)));
 
-        if (! $this->choices->configured()->contains($choice)) {
+        if (!$this->choices->configured()->contains($choice)) {
             $this->choices->configured()->push($choice);
         }
     }

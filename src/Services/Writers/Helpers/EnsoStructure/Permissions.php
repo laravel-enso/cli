@@ -40,8 +40,8 @@ class Permissions
 
         return [
             '${permissionGroup}' => $this->group,
-            '${model}' => $model,
-            '${models}' => Str::plural($model),
+            '${model}'           => $model,
+            '${models}'          => Str::plural($model),
         ];
     }
 }

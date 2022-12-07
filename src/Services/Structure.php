@@ -23,14 +23,14 @@ class Structure
     private bool $isPackage;
 
     private array $providers = [
-        'table' => Table::class,
-        'form' => Form::class,
-        'views' => Views::class,
-        'routes' => Routes::class,
+        'table'     => Table::class,
+        'form'      => Form::class,
+        'views'     => Views::class,
+        'routes'    => Routes::class,
         'structure' => EnsoStructure::class,
-        'options' => Options::class,
-        'model' => Model::class,
-        'package' => Package::class,
+        'options'   => Options::class,
+        'model'     => Model::class,
+        'package'   => Package::class,
     ];
 
     public function __construct(private Choices $choices)
@@ -105,14 +105,14 @@ class Structure
 
     private function initModel()
     {
-        if (! $this->choices->has('model')) {
+        if (!$this->choices->has('model')) {
             return $this;
         }
 
         $model = $this->choices->get('model');
         $segments = new Collection(explode('/', $model->get('name')));
 
-        if ($segments->first() !== 'App' && ! $this->isPackage) {
+        if ($segments->first() !== 'App' && !$this->isPackage) {
             $segments->prepend('App');
         }
 
