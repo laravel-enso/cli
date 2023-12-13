@@ -2,12 +2,10 @@
 
 use LaravelEnso\Migrator\Database\Migration;
 
-class CreateStructureFor${Entity} extends Migration
-{
+return new class extends Migration {
     protected array $permissions = ${permissions};
 
     protected array $menu = ${menu};
 
     protected ?string $parentMenu = ${parentMenu};
-}
-
+};
