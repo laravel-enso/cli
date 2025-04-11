@@ -3,7 +3,7 @@
 namespace LaravelEnso\Cli\Commands;
 
 use Illuminate\Console\Command;
-use LaravelEnso\Cli\Enums\Options;
+use LaravelEnso\Cli\Enums\Option;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Config;
 use LaravelEnso\Cli\Services\Generator;
@@ -38,9 +38,9 @@ class Cli extends Command
         $choice = $this->input();
 
         switch ($choice) {
-            case Options::Exit:
+            case Option::Exit:
                 break;
-            case Options::Generate:
+            case Option::Generate:
                 if (! (new Generator($this->choices))->handle()) {
                     $this->index();
                 }

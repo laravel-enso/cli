@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use LaravelEnso\Cli\Enums\Options;
+use LaravelEnso\Cli\Enums\Option;
 use LaravelEnso\Helpers\Services\Obj;
 
 class Choices
@@ -138,7 +138,7 @@ class Choices
 
     private function defaults()
     {
-        return Options::choices()
+        return Option::choices()
             ->reduce(fn ($choices, $choice) => $choices
                 ->set(Str::camel($choice), $this->attributes($choice)), new Obj());
     }

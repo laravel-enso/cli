@@ -9,7 +9,7 @@ use LaravelEnso\Enums\Services\Enum;
 class Validators extends Enum
 {
     public static array $data = [
-        Options::Model => Model::class,
-        Options::Menu => Menu::class,
+        Option::Model => Model::class,
+        Option::Menu => Menu::class,
     ];
 }
