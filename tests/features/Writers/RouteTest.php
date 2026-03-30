@@ -29,7 +29,7 @@ class RouteTest extends TestCase
 
     protected function tearDown(): void
     {
-        // parent::tearDown();
+        parent::tearDown();
 
         File::deleteDirectory($this->root);
     }
