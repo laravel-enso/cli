@@ -8,6 +8,7 @@ use LaravelEnso\Cli\Services\Writers\Routes;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class RouteTest extends TestCase
 {
@@ -34,7 +35,7 @@ class RouteTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_route_directory()
     {
         $this->write(Routes::class);
@@ -42,7 +43,7 @@ class RouteTest extends TestCase
         $this->assertDirectoryExists($this->path(['client', 'src', 'js', 'routes', 'perm']));
     }
 
-    /** @test */
+    #[Test]
     public function can_create_index_route()
     {
         $this->setPermission('index');
@@ -56,7 +57,7 @@ class RouteTest extends TestCase
         ], ['perm', 'group', 'index.js']);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_show_route()
     {
         $this->setPermission('show');
@@ -70,7 +71,7 @@ class RouteTest extends TestCase
         ], ['perm', 'group', 'show.js']);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_edit_route()
     {
         $this->setPermission('edit');
@@ -84,7 +85,7 @@ class RouteTest extends TestCase
         ], ['perm', 'group', 'edit.js']);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_segment_route()
     {
         $this->setPermission('edit');
@@ -97,7 +98,7 @@ class RouteTest extends TestCase
         ], 'perm.js');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_parent_segment_route()
     {
         $this->setPermission('edit');
@@ -112,7 +113,7 @@ class RouteTest extends TestCase
         ], ['perm', 'group.js']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_create_non_route()
     {
         $this->setPermission('destroy');
@@ -122,7 +123,7 @@ class RouteTest extends TestCase
         $this->assertFileDoesNotExist($this->viewRoutePath('perm/group/destroy.js'));
     }
 
-    /** @test */
+    #[Test]
     public function cannot_create_route_for_false_permission()
     {
         $this->choices->put('permissions', new Collection(['show' => false]));
@@ -132,7 +133,7 @@ class RouteTest extends TestCase
         $this->assertFileDoesNotExist($this->viewRoutePath('perm/group/show.js'));
     }
 
-    /** @test */
+    #[Test]
     public function can_create_create_route()
     {
         $this->setPermission('create');

@@ -9,6 +9,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class EnsoStructureTest extends TestCase
 {
@@ -37,7 +38,7 @@ class EnsoStructureTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_empty_migration()
     {
         (new Writer(new EnsoStructure($this->choices)))->handle();
@@ -48,7 +49,7 @@ class EnsoStructureTest extends TestCase
         $this->assertStructureMigrationContains('$parentMenu = null');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_permissions()
     {
         $this->choices->put('permissions', $this->permissions());
@@ -69,7 +70,7 @@ class EnsoStructureTest extends TestCase
             ->assertStructureMigrationContains("'description' => '{$description}'"));
     }
 
-    /** @test */
+    #[Test]
     public function can_create_menu()
     {
         $this->choices->put('menu', new Obj(['parentMenu' => 'parent']));

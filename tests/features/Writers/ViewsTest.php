@@ -8,6 +8,7 @@ use LaravelEnso\Cli\Services\Writers\Views;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ViewsTest extends TestCase
 {
@@ -34,7 +35,7 @@ class ViewsTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_views()
     {
         $this->write(Views::class);

@@ -7,6 +7,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Services\Writers\Options;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class OptionsTest extends TestCase
 {
@@ -33,7 +34,7 @@ class OptionsTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_controller()
     {
         (new Writer(new Options($this->choices)))->handle();

@@ -8,6 +8,7 @@ use LaravelEnso\Cli\Enums\Options;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CliTest extends TestCase
 {
@@ -36,7 +37,7 @@ class CliTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_config_choice_without_requirements()
     {
         $dependent = $this->dependent();
@@ -48,7 +49,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
-    /** @test */
+    #[Test]
     public function can_reload_session_if_available()
     {
         Cache::put('cli_data', [
@@ -63,7 +64,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
-    /** @test */
+    #[Test]
     public function can_save_after_choice_was_configured()
     {
         $this->artisan('enso:cli')
@@ -75,7 +76,7 @@ class CliTest extends TestCase
         $this->assertEquals('test', Cache::get('cli_data')['choices'][Str::camel($this->choice)]['name']);
     }
 
-    /** @test */
+    #[Test]
     public function can_remove_saved_session_after_generate()
     {
         $this->artisan('enso:cli')
@@ -87,7 +88,7 @@ class CliTest extends TestCase
         $this->assertFalse(Cache::has('cli_data'));
     }
 
-    /** @test */
+    #[Test]
     public function cannot_generate_with_nothing_configured()
     {
         $this->artisan('enso:cli')
@@ -96,7 +97,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_generate_with_failed_validation()
     {
         $this->artisan('enso:cli')
@@ -108,7 +109,7 @@ class CliTest extends TestCase
             ->expectsQuestion('Choose element to configure', Options::Exit);
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_with_disabled_validation()
     {
         $this->artisan('enso:cli')

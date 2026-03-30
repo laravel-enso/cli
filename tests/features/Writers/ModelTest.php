@@ -5,6 +5,7 @@ use LaravelEnso\Cli\Services\StubWriters\Writer;
 use LaravelEnso\Cli\Services\Writers\Model;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ModelTest extends TestCase
 {
@@ -29,7 +30,7 @@ class ModelTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_model_with_path()
     {
         $this->choices->get('model')->put('path', 'app');
@@ -39,7 +40,7 @@ class ModelTest extends TestCase
         $this->assertFileExists("{$this->root}/app/TestModel.php");
     }
 
-    /** @test */
+    #[Test]
     public function can_create_model()
     {
         (new Writer(new Model($this->choices)))->handle();

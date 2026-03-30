@@ -5,6 +5,7 @@ use LaravelEnso\Cli\Services\Writers\Package;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PackageTest extends TestCase
 {
@@ -29,7 +30,7 @@ class PackageTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_composer()
     {
         $this->write(Package::class);
@@ -42,7 +43,7 @@ class PackageTest extends TestCase
         ], ['composer.json']);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_readme()
     {
         $this->write(Package::class);
@@ -50,7 +51,7 @@ class PackageTest extends TestCase
         $this->assertCliFileContains('###  enso - cli', 'README.md');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_licence()
     {
         $this->write(Package::class);
@@ -58,7 +59,7 @@ class PackageTest extends TestCase
         $this->assertCliFileContains('Copyright (c) '.now()->format('Y').' enso', ['LICENSE']);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_config()
     {
         $this->choices->get('package')->put('config', true);
@@ -68,7 +69,7 @@ class PackageTest extends TestCase
         $this->assertFileExists($this->path(['config',  'cli.php']));
     }
 
-    /** @test */
+    #[Test]
     public function can_create_provider()
     {
         $this->choices->get('package')->put('providers', true);

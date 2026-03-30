@@ -7,6 +7,7 @@ use LaravelEnso\Cli\Services\Validator;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Menus\Models\Menu;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ValidatorTest extends TestCase
 {
@@ -19,7 +20,7 @@ class ValidatorTest extends TestCase
         $this->createMenuTable();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_model_with_two_slashed()
     {
         $choices = $this->modelChoices('namespace//testModel');
@@ -29,7 +30,7 @@ class ValidatorTest extends TestCase
         $this->assertErrors('Model', 'Namespaced models must only use one slash for each segment');
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_model_with_back_slashed()
     {
         $choices = $this->modelChoices('namespace\\testModel');
@@ -39,7 +40,7 @@ class ValidatorTest extends TestCase
         $this->assertErrors('Model', 'Namespaced models must only use slashes ("/")');
     }
 
-    /** @test */
+    #[Test]
     public function can_validate_model()
     {
         $choices = $this->modelChoices('namespace/testModel');
@@ -49,7 +50,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($this->validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_parent_menu_with_route()
     {
         $choices = $this->menuChoices('group', 'route', null, true);
@@ -59,7 +60,7 @@ class ValidatorTest extends TestCase
         $this->assertErrors('Menu', 'A parent menu must have the route attribute empty');
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_menu_with_wrong_permission()
     {
         $choices = $this->menuChoices('group', 'wrong_route');
@@ -70,7 +71,7 @@ class ValidatorTest extends TestCase
         $this->assertErrors('Menu', "The menu's route does not match the configured permissions");
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_regular_menu_without_route()
     {
         $choices = $this->menuChoices(null, null);
@@ -80,7 +81,7 @@ class ValidatorTest extends TestCase
         $this->assertErrors('Menu', 'A regular menu must have the route attribute filled');
     }
 
-    /** @test */
+    #[Test]
     public function can_validate_parent_menu()
     {
         $great = Menu::create(['name' => 'great', 'has_children' => true]);
@@ -94,7 +95,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($this->validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_wrong_parent()
     {
         $choices = $this->menuChoices('group', 'create', 'not_menu');
@@ -104,7 +105,7 @@ class ValidatorTest extends TestCase
         $this->assertErrors('Menu', 'The parent menu not_menu does not exist in the system');
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_menu_with_multiple_parent()
     {
         Menu::insert([

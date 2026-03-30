@@ -7,6 +7,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Path;
 use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Tests\Cli;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class FormTest extends TestCase
 {
@@ -33,7 +34,7 @@ class FormTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_builder()
     {
         $this->write(Form::class);
@@ -45,7 +46,7 @@ class FormTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_controller()
     {
         $this->setPermission('edit');
@@ -58,7 +59,7 @@ class FormTest extends TestCase
         ], 'Edit');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_index()
     {
         $this->setPermission('index');
@@ -72,7 +73,7 @@ class FormTest extends TestCase
         ], 'Index');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_show()
     {
         $this->setPermission('show');
@@ -88,7 +89,7 @@ class FormTest extends TestCase
         ], 'Show');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_create()
     {
         $this->setPermission('create');
@@ -103,7 +104,7 @@ class FormTest extends TestCase
         ], 'Create');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_destroy()
     {
         $this->setPermission('destroy');
@@ -119,7 +120,7 @@ class FormTest extends TestCase
         ], 'Destroy');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_update()
     {
         $this->setPermission('update');
@@ -136,7 +137,7 @@ class FormTest extends TestCase
         ], 'Update');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_store()
     {
         $this->setPermission('store');
@@ -153,7 +154,7 @@ class FormTest extends TestCase
         ], 'Store');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_request()
     {
         $this->setPermission('store');

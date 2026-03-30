@@ -7,6 +7,7 @@ use LaravelEnso\Cli\Services\Writers\RouteGenerator;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class RouteGeneratorTest extends TestCase
 {
@@ -34,7 +35,7 @@ class RouteGeneratorTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_route_group()
     {
         (new RouteGenerator($this->choices))->handle();
@@ -45,7 +46,7 @@ class RouteGeneratorTest extends TestCase
         ], ['app', 'perm', 'group.php']);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_routes()
     {
         $result = (new RouteGenerator($this->choices))->handle();
@@ -53,7 +54,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertRoutes($result);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_imports()
     {
         $result = (new RouteGenerator($this->choices))->handle();
@@ -61,7 +62,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertUses('Namespace\App\Http\Controllers\Perm\Group', $result);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_imports_sorted()
     {
         $this->choices->params()->put('namespace', 'AAA');
