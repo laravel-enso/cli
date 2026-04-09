@@ -1,5 +1,5 @@
 <template>
-    <enso-table class="box is-paddingless raises-on-hover"
+    <enso-table class="box is-paddingless"
         id="${models}"/>
 </template>
 
