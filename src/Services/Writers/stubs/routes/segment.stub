@@ -1,11 +1,11 @@
 import routeImporter from '@enso-ui/ui/src/modules/importers/routeImporter';
 
-const routes = routeImporter(require.context('./${segment}', false, /.*\.js$/));
-const RouterView = () => import('@enso-ui/ui/src/bulma/pages/Router.vue');
+const routes = routeImporter.fromGlob(import.meta.glob('./${segment}/*.js', { eager: true }));
+const Router = () => import('@enso-ui/ui/src/bulma/pages/Router.vue');
 
 export default {
     path: '${relativePath}',
-    component: RouterView,
+    component: Router,
     meta: {
         breadcrumb: '${breadcrumb}',
     },
