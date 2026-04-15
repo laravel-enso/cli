@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\File;
 use LaravelEnso\Cli\Services\Writers\Migration;
 use LaravelEnso\Cli\Tests\Cli;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MigrationTest extends TestCase
@@ -28,7 +29,7 @@ class MigrationTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_migration()
     {
         $this->choices->get('files')->put('table', true);

@@ -6,6 +6,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Services\Writers\Table;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TableTest extends TestCase
@@ -33,7 +34,7 @@ class TableTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_template()
     {
         $this->write(Table::class);
@@ -45,7 +46,7 @@ class TableTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_builder()
     {
         $this->write(Table::class);
@@ -58,7 +59,7 @@ class TableTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_controller()
     {
         $this->setPermission('initTable');

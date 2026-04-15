@@ -8,6 +8,7 @@ use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Structure;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class StructureWriterTest extends TestCase
@@ -34,7 +35,7 @@ class StructureWriterTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_local_structure()
     {
         $this->root = '';
@@ -44,7 +45,7 @@ class StructureWriterTest extends TestCase
         $this->makeAssertions();
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_package()
     {
         $this->root = 'vendor/laravel-enso/testing';

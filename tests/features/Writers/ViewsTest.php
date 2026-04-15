@@ -7,6 +7,7 @@ use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Cli\Services\Writers\Views;
 use LaravelEnso\Cli\Tests\Cli;
 use LaravelEnso\Helpers\Services\Obj;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ViewsTest extends TestCase
@@ -34,14 +35,15 @@ class ViewsTest extends TestCase
         File::deleteDirectory($this->root);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_views()
     {
         $this->write(Views::class);
 
-        $this->choices->get('permissions')->each(fn ($perm) => (
-            $this->assertViewPageContains("name: '".ucfirst($perm)."',", $perm)
-        ));
+        $this->assertViewPageContains('<enso-table class="box p-0"', 'index');
+        $this->assertViewPageContains('<enso-form class="box form-box"/>', 'create');
+        $this->assertViewPageContains('<enso-form class="box form-box"/>', 'edit');
+        $this->assertViewPageContains('<div/>', 'show');
     }
 
     protected function choices()
