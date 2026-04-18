@@ -9,7 +9,7 @@ use LaravelEnso\Menus\Models\Menu;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class ValidatorTest extends TestCase
+class CliValidatorTest extends TestCase
 {
     private $validator;
 
