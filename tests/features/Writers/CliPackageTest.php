@@ -7,7 +7,7 @@ use LaravelEnso\Helpers\Services\Obj;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class PackageTest extends TestCase
+class CliPackageTest extends TestCase
 {
     use Cli;
 
