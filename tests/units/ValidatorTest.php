@@ -142,8 +142,8 @@ class CliValidatorTest extends TestCase
     {
         return (new Choices(new Command()))
             ->setChoices(new Obj([
-                'menu' => $this->menu($permission, $parentMenu, $hasChildren),
-                'permissions' => new Obj([$permission => $permission]),
+                'menu'            => $this->menu($permission, $parentMenu, $hasChildren),
+                'permissions'     => new Obj([$permission => $permission]),
                 'permissionGroup' => new Obj(['name' => $group]),
             ]))->setConfigured(['Menu']);
     }
@@ -157,8 +157,8 @@ class CliValidatorTest extends TestCase
     private function menu($route, $parentMenu, $hasChildren)
     {
         return new Obj([
-            'route' => $route,
-            'parentMenu' => $parentMenu,
+            'route'        => $route,
+            'parentMenu'   => $parentMenu,
             'has_children' => $hasChildren,
         ]);
     }

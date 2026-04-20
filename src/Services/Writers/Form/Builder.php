@@ -39,11 +39,11 @@ class Builder implements StubProvider
             '${relativePath}' => Segments::get(false)
                 ->whenNotEmpty(fn ($segments) => $segments->push(''))
                 ->implode(DIRECTORY_SEPARATOR),
-            '${namespace}' => Namespacer::get(['Forms', 'Builders']),
+            '${namespace}'      => Namespacer::get(['Forms', 'Builders']),
             '${modelNamespace}' => $this->model->get('namespace'),
-            '${depth}' => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count()),
-            '${model}' => Str::camel($this->model->get('name')),
-            '${Model}' => $this->model->get('name'),
+            '${depth}'          => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count()),
+            '${model}'          => Str::camel($this->model->get('name')),
+            '${Model}'          => $this->model->get('name'),
         ];
     }
 

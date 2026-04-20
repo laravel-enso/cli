@@ -151,8 +151,8 @@ class RouteTest extends TestCase
     {
         return new Obj([
             'permissionGroup' => ['name' => 'perm.group'],
-            'model' => ['name' => 'TestModel'],
-            'permissions' => [],
+            'model'           => ['name' => 'TestModel'],
+            'permissions'     => [],
         ]);
     }
 }

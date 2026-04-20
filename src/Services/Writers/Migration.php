@@ -29,7 +29,7 @@ class Migration
         $name = Str::plural(Str::snake($this->model->get('name')));
 
         Artisan::call('make:migration', [
-            'name' => "create_{$name}_table",
+            'name'   => "create_{$name}_table",
             '--path' => $path,
         ]);
     }

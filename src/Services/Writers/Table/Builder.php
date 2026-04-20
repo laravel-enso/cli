@@ -36,13 +36,13 @@ class Builder implements StubProvider
     public function fromTo(): array
     {
         return [
-            '${namespace}' => Namespacer::get(['Tables', 'Builders']),
+            '${namespace}'      => Namespacer::get(['Tables', 'Builders']),
             '${modelNamespace}' => $this->model->get('namespace'),
-            '${Model}' => $this->model->get('name'),
-            '${models}' => Str::camel(Str::plural($this->model->get('name'))),
-            '${table}' => Str::snake(Str::plural($this->model->get('name'))),
-            '${depth}' => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count()),
-            '${relativePath}' => Segments::get(false)
+            '${Model}'          => $this->model->get('name'),
+            '${models}'         => Str::camel(Str::plural($this->model->get('name'))),
+            '${table}'          => Str::snake(Str::plural($this->model->get('name'))),
+            '${depth}'          => str_repeat('..'.DIRECTORY_SEPARATOR, Segments::count()),
+            '${relativePath}'   => Segments::get(false)
                 ->whenNotEmpty(fn ($segments) => $segments->push(''))
                 ->implode(DIRECTORY_SEPARATOR),
         ];

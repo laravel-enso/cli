@@ -10,6 +10,6 @@ class Validators extends Enum
 {
     public static array $data = [
         Options::Model => Model::class,
-        Options::Menu => Menu::class,
+        Options::Menu  => Menu::class,
     ];
 }

@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'requires' => ['Model', 'Permissions'],
+    'requires'   => ['Model', 'Permissions'],
     'attributes' => [
-        'name' => null,
-        'vendor' => 'laravel-enso',
-        'config' => false,
+        'name'      => null,
+        'vendor'    => 'laravel-enso',
+        'config'    => false,
         'providers' => false,
     ],
 ];

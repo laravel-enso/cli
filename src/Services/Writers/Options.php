@@ -39,9 +39,9 @@ class Options implements StubProvider
     public function fromTo(): array
     {
         return [
-            '${namespace}' => Namespacer::get(['Http', 'Controllers'], true),
+            '${namespace}'      => Namespacer::get(['Http', 'Controllers'], true),
             '${modelNamespace}' => $this->model->get('namespace'),
-            '${Model}' => Str::ucfirst($this->model->get('name')),
+            '${Model}'          => Str::ucfirst($this->model->get('name')),
         ];
     }
 

@@ -40,12 +40,12 @@ class Resource implements StubProvider
         $segments = Collection::wrap(explode('\\', $this->namespace))->slice(0, 2);
 
         return [
-            '${year}' => Carbon::now()->format('Y'),
-            '${vendor}' => $this->package->get('vendor'),
-            '${package}' => $this->package->get('name'),
+            '${year}'      => Carbon::now()->format('Y'),
+            '${vendor}'    => $this->package->get('vendor'),
+            '${package}'   => $this->package->get('name'),
             '${namespace}' => $segments->implode('\\'),
-            '${Vendor}' => $segments->first(),
-            '${Package}' => $segments->last(),
+            '${Vendor}'    => $segments->first(),
+            '${Package}'   => $segments->last(),
         ];
     }
 

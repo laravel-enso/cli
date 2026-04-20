@@ -50,8 +50,8 @@ class ViewsTest extends TestCase
     {
         return new Obj([
             'permissionGroup' => ['name' => 'group.testModels'],
-            'model' => ['name' => 'TestModel'],
-            'permissions' => $this->permissions()
+            'model'           => ['name' => 'TestModel'],
+            'permissions'     => $this->permissions()
                 ->only(['index', 'create', 'show', 'edit']),
         ]);
     }

@@ -38,7 +38,7 @@ class Mapping
 
     private function values()
     {
-        if (! $this->menu->get('has_children')) {
+        if (!$this->menu->get('has_children')) {
             $this->menu->set('route', "{$this->group}.{$this->menu->get('route')}");
         }
 

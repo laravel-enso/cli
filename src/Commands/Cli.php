@@ -41,7 +41,7 @@ class Cli extends Command
             case Options::Exit:
                 break;
             case Options::Generate:
-                if (! (new Generator($this->choices))->handle()) {
+                if (!(new Generator($this->choices))->handle()) {
                     $this->index();
                 }
                 break;

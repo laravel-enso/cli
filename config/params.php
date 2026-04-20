@@ -2,8 +2,8 @@
 
 return [
     'attributes' => [
-        'namespace' => 'App',
-        'root' => '',
+        'namespace'   => 'App',
+        'root'        => '',
         'rootSegment' => 'app',
     ],
 ];

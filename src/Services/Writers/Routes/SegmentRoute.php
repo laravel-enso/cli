@@ -39,10 +39,10 @@ class SegmentRoute implements StubProvider
         $depth = $this->segments->count();
 
         return [
-            '${segment}' => $segment,
-            '${breadcrumb}' => Collection::wrap(explode('_', Str::snake($segment)))->implode(' '),
+            '${segment}'         => $segment,
+            '${breadcrumb}'      => Collection::wrap(explode('_', Str::snake($segment)))->implode(' '),
             '${permissionGroup}' => $this->group,
-            '${relativePath}' => $depth === 1 ? DIRECTORY_SEPARATOR.$segment : $segment,
+            '${relativePath}'    => $depth === 1 ? DIRECTORY_SEPARATOR.$segment : $segment,
         ];
     }
 

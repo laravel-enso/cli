@@ -92,7 +92,7 @@ class CliPackageTest extends TestCase
         return new Obj([
             'package' => [
                 'vendor' => 'enso',
-                'name' => 'cli',
+                'name'   => 'cli',
             ],
         ]);
     }
@@ -100,8 +100,8 @@ class CliPackageTest extends TestCase
     protected function params()
     {
         return new Obj([
-            'root' => $this->root,
-            'namespace' => 'Enso\Cli\App',
+            'root'        => $this->root,
+            'namespace'   => 'Enso\Cli\App',
             'rootSegment' => 'app',
         ]);
     }
