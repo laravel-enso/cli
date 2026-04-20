@@ -1,6 +1,6 @@
 {
     "name": "laravel-enso/cli",
-    "description": "Cli dependency for Laravel Enso",
+    "description": "Interactive scaffolding for Laravel Enso resources",
     "keywords": [
         "laravel-enso",
         "cli",
