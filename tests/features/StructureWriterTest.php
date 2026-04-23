@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 use LaravelEnso\Cli\Services\Choices;
 use LaravelEnso\Cli\Services\Structure;
 use LaravelEnso\Cli\Tests\Cli;
+use LaravelEnso\Cli\Services\Writers\Helpers\Namespacer;
+use LaravelEnso\Cli\Services\Writers\Helpers\Path;
+use LaravelEnso\Cli\Services\Writers\Helpers\Segments;
 use LaravelEnso\Helpers\Services\Obj;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -26,11 +29,13 @@ class StructureWriterTest extends TestCase
 
         $this->params = $this->params();
         $this->choices = $this->choices();
+        $this->resetHelpers();
     }
 
     public function tearDown(): void
     {
         $this->cleanUp();
+        $this->resetHelpers();
 
         parent::tearDown();
     }
@@ -137,6 +142,7 @@ class StructureWriterTest extends TestCase
     {
         if ($this->root) {
             File::deleteDirectory(str_replace('src/', '', $this->root));
+            clearstatcache(true);
 
             return;
         }
@@ -153,6 +159,16 @@ class StructureWriterTest extends TestCase
         File::delete($this->path(['client', 'src', 'js', 'routes', 'testing.js']));
         $this->deleteMigration("create_{$this->tableName()}_table");
         $this->deleteMigration("create_structure_for_{$this->tableName()}");
+        clearstatcache(true);
+    }
+
+    private function resetHelpers(): void
+    {
+        Path::root($this->params()->get('root'));
+        Path::segments(false);
+        Namespacer::prefix($this->params()->get('namespace'));
+        Segments::set($this->choices->get('permissionGroup'));
+        Segments::ucfirst(false);
     }
 
     private function handle()
