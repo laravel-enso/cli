@@ -35,7 +35,7 @@ class Cli extends Command
 
     private function index()
     {
-        $choice = $this->input();
+        $choice = $this->selectedOption();
 
         switch ($choice) {
             case Options::Exit:
@@ -52,7 +52,7 @@ class Cli extends Command
         }
     }
 
-    private function input()
+    private function selectedOption()
     {
         return (new Status($this->choices))
             ->display()
